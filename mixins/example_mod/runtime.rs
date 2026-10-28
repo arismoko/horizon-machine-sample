@@ -3,7 +3,7 @@
 
 pub fn block_break_message(pos: [i32; 3]) -> String {
     format!(
-        "[example-mod] Breaking block at {}, {}, {}",
+        "[example_mod] Breaking block at {}, {}, {}",
         pos[0], pos[1], pos[2]
     )
 }
@@ -20,7 +20,7 @@ mod tests {
     fn message_preserves_signed_block_coordinates() {
         assert_eq!(
             block_break_message([-3, 64, 12]),
-            "[example-mod] Breaking block at -3, 64, 12"
+            "[example_mod] Breaking block at -3, 64, 12"
         );
     }
 }

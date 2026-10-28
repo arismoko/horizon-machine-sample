@@ -48,7 +48,7 @@ a separate clone/worktree and set `HORIZON_MIXINS=/path/to/pinned/horizon-mixins
 ```text
 Cargo.toml                         Standalone runtime library + source audit workspace
 compatibility.json                 Exact upstream/tool revisions and source hashes
-mixins/example-mod/
+mixins/example_mod/
   horizon-mixin.toml                Module and HEAD declaration
   break.rs                         Small typed hook adapter
   runtime.rs                       Runtime implementation and unit tests (single source)
@@ -61,7 +61,7 @@ tools/audit/                      Rust AST comparison against the pristine expor
 To rename the example:
 
 1. Change Cargo package name/description and the manifest's mod ID/version.
-2. Rename `mixins/example-mod/` and update the Cargo `[lib].path`.
+2. Rename `mixins/example_mod/` and update the Cargo `[lib].path`.
 3. Change the manifest module name `example_mod` and its reference in `break.rs`.
 4. Change the runtime log prefix, unit-test expectation and the native test filter
    `game::example_mod::tests` in `tools/horizon.py`.
@@ -120,9 +120,29 @@ Horizon version**, and explicitly pass their path:
 Prepare those resources using the compatible Horizon launcher or
 `horizon-prepare --prepare`; game resources are not supplied by this repository.
 Use the binary's `--help` for world/server arguments. Breaking a block should
-print `[example-mod] Breaking block at ...` to the host's stderr. The HEAD log
+print `[example_mod] Breaking block at ...` to the host's stderr. The HEAD log
 reports attempts, including attempts the original game later rejects.
 Compilation tests do not establish interactive gameplay/resource compatibility.
+
+## Pin to a Nightly, package, publish
+
+A native mod builds on one exact Horizon commit, and every mod of a player's build must pin the same one, so
+pin a **Nightly**: its release notes name the commit, and the tag `nightly-source/<date>-<short>` keeps that
+commit's source downloadable after the Nightly is replaced. This template pins Nightly 2026-10-28
+(`83f15fa`). To move to a newer Nightly:
+
+1. Put its commit in `compatibility.json` (`horizon_revision`) and in the manifest's
+   `[compatibility] horizon_revision`.
+2. Update `source_sha256` for each target file (`git -C ../horizon show <commit>:<path> | sha256sum`).
+3. Run the checks below. When a target moved (the game is being split into crates), `plan` names the
+   missing function: find its new path in that commit and fix `target` in the manifest.
+
+Then `python3 tools/package.py` writes `target/<id>-<version>.hnmod`: `horizon-native.json` plus your
+`mixins/<id>/` sources, byte-for-byte reproducible. Submit it to
+[horizon-mods](https://github.com/horizon-rust/horizon-mods) as a `native-mod`. A maintainer reads the
+source before it is listed, and the Horizon launcher compiles it with its own Rust on the pinned commit, in
+an instance of its own. The mod id must be lowercase letters, digits and `_` (the registry's rule), and
+the bundle folder is named after it.
 
 ## Validation
 
