@@ -1,6 +1,6 @@
 # Validation
 
-Validated on Linux with Rust 1.95.0 on 2026-10-28, using the exact revisions in
+Validated on Linux with Rust 1.95.0 on 2026-10-30, using the exact revisions in
 `compatibility.json` and the real bundle committed here.
 
 | Check | Result |
@@ -13,8 +13,8 @@ Validated on Linux with Rust 1.95.0 on 2026-10-28, using the exact revisions in
 | `python3 tools/horizon.py check` | Actual `horizon-client` binary checks successfully with `--no-default-features` |
 | `python3 tools/horizon.py test` | The runtime's embedded test passes inside the actual Horizon game test binary |
 
-The native check reported 24.76 seconds in Cargo; the native test reported 41.49
-seconds. Both reused an existing external Cargo target directory with cached
+The native check reported 69.55 seconds in Cargo, and the native test passed.
+Both reused an existing external Cargo target directory with cached
 Horizon dependencies. These are compilation/test checks, not a fresh-build
 benchmark. Staging the full export took about 24 seconds per command on this
 machine; a repeated application preserved the stage.
