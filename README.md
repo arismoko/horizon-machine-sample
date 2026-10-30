@@ -7,7 +7,7 @@ original method run unchanged. Runtime logic lives in one Rust file that also
 builds as a standalone testable Cargo library.
 
 This is the native source-mixin path: it builds a custom Horizon executable.
-For sandboxed `.hmod`/Wasm API mods, use Horizon's `cargo horizon-mod new`
+For content mods (data only, `.hmod`), use Horizon's `cargo horizon-mod new`
 instead. This template does not install into a running game or the launcher's
 ordinary `.hmod` folder.
 
