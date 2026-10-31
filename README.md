@@ -19,11 +19,13 @@ from a mod through to a running game.
 
 ![Machine screen showing cobblestone and a partly filled progress bar](docs/images/machine-screen.png)
 
-*Machine screen from a build with Horizon PR #5120 applied, not the pinned build.*
+*Machine screen from a build with Horizon PR #5120 applied.*
 
 ## Try it
 
-The sample pins Horizon commit `36f4bc00d6fc644f1ad118ddd926a997a034cb48`.
+The sample pins Horizon commit `3b77664bdb690f1977669db25ced64e97dacc8e5`,
+the head tested from pending [PR #5120](https://github.com/horizon-rust/horizon/pull/5120).
+This pin depends on that upstream change, which has not merged.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 The native bundle runs code with the player's rights. Only use native mods you
 trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
@@ -59,16 +61,13 @@ original checkout.
 
 ## Recipe status
 
-At the pinned revision, processing does **not** work on the normal server
-thread. The recipe helpers return no recipes when the server has no local
-player. [Horizon #5119](https://github.com/horizon-rust/horizon/issues/5119)
-tracks the gap; draft [PR #5120](https://github.com/horizon-rust/horizon/pull/5120)
-is not merged. The screen opens, but progress stays empty at this pin.
+At the previous pin, processing did **not** work on the normal server thread.
+The recipe helpers returned no recipes when the server had no local player.
+[Horizon #5119](https://github.com/horizon-rust/horizon/issues/5119) tracks the gap.
 
-With PR #5120 applied, a test at commit `3b77664bd` processed four cobblestone
-into four stone and transferred them to a chest. The pinned revision does not
-include that fix. The pipe also worked at the pin with a manually loaded output
-stack.
+With pending PR #5120 applied, a test at the current pin processed four
+cobblestone into four stone and transferred them to a chest. The pipe also
+worked at the previous pin with a manually loaded output stack.
 
 ## Notes
 
