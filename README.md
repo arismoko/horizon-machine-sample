@@ -8,7 +8,8 @@ from a mod through to a running game.
 
 ## What's in it
 
-- A machine with input and output slots and a progress bar. Its
+- A machine with a custom two-slot screen backed by a five-slot hopper menu.
+  Only the input and output slots are shown. Its
   `machine_sample:processing` recipe is designed to finish in 40 ticks.
   Its Deposit button moves the carried stack into the input slot, up to the
   item stack limit. Incompatible items remain on the cursor.
@@ -21,7 +22,8 @@ from a mod through to a running game.
 
 ![Machine screen showing cobblestone and a partly filled progress bar](docs/images/machine-screen.png)
 
-*Machine screen from a build with Horizon PR #5120 applied.*
+*Machine screen from an earlier build with a generic menu. The hopper-backed
+layout has not yet been visually verified at the current pin.*
 
 ## Try it
 
