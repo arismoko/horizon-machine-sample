@@ -1,7 +1,7 @@
 fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) {
     use horizon_world::nbt::Tag;
     if entity.id == super::machine_sample::MACHINE {
-        if !entity.nbt.contains_key("random_probe") {
+        if !entity.nbt.contains_key(&"random_probe".into()) {
             use horizon_core::random::RandomSource;
             let draw = game.native_level_random("minecraft:overworld").map(|rng| rng.next_int());
             let invalid = game.native_level_random("example:invalid").is_none();
