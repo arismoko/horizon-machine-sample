@@ -43,8 +43,9 @@ resources and this repository's content folder:
   --game-dir /path/to/a/fresh/game --dev-mod "$PWD/content" --world Sample --creative
 ```
 
-The game loads the content folder directly for this run. For a packaged content
-mod and installation steps, see [content/README.md](content/README.md).
+The game needs a display. On a headless machine, use a virtual display such as
+Xvfb. The game loads the content folder directly for this run. For a packaged
+content mod and installation steps, see [content/README.md](content/README.md).
 
 ## Test a hook or helper end to end
 
@@ -67,8 +68,9 @@ is not merged. The screen opens, but progress stays empty at this pin.
 
 With PR #5120 applied, a test at commit `3b77664bd` processed four cobblestone
 into four stone and transferred them to a chest. The pinned revision does not
-include that fix. The pipe also worked at the pin with a manually loaded output
-stack.
+include that fix. At the current pin, a game test on `lt-24-005` opened the screen and left four
+cobblestone idle, as expected. Four manually loaded stone moved through the pipe
+into the east chest.
 
 ## Notes
 
