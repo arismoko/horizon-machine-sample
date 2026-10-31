@@ -23,7 +23,7 @@ from a mod through to a running game.
 
 ## Try it
 
-The sample pins Horizon commit `571ec1b76e186d0b5cd17c8f4eb35cb6894b5d35`.
+The sample pins Horizon commit `1b6e55d4f3bd14079551bcad173d0fac8f8225bb`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 The native bundle runs code with the player's rights. Only use native mods you
 trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
@@ -62,11 +62,13 @@ original checkout.
 
 The pinned revision includes [Horizon PR #5120](https://github.com/horizon-rust/horizon/pull/5120),
 which fixes recipe lookup on the normal server thread. In an integrated-server
-game test at this pin, four cobblestone became four stone in the east chest
-after 250 ticks. Both machine slots were empty; no stone was added by hand.
-This test covers one recipe and the east pipe, not a dedicated server.
+game test at the previous pin (`571ec1b76e186d0b5cd17c8f4eb35cb6894b5d35`),
+four cobblestone became four stone in the east chest after 250 ticks. Both
+machine slots were empty; no stone was added by hand. This test covers one
+recipe and the east pipe, not a dedicated server. The current pin has not yet
+been tested in game.
 
-At the previous pin, the screen opened but four cobblestone stayed idle. Four
+At an earlier pin, the screen opened but four cobblestone stayed idle. Four
 manually loaded stone moved through the pipe into the east chest.
 
 ## Notes
