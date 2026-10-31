@@ -40,6 +40,7 @@ check 5 0 empty 0
 check 6 0 empty 0
 check 12 0 empty 0
 control look-at-block 0 110 0
+control interact 0 110 0
 control wait 10
 mkdir -p evidence
 control screenshot "$PWD/evidence/west-input.png"
