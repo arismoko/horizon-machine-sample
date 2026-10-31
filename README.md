@@ -19,11 +19,13 @@ from a mod through to a running game.
 
 ![Machine screen showing cobblestone and a partly filled progress bar](docs/images/machine-screen.png)
 
-*Machine screen from a build with Horizon PR #5120 applied, not the pinned build.*
+*Earlier machine screen with Horizon PR #5120 applied. It does not show this hopper-menu example.*
 
 ## Try it
 
-The sample pins Horizon commit `36f4bc00d6fc644f1ad118ddd926a997a034cb48`.
+This example pins Horizon PR [#5148](https://github.com/horizon-rust/horizon/pull/5148)
+head `40fa42e2390cbcd5ed2f76b0c74848600f709e29`. The PR is not merged.
+The Horizon checkout must contain that commit; staging does not change it.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 The native bundle runs code with the player's rights. Only use native mods you
 trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
@@ -57,17 +59,32 @@ recommended mod test route for hook work in
 The staging tools export committed Horizon sources; they do not change the
 original checkout.
 
+## Hopper menu screen
+
+The machine uses a five-slot `minecraft:hopper` menu in
+`mixins/machine_sample/container.rs`. Its `NativeScreen` in `screen.rs`
+places only slots 0 and 1 at custom positions. Slots 2 through 4 remain
+hidden. The input and output use slots 0 and 1. The player inventory uses
+separate coordinates. PR #5148 makes hopper menus use these custom slots
+instead of the vanilla hopper layout.
+
+To validate in game, place and open a sample machine in a fresh world. Confirm
+that two machine slots appear at the custom positions, not five hopper slots.
+Move items between each visible machine slot and the player inventory. Close
+and reopen the screen and confirm the items remain in their respective slots.
+This interactive check has not yet been run for this branch. Recipe processing
+is separate and is not required for this screen check.
+
 ## Recipe status
 
-At the pinned revision, processing does **not** work on the normal server
+At the earlier main-branch pin, processing did **not** work on the normal server
 thread. The recipe helpers return no recipes when the server has no local
 player. [Horizon #5119](https://github.com/horizon-rust/horizon/issues/5119)
 tracks the gap; draft [PR #5120](https://github.com/horizon-rust/horizon/pull/5120)
-is not merged. The screen opens, but progress stays empty at this pin.
+is not merged. Recipe behavior at this PR head has not been validated.
 
 With PR #5120 applied, a test at commit `3b77664bd` processed four cobblestone
-into four stone and transferred them to a chest. The pinned revision does not
-include that fix. The pipe also worked at the pin with a manually loaded output
+into four stone and transferred them to a chest. Recipe behavior at this PR head has not been validated. The pipe also worked at the pin with a manually loaded output
 stack.
 
 ## Notes
