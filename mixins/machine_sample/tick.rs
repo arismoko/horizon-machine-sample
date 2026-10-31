@@ -1,6 +1,21 @@
 fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) {
     use horizon_world::nbt::Tag;
     if entity.id == super::machine_sample::MACHINE {
+        if entity.items[0].is_none() {
+            entity.items[0] = game.native_extract_item(
+                "minecraft:overworld", [pos[0] - 1, pos[1], pos[2]], Direction::East, 0, 1,
+            );
+            if entity.items[0].is_some() {
+                eprintln!("PR5130 extract: success");
+            }
+        }
+        let moved = game.native_move_items(
+            "minecraft:overworld", [pos[0] + 2, pos[1], pos[2]], Direction::East,
+            [pos[0] + 4, pos[1], pos[2]], Direction::West, Some("minecraft:diamond"), 1,
+        );
+        if moved > 0 {
+            eprintln!("PR5130 move: {moved}");
+        }
         let result = entity
             .items
             .first()
