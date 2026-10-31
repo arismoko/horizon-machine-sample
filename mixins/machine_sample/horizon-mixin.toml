@@ -4,7 +4,7 @@ version = "0.1.0"
 priority = 100
 
 [compatibility]
-horizon_revision = "979aa64e5199525f7318e7f8be1d4766e76f8c7e"
+horizon_revision = "571ec1b76e186d0b5cd17c8f4eb35cb6894b5d35"
 
 [[module]]
 id = "runtime"

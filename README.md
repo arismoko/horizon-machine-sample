@@ -19,11 +19,11 @@ from a mod through to a running game.
 
 ![Machine screen showing cobblestone and a partly filled progress bar](docs/images/machine-screen.png)
 
-*Machine screen from a build with Horizon PR #5120 applied, not the pinned build.*
+*Machine screen from a build with Horizon PR #5120 applied.*
 
 ## Try it
 
-The sample pins Horizon commit `979aa64e5199525f7318e7f8be1d4766e76f8c7e`.
+The sample pins Horizon commit `571ec1b76e186d0b5cd17c8f4eb35cb6894b5d35`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 The native bundle runs code with the player's rights. Only use native mods you
 trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
@@ -60,17 +60,13 @@ original checkout.
 
 ## Recipe status
 
-At the pinned revision, processing does **not** work on the normal server
-thread. The recipe helpers return no recipes when the server has no local
-player. [Horizon #5119](https://github.com/horizon-rust/horizon/issues/5119)
-tracks the gap; draft [PR #5120](https://github.com/horizon-rust/horizon/pull/5120)
-is not merged. The screen opens, but progress stays empty at this pin.
+The pinned revision includes [Horizon PR #5120](https://github.com/horizon-rust/horizon/pull/5120),
+which fixes recipe lookup on the normal server thread. An earlier test at
+`3b77664bd` processed four cobblestone into four stone and transferred them to
+the east chest. A game test at the current pin is still needed.
 
-With PR #5120 applied, a test at commit `3b77664bd` processed four cobblestone
-into four stone and transferred them to a chest. The pinned revision does not
-include that fix. At the current pin, a game test on `lt-24-005` opened the screen and left four
-cobblestone idle, as expected. Four manually loaded stone moved through the pipe
-into the east chest.
+At the previous pin, the screen opened but four cobblestone stayed idle. Four
+manually loaded stone moved through the pipe into the east chest.
 
 ## Notes
 
