@@ -1,0 +1,55 @@
+[mod]
+id = "machine_sample"
+version = "0.1.0"
+priority = 100
+
+[compatibility]
+horizon_revision = "ce12d07965e337040611534577834438be58c65c"
+
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "machine_sample"
+source = "runtime.rs"
+
+[[injection]]
+id = "entity"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_block_entity"
+helper = "entity.rs"
+bindings = [{ name = "block", ty = "&str", value = "block" }, { name = "entity", ty = "&mut Option<(String, Compound)>", value = "entity" }]
+
+[[injection]]
+id = "ticks"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_block_entity_ticks"
+helper = "ticks.rs"
+bindings = [{ name = "block", ty = "&str", value = "block" }, { name = "ticks", ty = "&mut bool", value = "ticks" }]
+
+[[injection]]
+id = "container"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_block_entity_container"
+helper = "container.rs"
+bindings = [{ name = "block", ty = "&str", value = "block" }, { name = "container", ty = "&mut Option<ModContainer>", value = "container" }]
+
+[[injection]]
+id = "tick"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_block_entity_tick"
+helper = "tick.rs"
+bindings = [{ name = "game", ty = "&mut Game<'_>", value = "&mut *self" }, { name = "pos", ty = "[i32; 3]", value = "pos" }, { name = "entity", ty = "&mut ModBlockEntity", value = "entity" }]
+
+[[injection]]
+id = "screen"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_screen"
+helper = "screen.rs"
+bindings = [{ name = "block", ty = "&str", value = "block" }, { name = "screen", ty = "&mut Option<NativeScreen>", value = "screen" }]
+
+[[injection]]
+id = "draw"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_screen_draw"
+helper = "draw.rs"
+bindings = [{ name = "game", ty = "&Game<'_>", value = "&*self" }, { name = "block", ty = "&str", value = "block" }, { name = "data", ty = "&[i32]", value = "data" }, { name = "batch", ty = "&mut HudBatch", value = "batch" }, { name = "origin", ty = "[f32; 2]", value = "origin" }]
