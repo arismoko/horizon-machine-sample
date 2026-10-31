@@ -1,0 +1,14 @@
+[mod]
+id = "entity_join_example"
+version = "0.1.0"
+priority = 100
+
+[compatibility]
+horizon_revision = "2af60d68a2b838d53e7322c16a54174325b60dd7"
+
+[[injection]]
+id = "entity_join"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_entity_join_level"
+helper = "entity_join.rs"
+bindings = [{ name = "dimension", ty = "&str", value = "dimension" }, { name = "entity", ty = "u32", value = "entity" }, { name = "kind", ty = "&str", value = "kind" }, { name = "pos", ty = "[f64; 3]", value = "pos" }, { name = "loaded_from_disk", ty = "bool", value = "loaded_from_disk" }, { name = "canceled", ty = "&mut bool", value = "canceled" }]
