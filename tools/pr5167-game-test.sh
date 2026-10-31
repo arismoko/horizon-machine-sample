@@ -13,6 +13,7 @@ control launch --game "$BASE/target-5167/fast/horizon-client" --world Probe --cr
 control command 'tp @s 0 110 4'
 control wait 80
 control fill -2 109 -2 3 109 6 minecraft:stone
+control command 'tp @s 0 110 4'
 control command 'summon item 0.5 110 0.5 {Item:{id:"minecraft:diamond",count:2},NoGravity:1b}'
 control command 'summon experience_orb 1.5 110 0.5 {Value:7,NoGravity:1b}'
 control wait 40
@@ -22,8 +23,9 @@ control screenshot "$PWD/evidence/pr5167.png"
 control entities 16 minecraft:item
 control entities 16 minecraft:experience_orb
 control command 'kill @e[type=minecraft:item]'
+control fill -3 249 -3 3 249 3 minecraft:stone
 control command 'tp @s 0 250 0'
-control wait 80
+control wait 40
 control give minecraft:diamond 1
 control key q tap || true
 sleep 3
