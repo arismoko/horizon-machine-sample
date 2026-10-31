@@ -1,0 +1,11 @@
+fn sample_container(block: &str, container: &mut Option<ModContainer>) {
+    if block == super::example_mod::MACHINE && container.is_none() {
+        *container = Some(ModContainer {
+            slots: 5,
+            faces: std::array::from_fn(|_| vec![0, 1]),
+            inputs: vec![0],
+            outputs: vec![1],
+            menu: Some("minecraft:hopper".into()),
+        });
+    }
+}
