@@ -4,7 +4,7 @@ version = "0.1.0"
 priority = 100
 
 [compatibility]
-horizon_revision = "36f4bc00d6fc644f1ad118ddd926a997a034cb48"
+horizon_revision = "2af60d68a2b838d53e7322c16a54174325b60dd7"
 
 [[module]]
 id = "runtime"
@@ -53,3 +53,10 @@ kind = "HEAD"
 target = "horizon_client::game::native_hooks::Game<'_>::native_screen_draw"
 helper = "draw.rs"
 bindings = [{ name = "game", ty = "&Game<'_>", value = "&*self" }, { name = "block", ty = "&str", value = "block" }, { name = "data", ty = "&[i32]", value = "data" }, { name = "batch", ty = "&mut HudBatch", value = "batch" }, { name = "origin", ty = "[f32; 2]", value = "origin" }]
+
+[[injection]]
+id = "test_entity_join"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_entity_join_level"
+helper = "test_entity_join.rs"
+bindings = [{ name = "dimension", ty = "&str", value = "dimension" }, { name = "entity", ty = "u32", value = "entity" }, { name = "kind", ty = "&str", value = "kind" }, { name = "pos", ty = "[f64; 3]", value = "pos" }, { name = "loaded_from_disk", ty = "bool", value = "loaded_from_disk" }, { name = "canceled", ty = "&mut bool", value = "canceled" }]
