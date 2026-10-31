@@ -65,8 +65,9 @@ which fixes recipe lookup on the normal server thread. In an integrated-server
 game test at the previous pin (`571ec1b76e186d0b5cd17c8f4eb35cb6894b5d35`),
 four cobblestone became four stone in the east chest after 250 ticks. Both
 machine slots were empty; no stone was added by hand. This test covers one
-recipe and the east pipe, not a dedicated server. The current pin has not yet
-been tested in game.
+recipe and the east pipe, not a dedicated server. At the current pin, an
+integrated-server game test also converted four cobblestone into four stone
+in the east chest.
 
 At an earlier pin, the screen opened but four cobblestone stayed idle. Four
 manually loaded stone moved through the pipe into the east chest.
