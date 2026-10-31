@@ -10,6 +10,11 @@ from a mod through to a running game.
 
 - A machine with input and output slots and a progress bar. Its
   `machine_sample:processing` recipe is designed to finish in 40 ticks.
+- An empty input slot pulls one item from slot 0 of a container directly west
+  of the machine, through the container's east face. This uses the machine's
+  current dimension and respects source face and extraction rules. It does not
+  search other slots or filter recipes; an unsuitable item must be removed by
+  hand. Occupied input slots do not pull more items.
 - One pipe segment that moves output into a container. Place the pipe directly
   east of the machine and the container directly east of the pipe. The machine
   attempts to insert one item per tick into the container's west face. Other
@@ -23,7 +28,9 @@ from a mod through to a running game.
 
 ## Try it
 
-The sample pins Horizon commit `36f4bc00d6fc644f1ad118ddd926a997a034cb48`.
+This draft pins the head of [Horizon PR #5130](https://github.com/horizon-rust/horizon/pull/5130),
+`7fc7fc4735cb698e3806274ebd8d085fa7b26dbe`. It must not merge until that PR
+merges and this sample is repinned and revalidated.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 The native bundle runs code with the player's rights. Only use native mods you
 trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
@@ -67,8 +74,8 @@ is not merged. The screen opens, but progress stays empty at this pin.
 
 With PR #5120 applied, a test at commit `3b77664bd` processed four cobblestone
 into four stone and transferred them to a chest. The pinned revision does not
-include that fix. The pipe also worked at the pin with a manually loaded output
-stack.
+include that fix. The pipe also worked at the earlier pin with a manually loaded output
+stack. The west-side input feature has not yet been tested in a running game.
 
 ## Notes
 

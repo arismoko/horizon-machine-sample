@@ -1,6 +1,15 @@
 fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) {
     use horizon_world::nbt::Tag;
     if entity.id == super::machine_sample::MACHINE {
+        super::machine_sample::fill_empty(&mut entity.items[0], || {
+            game.native_extract_item(
+                game.native_dimension(),
+                [pos[0] - 1, pos[1], pos[2]],
+                Direction::East,
+                0,
+                1,
+            )
+        });
         let result = entity
             .items
             .first()

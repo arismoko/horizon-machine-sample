@@ -3,6 +3,12 @@ pub const MACHINE: &str = "machine_sample:machine";
 pub const PIPE: &str = "machine_sample:pipe";
 pub const DURATION: i32 = 40;
 
+pub fn fill_empty<T>(slot: &mut Option<T>, extract: impl FnOnce() -> Option<T>) {
+    if slot.is_none() {
+        *slot = extract();
+    }
+}
+
 pub fn advance(progress: i32, can_process: bool) -> (i32, bool) {
     if !can_process {
         return (0, false);
@@ -18,6 +24,19 @@ pub fn advance(progress: i32, can_process: bool) -> (i32, bool) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn fills_only_an_empty_slot() {
+        let mut slot = None;
+        fill_empty(&mut slot, || None::<u8>);
+        assert_eq!(slot, None);
+        fill_empty(&mut slot, || Some(7));
+        assert_eq!(slot, Some(7));
+        fill_empty(&mut slot, || {
+            panic!("must not extract into an occupied slot")
+        });
+        assert_eq!(slot, Some(7));
+    }
+
     #[test]
     fn completes_after_forty_ticks_and_resets_when_blocked() {
         let mut progress = 0;
