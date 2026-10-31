@@ -1,0 +1,8 @@
+id = "machine_sample"
+name = "Machine Sample Content"
+version = "0.1.0"
+description = "Original content for the native machine sample"
+authors = []
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

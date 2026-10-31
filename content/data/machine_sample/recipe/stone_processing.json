@@ -1,0 +1,8 @@
+{
+  "type": "machine_sample:processing",
+  "ingredient": "minecraft:cobblestone",
+  "result": {
+    "id": "minecraft:stone",
+    "count": 1
+  }
+}

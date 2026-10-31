@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "machine_sample:block/machine"
+    }
+  }
+}
