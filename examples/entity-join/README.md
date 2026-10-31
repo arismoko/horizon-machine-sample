@@ -26,10 +26,15 @@ mkdir -p "$work/mixins"
 cp -R "$work/examples/entity-join/bundle" "$work/mixins/entity_join_example"
 python3 "$work/tools/horizon.py" build --horizon /path/to/horizon \
   --target-dir /home/ari/.cache/horizon-sample-mod/entity-join-target
+cargo build --locked --offline \
+  --manifest-path "$work/target/mixins/modded/Cargo.toml" \
+  -p horizon-client --bin horizon-ctl --no-default-features --profile fast \
+  --target-dir /home/ari/.cache/horizon-sample-mod/entity-join-target
 ```
 
 Use a fresh work directory for each build. The tool exports committed Horizon
 sources and applies the bundle with Horizon Mixins. It does not edit Horizon.
+The Cargo command builds `horizon-ctl` from that same pinned source export.
 
 ## Game test
 
@@ -37,7 +42,8 @@ Run the script with absolute paths to a compatible `horizon-ctl`, the built
 client, prepared 26.3 resources, and this repository's `content` directory:
 
 ```sh
-examples/entity-join/game-test.sh /path/to/horizon-ctl \
+examples/entity-join/game-test.sh \
+  /home/ari/.cache/horizon-sample-mod/entity-join-target/fast/horizon-ctl \
   /home/ari/.cache/horizon-sample-mod/entity-join-target/fast/horizon-client \
   /path/to/prepared/26.3 "$PWD/content"
 ```
