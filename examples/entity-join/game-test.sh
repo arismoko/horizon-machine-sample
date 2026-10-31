@@ -20,6 +20,6 @@ control command 'summon item 0.5 110 0.5 {Item:{id:"minecraft:diamond",count:2},
 control command 'summon experience_orb 1.5 110 0.5 {Value:7,NoGravity:1b}'
 control wait 40
 # Require the hook's own messages, not merely successful summon commands.
-grep -E 'entity-join-example .*kind=(minecraft:)?item([[:space:]]|$)' "$run/control.log"
-grep -E 'entity-join-example .*kind=(minecraft:)?experience_orb([[:space:]]|$)' "$run/control.log"
+grep -E 'entity-join-example .*kind=(minecraft:)?item pos=\[0\.5, 110\.0, 0\.5\]' "$run/control.log"
+grep -E 'entity-join-example .*kind=(minecraft:)?experience_orb pos=\[1\.5, 110\.0, 0\.5\]' "$run/control.log"
 echo "Both entity joins reached the hook."

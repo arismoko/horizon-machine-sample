@@ -18,6 +18,7 @@ the revision in the example's `compatibility.json`, as in the main README.
 ```sh
 git -C /path/to/horizon fetch origin pull/5167/head
 export HORIZON_MIXINS=/path/to/horizon-mixins
+cargo fetch --locked --manifest-path "$HORIZON_MIXINS/Cargo.toml"
 work=/home/ari/.cache/horizon-sample-mod/entity-join-work
 mkdir "$work"  # Fail if an earlier build already exists.
 git archive HEAD | tar -x -C "$work"
@@ -44,6 +45,7 @@ examples/entity-join/game-test.sh /path/to/horizon-ctl \
 ```
 
 The script creates a fresh game directory, summons an item and an experience
-orb, and requires a hook log line for each. It prints the retained log path.
+orb, and requires a hook log line at each summoned position. It prints the
+retained log path.
 A missing line fails the test. This verifies delivery, not cancellation or
 disk reload behavior.
