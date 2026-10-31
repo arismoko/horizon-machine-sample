@@ -7,21 +7,21 @@ stores a marker in its block entity NBT. This changes the world's random
 sequence. Use a fresh test world.
 
 The example requires [Horizon PR #5146](https://github.com/horizon-rust/horizon/pull/5146)
-head `ce12d07965e337040611534577834438be58c65c`, not the default pin.
-It is unmerged; revalidate against the merged revision before use.
+merge commit `5062f2259224d3610e96019dd6b69d7523aeb85e`, not the default pin.
+The live game test must be repeated against this merged revision.
 
 ## Activate and build
 
-Use a disposable clean checkout of this repository. Fetch the PR head into your
+Use a disposable clean checkout of this repository. Fetch Horizon main into your
 Horizon checkout, and set `HORIZON_MIXINS` to the revision in
 `compatibility.json`. Then run from the sample checkout:
 
 ```sh
-git -C /path/to/horizon fetch origin pull/5146/head
+git -C /path/to/horizon fetch origin main
 cp examples/level-random/compatibility.json compatibility.json
 cp examples/level-random/horizon-mixin.toml mixins/machine_sample/horizon-mixin.toml
 cp examples/level-random/tick.rs mixins/machine_sample/tick.rs
-python3 tools/horizon.py build --horizon /path/to/horizon --target-dir /home/ari/.cache/horizon-sample-mod/level-random-target
+python3 tools/horizon.py build --horizon /path/to/horizon --target-dir "$HOME/.cache/horizon-sample-mod/level-random-target"
 ```
 
 These copies activate the example only in this checkout. Discard them after the
@@ -33,7 +33,7 @@ the pinned committed Horizon source and does not edit the Horizon checkout.
 Use a compatible `horizon-ctl`, the built client, and prepared 26.3 resources:
 
 ```sh
-CTL=/path/to/horizon-ctl CLIENT=/home/ari/.cache/horizon-sample-mod/level-random-target/fast/horizon-client RESOURCES=/path/to/26.3 examples/level-random/game-test.sh
+CTL=/path/to/horizon-ctl CLIENT="$HOME/.cache/horizon-sample-mod/level-random-target/fast/horizon-client" RESOURCES=/path/to/26.3 examples/level-random/game-test.sh
 ```
 
 The script creates a fresh game directory, places a machine, and requires a
