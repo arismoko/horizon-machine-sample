@@ -61,9 +61,10 @@ original checkout.
 ## Recipe status
 
 The pinned revision includes [Horizon PR #5120](https://github.com/horizon-rust/horizon/pull/5120),
-which fixes recipe lookup on the normal server thread. An earlier test at
-`3b77664bd` processed four cobblestone into four stone and transferred them to
-the east chest. A game test at the current pin is still needed.
+which fixes recipe lookup on the normal server thread. In an integrated-server
+game test at this pin, four cobblestone became four stone in the east chest
+after 250 ticks. Both machine slots were empty; no stone was added by hand.
+This test covers one recipe and the east pipe, not a dedicated server.
 
 At the previous pin, the screen opened but four cobblestone stayed idle. Four
 manually loaded stone moved through the pipe into the east chest.
