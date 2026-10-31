@@ -4,7 +4,7 @@ version = "0.1.0"
 priority = 100
 
 [compatibility]
-horizon_revision = "2af60d68a2b838d53e7322c16a54174325b60dd7"
+horizon_revision = "1b6e55d4f3bd14079551bcad173d0fac8f8225bb"
 
 [[injection]]
 id = "entity_join"

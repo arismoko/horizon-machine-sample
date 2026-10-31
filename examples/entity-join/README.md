@@ -4,19 +4,17 @@ This opt-in example logs item and experience orb joins without canceling them.
 The hook receives the dimension, entity ID, kind, position, disk-load flag,
 and a mutable cancellation decision. The hook is limited to the entity types
 supported by [Horizon PR #5167](https://github.com/horizon-rust/horizon/pull/5167).
-The PR is not merged. This example pins its head,
-`2af60d68a2b838d53e7322c16a54174325b60dd7`, not the repository's normal pin.
-Revalidate it after the upstream PR changes or merges.
+The merged PR is included in the repository's pinned Horizon revision,
+`1b6e55d4f3bd14079551bcad173d0fac8f8225bb`.
 
 ## Activate and build
 
 The commands below make a disposable copy of this committed repository. They
 replace its bundle and pin only in that copy. The normal machine stays unchanged.
-Fetch the PR head into the Horizon checkout first. Set `HORIZON_MIXINS` to
+Ensure the pinned commit is available in the Horizon checkout. Set `HORIZON_MIXINS` to
 the revision in the example's `compatibility.json`, as in the main README.
 
 ```sh
-git -C /path/to/horizon fetch origin pull/5167/head
 export HORIZON_MIXINS=/path/to/horizon-mixins
 cargo fetch --locked --manifest-path "$HORIZON_MIXINS/Cargo.toml"
 work=/home/ari/.cache/horizon-sample-mod/entity-join-work
