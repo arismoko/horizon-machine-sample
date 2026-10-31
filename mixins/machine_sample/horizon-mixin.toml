@@ -4,13 +4,34 @@ version = "0.1.0"
 priority = 100
 
 [compatibility]
-horizon_revision = "1b6e55d4f3bd14079551bcad173d0fac8f8225bb"
+horizon_revision = "0dc6e9e28112cde7813a0829ab82ffc378f632a7"
 
 [[module]]
 id = "runtime"
 file = "crates/horizon-client/src/game.rs"
 name = "machine_sample"
 source = "runtime.rs"
+
+[[injection]]
+id = "tag_legacy"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_server_tick"
+helper = "tag_legacy.rs"
+bindings = [{ name = "game", ty = "&Game<'_>", value = "&*self" }, { name = "context", ty = "&NativeLifecycleContext", value = "context" }]
+
+[[injection]]
+id = "tag_startup"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_server_about_to_start"
+helper = "tag_startup.rs"
+bindings = [{ name = "game", ty = "&Game<'_>", value = "&*self" }]
+
+[[injection]]
+id = "tag_proof"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_entity_join_level"
+helper = "tag_proof.rs"
+bindings = [{ name = "game", ty = "&Game<'_>", value = "&*self" }, { name = "kind", ty = "&str", value = "kind" }]
 
 [[injection]]
 id = "entity"
