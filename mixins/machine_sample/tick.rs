@@ -1,6 +1,6 @@
 fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) {
     use horizon_world::nbt::Tag;
-    if entity.id == super::example_mod::MACHINE {
+    if entity.id == super::machine_sample::MACHINE {
         let result = entity
             .items
             .first()
@@ -36,7 +36,7 @@ fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) 
             Some(Tag::Int(n)) => *n,
             _ => 0,
         };
-        let (progress, done) = super::example_mod::advance(progress, result.is_some());
+        let (progress, done) = super::machine_sample::advance(progress, result.is_some());
         entity.nbt.insert("progress".into(), Tag::Int(progress));
         entity.data = vec![progress];
         if done {
@@ -52,7 +52,7 @@ fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) 
                 entity.items[1] = Some(result);
             }
         }
-        if game.native_block([pos[0] + 1, pos[1], pos[2]]) == super::example_mod::PIPE {
+        if game.native_block([pos[0] + 1, pos[1], pos[2]]) == super::machine_sample::PIPE {
             if let Some(output) = &mut entity.items[1] {
                 let one = ItemStack {
                     count: 1,

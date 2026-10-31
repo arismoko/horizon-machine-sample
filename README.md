@@ -38,9 +38,7 @@ prepared 26.3 resources and this repository's content folder:
 The game reads the content folder directly and keeps it enabled for this run.
 For a packaged content mod, see [content/README.md](content/README.md). No game
 assets are included here. See `AGENTS.md` and `tools/` for staging and source
-audit tools. The internal bundle ID and module name remain `example_mod`
-from the template. Rename them before combining this sample with another mod
-that uses that ID.
+audit tools. The native bundle ID and module name are `machine_sample`.
 
 The legacy `tools/test_template.py` fixture targets the original break-block
 example. It does not validate this bundle. Use `tools/test_stage.py` against

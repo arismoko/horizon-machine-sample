@@ -8,7 +8,7 @@ description = "A minimal native Horizon Mixins mod"
 
 [lib]
 # This exact source is also injected as a same-crate module by horizon-mixins.
-path = "mixins/example_mod/runtime.rs"
+path = "mixins/machine_sample/runtime.rs"
 
 [workspace]
 members = ["tools/audit"]

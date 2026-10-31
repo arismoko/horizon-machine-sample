@@ -1,5 +1,5 @@
 fn sample_container(block: &str, container: &mut Option<ModContainer>) {
-    if block == super::example_mod::MACHINE && container.is_none() {
+    if block == super::machine_sample::MACHINE && container.is_none() {
         *container = Some(ModContainer {
             slots: 9,
             faces: std::array::from_fn(|_| vec![0, 1]),

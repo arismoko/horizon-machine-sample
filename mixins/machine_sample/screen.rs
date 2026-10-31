@@ -1,5 +1,5 @@
 fn sample_screen(block: &str, screen: &mut Option<NativeScreen>) {
-    if block == super::example_mod::MACHINE && screen.is_none() {
+    if block == super::machine_sample::MACHINE && screen.is_none() {
         *screen = Some(NativeScreen {
             width: 176.0,
             height: 166.0,

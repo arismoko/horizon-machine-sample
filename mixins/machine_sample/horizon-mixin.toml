@@ -1,5 +1,5 @@
 [mod]
-id = "example_mod"
+id = "machine_sample"
 version = "0.1.0"
 priority = 100
 
@@ -9,7 +9,7 @@ horizon_revision = "36f4bc00d6fc644f1ad118ddd926a997a034cb48"
 [[module]]
 id = "runtime"
 file = "crates/horizon-client/src/game.rs"
-name = "example_mod"
+name = "machine_sample"
 source = "runtime.rs"
 
 [[injection]]
