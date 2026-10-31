@@ -10,6 +10,8 @@ from a mod through to a running game.
 
 - A machine with input and output slots and a progress bar. Its
   `machine_sample:processing` recipe is designed to finish in 40 ticks.
+  Its Deposit button moves the carried stack into the input slot, up to the
+  item stack limit. Incompatible items remain on the cursor.
 - One pipe segment that moves output into a container. Place the pipe directly
   east of the machine and the container directly east of the pipe. The machine
   attempts to insert one item per tick into the container's west face. Other

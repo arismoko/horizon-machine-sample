@@ -53,3 +53,17 @@ kind = "HEAD"
 target = "horizon_client::game::native_hooks::Game<'_>::native_screen_draw"
 helper = "draw.rs"
 bindings = [{ name = "game", ty = "&Game<'_>", value = "&*self" }, { name = "block", ty = "&str", value = "block" }, { name = "data", ty = "&[i32]", value = "data" }, { name = "batch", ty = "&mut HudBatch", value = "batch" }, { name = "origin", ty = "[f32; 2]", value = "origin" }]
+
+[[injection]]
+id = "click"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_screen_click"
+helper = "click.rs"
+bindings = [{ name = "block", ty = "&str", value = "block" }, { name = "at", ty = "[f32; 2]", value = "at" }, { name = "right", ty = "bool", value = "right" }, { name = "button", ty = "&mut Option<i32>", value = "button" }]
+
+[[injection]]
+id = "button"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_menu_button_v2"
+helper = "button.rs"
+bindings = [{ name = "game", ty = "&mut Game<'_>", value = "&mut *self" }, { name = "entity", ty = "&mut ModBlockEntity", value = "entity" }, { name = "id", ty = "i32", value = "id" }, { name = "carried", ty = "&mut Option<ItemStack>", value = "carried" }]
