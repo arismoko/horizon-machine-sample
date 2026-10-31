@@ -13,6 +13,9 @@ from a mod through to a running game.
   `machine_sample:processing` recipe is designed to finish in 40 ticks.
   Its Deposit button moves the carried stack into the input slot, up to the
   item stack limit. Incompatible items remain on the cursor.
+- The machine extracts one item from slot 0 of a container directly west,
+  through its east face, when the machine input is empty. Other orientations
+  are not supported.
 - One pipe segment that moves output into a container. Place the pipe directly
   east of the machine and the container directly east of the pipe. The machine
   attempts to insert one item per tick into the container's west face. Other
