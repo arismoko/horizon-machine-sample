@@ -23,7 +23,7 @@ from a mod through to a running game.
 
 ## Try it
 
-The sample pins Horizon commit `36f4bc00d6fc644f1ad118ddd926a997a034cb48`.
+The sample pins Horizon commit `979aa64e5199525f7318e7f8be1d4766e76f8c7e`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 The native bundle runs code with the player's rights. Only use native mods you
 trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
