@@ -3,7 +3,7 @@ set -eu
 : "${CTL:?Set CTL to horizon-ctl}"
 : "${CLIENT:?Set CLIENT to the built horizon-client}"
 : "${RESOURCES:?Set RESOURCES to prepared 26.3 resources}"
-BASE="${TMPDIR:-/home/ari/.cache/horizon-sample-mod}"
+BASE="${TMPDIR:-${XDG_CACHE_HOME:-$HOME/.cache}/horizon-sample-mod}"
 mkdir -p "$BASE"
 HOME_DIR="$(mktemp -d "$BASE/level-random-game-XXXXXX")"
 echo "Game test files: $HOME_DIR"
