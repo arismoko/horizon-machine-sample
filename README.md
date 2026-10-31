@@ -8,6 +8,9 @@ slot and a progress bar. **Processing does not work on the normal server thread
 at this pin:** the recipe helpers return no recipes when the server has no
 local player. Horizon issue #5119 tracks this; draft fix #5120 is not merged.
 The screen opens, but its progress bar stays empty until that engine gap is fixed.
+With PR #5120 applied, a test at commit `3b77664bd` processed four cobblestone
+into four stone and transferred them to a chest. The pinned revision does not
+include that fix.
 
 To transfer output, place one `machine_sample:pipe` immediately east of the
 machine and a container immediately east of the pipe. The machine attempts to
