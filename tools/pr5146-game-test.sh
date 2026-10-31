@@ -13,6 +13,7 @@ control launch --game "$BASE/target-5146/fast/horizon-client" --world Probe --cr
 control command 'tp @s 0 110 4'
 control wait 80
 control fill -2 109 -2 3 109 6 minecraft:stone
+control command 'tp @s 0 110 4'
 control setblock 0 110 0 machine_sample:machine
 control wait 80
 control look-at-block 0 110 0
