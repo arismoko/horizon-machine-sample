@@ -21,16 +21,16 @@ control wait 20
 control interact 0 110 0
 echo 'OPEN INITIAL'
 control ui
+control click-slot 300
 control click-slot 0
-control click-slot 32
+control click-slot 301
 control click-slot 1
-control click-slot 33
 echo 'AFTER MACHINE TO INVENTORY'
 control ui
-control click-slot 32
 control click-slot 0
-control click-slot 33
+control click-slot 300
 control click-slot 1
+control click-slot 301
 echo 'AFTER INVENTORY TO MACHINE'
 control ui
 control close
