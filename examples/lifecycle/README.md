@@ -5,10 +5,10 @@ The four hook helpers receive the dimension and chunk coordinates, or the
 player UUID and name. Replace the log statements with your own behavior.
 Chunk load's `new` flag distinguishes newly generated chunks.
 
-The example requires the unmerged [Horizon PR #5131](https://github.com/horizon-rust/horizon/pull/5131)
-head `815de4119d2f984e2c97e67c163c705cc79b7be4`. It does not work at the
-repository's default pin. This is a draft example; revalidate it against the
-merged revision before relying on it. The default machine bundle stays unchanged.
+The isolated overlay pins Horizon `75ba9ad839abecceba07a7583ce37964424b8033`,
+which includes [Horizon PR #5131](https://github.com/horizon-rust/horizon/pull/5131).
+The default machine bundle and its pin stay unchanged. The overlay pin and
+source hashes are recorded in `examples/lifecycle/compatibility.json`.
 
 ## Build the example
 
