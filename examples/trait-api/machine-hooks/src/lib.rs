@@ -107,13 +107,21 @@ impl Hooks for MachineHooks {
         _face: [i32; 3],
     ) -> Flow {
         let block = host.block(pos);
-        if !is_machine_probe(&stack.item, &block) {
+        let machine = is_machine_probe(&stack.item, &block);
+        if stack.item.as_ref() == PROBE_ITEM {
+            eprintln!(
+                "MACHINE_SAMPLE server stick use at {} {} {}: {block} machine={machine}",
+                pos[0], pos[1], pos[2]
+            );
+        }
+        if !machine {
             return Flow::Continue;
         }
         let Some(player) = host.acting_player() else {
             return Flow::Continue;
         };
         let reads = self.server_probes.fetch_add(1, Ordering::Relaxed) + 1;
+        eprintln!("MACHINE_SAMPLE server read #{reads}");
         // `tell` does not reach the acting player inside their own hook.
         host.action_bar(
             player.uuid,

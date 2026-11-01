@@ -72,7 +72,11 @@ Then check each hook in the world:
    lets the click through. The action bar shows a `[server] read #1 ...` line
    (`Host::tell` does not reach the acting player inside their own hook
    until upstream #5677).
-   Without sneaking, the block handles the click first.
+   Without sneaking, the block handles the click first and the hook does not
+   run. Each stick use also logs `MACHINE_SAMPLE server stick use at x y z:
+   <state> machine=<bool>`, and each read logs `MACHINE_SAMPLE server read #N`.
+   Check the game log to see whether a second click reached the hook. Click a
+   non-machine block with the stick to see `machine=false` and no action bar.
 
 This trait-only build has no menu hooks yet (planned for a later API step), so
 the machine's screen never opens: ordinary use reports that
