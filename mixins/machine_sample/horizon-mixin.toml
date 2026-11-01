@@ -4,7 +4,7 @@ version = "0.1.0"
 priority = 100
 
 [compatibility]
-horizon_revision = "1b6e55d4f3bd14079551bcad173d0fac8f8225bb"
+horizon_revision = "e8d5b826b09400358c8d6a633d2460889c3785b4"
 
 [[module]]
 id = "runtime"
@@ -67,3 +67,10 @@ kind = "HEAD"
 target = "horizon_client::game::native_hooks::Game<'_>::native_menu_button_v2"
 helper = "button.rs"
 bindings = [{ name = "game", ty = "&mut Game<'_>", value = "&mut *self" }, { name = "entity", ty = "&mut ModBlockEntity", value = "entity" }, { name = "id", ty = "i32", value = "id" }, { name = "carried", ty = "&mut Option<ItemStack>", value = "carried" }]
+
+[[injection]]
+id = "tell_test"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_right_click_block"
+helper = "tell_test.rs"
+bindings = [{ name = "game", ty = "&mut Game<'_>", value = "&mut *self" }]
