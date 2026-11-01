@@ -4,7 +4,7 @@ version = "0.1.0"
 priority = 100
 
 [compatibility]
-horizon_revision = "1b6e55d4f3bd14079551bcad173d0fac8f8225bb"
+horizon_revision = "6e96e6f975f94b2cd72150b480b1c43f5009bd04"
 
 [[module]]
 id = "runtime"
@@ -67,3 +67,10 @@ kind = "HEAD"
 target = "horizon_client::game::native_hooks::Game<'_>::native_menu_button_v2"
 helper = "button.rs"
 bindings = [{ name = "game", ty = "&mut Game<'_>", value = "&mut *self" }, { name = "entity", ty = "&mut ModBlockEntity", value = "entity" }, { name = "id", ty = "i32", value = "id" }, { name = "carried", ty = "&mut Option<ItemStack>", value = "carried" }]
+
+[[injection]]
+id = "render_entity"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_block_entity_submit"
+helper = "render_entity.rs"
+bindings = [{ name = "game", ty = "&Game<'_>", value = "&*self" }, { name = "block", ty = "&str", value = "block" }, { name = "draw", ty = "&mut BlockEntityDraw", value = "draw" }]
