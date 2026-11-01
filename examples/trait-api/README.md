@@ -3,16 +3,18 @@
 This opt-in example implements the generated `horizon_client::mod_api::Hooks`
 trait with one small, machine-flavoured behaviour per hook. It does not use
 horizon-mixins and does not change the default machine bundle. It is a draft
-API: it needs the fork commit below, which is not in upstream Horizon.
+API: it needs the PR commit below, which is not in upstream Horizon's main branch.
 
-The pin is `affbb5faaa40816ed01a68a89ff5a446ce583d23` on branch `mod-api` of
-[arismoko/horizon](https://github.com/arismoko/horizon), recorded in
+The pin is `246f47f20dd17856f54b855939c176237f18bfe4`, the head of
+[Horizon PR #6216](https://github.com/horizon-rust/horizon/pull/6216), recorded in
 `compatibility.json`. A small executable (`driver`) links the mod and calls
 `horizon_client::entry::main_with(mods)`.
 
 ## The four hooks
 
-Hooks take `&self` and the mod must be `Send + Sync`. One `MachineHooks` value
+Hooks take `&self`, their host and one event (`LevelTickPreEvent`,
+`UseItemOnEvent`…) whose fields are the hook's arguments, and the mod must be
+`Send + Sync`. One `MachineHooks` value
 serves both the window's game (client) and the integrated server's game
 (server). Each hook runs on one side only, and its text says which.
 
@@ -30,7 +32,7 @@ tests. The machine block exists only with the sample content folder loaded.
 
 ## Build
 
-Use a Git checkout of the fork that contains the pinned commit. The script
+Use a Git checkout that contains the pinned commit. The script
 exports only that committed revision into a new folder and adds this example
 next to it. It never edits your checkout. Use new folders under the cache:
 

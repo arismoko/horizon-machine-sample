@@ -4,7 +4,9 @@
 //! integrated server's game (server). Each hook runs on one side only, so the
 //! state each hook uses is named for that side. Hooks take `&self`, so the
 //! state uses interior mutability.
-use horizon_client::mod_api::{Flow, Hooks, Host, ItemStack, NativeZoom, Text};
+use horizon_client::mod_api::{
+    Flow, Hooks, Host, LevelTickPreEvent, NativeZoom, Text, TooltipEvent, UseItemOnEvent, ZoomEvent,
+};
 use std::collections::HashMap;
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -40,6 +42,11 @@ impl MachineHooks {
     }
 }
 
+/// The launcher calls this to create the bundle's hooks.
+pub fn hooks() -> Box<dyn Hooks> {
+    Box::new(MachineHooks::from_env())
+}
+
 /// The lens zoom for a setting such as `2.5`; `None` leaves the view alone.
 /// Factors at or below 1 and values that are not finite numbers are ignored.
 pub fn lens_zoom(setting: Option<&str>) -> Option<NativeZoom> {
@@ -72,7 +79,8 @@ pub fn is_machine_probe(item: &str, block: &str) -> bool {
 
 impl Hooks for MachineHooks {
     /// Server: a machine clock. Count each level's ticks and log every 200th.
-    fn level_tick_pre(&self, _host: &mut dyn Host, dimension: &str) {
+    fn level_tick_pre(&self, _host: &mut dyn Host, event: &mut LevelTickPreEvent<'_>) {
+        let dimension = event.dimension;
         let mut ticks = self.server_ticks.lock().unwrap();
         let count = match ticks.get_mut(dimension) {
             Some(count) => count,
@@ -86,26 +94,21 @@ impl Hooks for MachineHooks {
 
     /// Client: an inspection lens. Zoom only when the player started the
     /// client with `MACHINE_SAMPLE_ZOOM`; the pinned `Host` has no key state.
-    fn zoom(&self, _host: &dyn Host) -> Option<NativeZoom> {
+    fn zoom(&self, _host: &dyn Host, _event: &mut ZoomEvent) -> Option<NativeZoom> {
         self.client_lens
     }
 
     /// Client: add a recipe note to cobblestone and stone tooltips.
-    fn tooltip(&self, _host: &dyn Host, stack: &ItemStack, lines: &mut Vec<(Text, u32)>) {
-        if let Some(note) = recipe_note(&stack.item) {
-            lines.push((Text::literal(format!("[client] {note}")), u32::MAX));
+    fn tooltip(&self, _host: &dyn Host, event: &mut TooltipEvent<'_>) {
+        if let Some(note) = recipe_note(&event.stack.item) {
+            event.lines.push((Text::literal(format!("[client] {note}")), u32::MAX));
         }
     }
 
     /// Server: a stick used on a machine reads it. The reply goes to the
     /// acting player's action bar, and the stick does nothing else.
-    fn use_item_on(
-        &self,
-        host: &mut dyn Host,
-        stack: &ItemStack,
-        pos: [i32; 3],
-        _face: [i32; 3],
-    ) -> Flow {
+    fn use_item_on(&self, host: &mut dyn Host, event: &mut UseItemOnEvent<'_>) -> Flow {
+        let (stack, pos) = (event.stack, event.pos);
         let block = host.block(pos);
         let machine = is_machine_probe(&stack.item, &block);
         if stack.item.as_ref() == PROBE_ITEM {
