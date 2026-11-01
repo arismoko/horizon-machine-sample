@@ -1,0 +1,22 @@
+# Nested workspace. prepare.sh copies this folder into an exported Horizon
+# source tree as `trait-example/`, so the `../crates` paths resolve there.
+[workspace]
+members = ["driver", "machine-hooks"]
+resolver = "2"
+
+[patch.crates-io]
+wgpu-hal = { path = "../third_party/wgpu-hal" }
+naga = { path = "../third_party/naga" }
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+
+[profile.fast]
+inherits = "release"
+lto = false
+codegen-units = 16
+incremental = true

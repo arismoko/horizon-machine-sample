@@ -65,6 +65,12 @@ recommended mod test route for hook work in
 The staging tools export committed Horizon sources; they do not change the
 original checkout.
 
+## Trait mod API example
+
+[examples/trait-api](examples/trait-api/README.md) shows the draft
+`Hooks` trait of a Horizon fork branch, one small hook behaviour at a time. It
+is separate from this bundle and needs a different Horizon pin.
+
 ## Recipe status
 
 The pinned revision includes [Horizon PR #5120](https://github.com/horizon-rust/horizon/pull/5120),

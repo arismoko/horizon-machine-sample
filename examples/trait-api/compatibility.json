@@ -1,0 +1,5 @@
+{
+  "horizon_repository": "https://github.com/horizon-rust/horizon",
+  "horizon_branch": "refs/pull/6216/head",
+  "horizon_revision": "246f47f20dd17856f54b855939c176237f18bfe4"
+}
