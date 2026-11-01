@@ -98,7 +98,7 @@ impl Hooks for MachineHooks {
     }
 
     /// Server: a stick used on a machine reads it. The reply goes to the
-    /// acting player, and the stick does nothing else.
+    /// acting player's action bar, and the stick does nothing else.
     fn use_item_on(
         &self,
         host: &mut dyn Host,
@@ -110,11 +110,18 @@ impl Hooks for MachineHooks {
         if !is_machine_probe(&stack.item, &block) {
             return Flow::Continue;
         }
+        let Some(player) = host.acting_player() else {
+            return Flow::Continue;
+        };
         let reads = self.server_probes.fetch_add(1, Ordering::Relaxed) + 1;
-        host.feedback(Text::literal(format!(
-            "[server] read #{reads} at {} {} {}: {block} (input west, output east)",
-            pos[0], pos[1], pos[2]
-        )));
+        // `tell` does not reach the acting player inside their own hook.
+        host.action_bar(
+            player.uuid,
+            Text::literal(format!(
+                "[server] read #{reads} at {} {} {}: {block} (input west, output east)",
+                pos[0], pos[1], pos[2]
+            )),
+        );
         Flow::Cancel
     }
 }
