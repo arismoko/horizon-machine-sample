@@ -69,7 +69,12 @@ Then check each hook in the world:
 3. **Tooltip (client).** Open the creative inventory and hover over cobblestone
    or stone. A `[client]` note appears under the name.
 4. **Machine read (server).** Place a `machine_sample:machine` block, hold a
-   stick, sneak and right-click the machine. The block would otherwise open its
-   screen first, and the hook runs only when the block lets the click through.
-   Chat shows a `[server] read #1 ...` line and no screen opens. Sneaking with
-   another item, or a stick on another block, continues as usual.
+   stick, sneak and right-click the machine. The hook runs only when the block
+   lets the click through. Chat shows a `[server] read #1 ...` line.
+   Without sneaking, the block handles the click first.
+
+This trait-only build has no menu hooks yet (planned for a later API step), so
+the machine's screen never opens: ordinary use reports that
+`machine_sample:machine` is not available yet. The machine screen, recipe and
+pipe need the mixin bundle; see the [root README](../../README.md), which is
+the full example.
