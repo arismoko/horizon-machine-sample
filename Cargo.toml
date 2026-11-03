@@ -1,9 +1,16 @@
-[workspace]
-members = ["native/rust"]
-resolver = "2"
+[package]
+name = "horizon-example-mod"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+description = "A minimal native Horizon mod"
 
-# Match the pinned game's patched dependencies when checking the trait crate.
+[dependencies]
+horizon-client = { git = "https://github.com/arismoko/horizon", rev = "f5b891948c0cd5bce563496c5fc129b89cce9efc" }
+
+# Match the pinned game's patched dependencies for standalone checks.
 [patch.crates-io]
-wgpu-hal = { git = "https://github.com/arismoko/horizon", rev = "bb0e55bc8359af717aec5a556cc4236b33ca0984" }
-naga = { git = "https://github.com/arismoko/horizon", rev = "bb0e55bc8359af717aec5a556cc4236b33ca0984" }
-libmimalloc-sys = { git = "https://github.com/arismoko/horizon", rev = "bb0e55bc8359af717aec5a556cc4236b33ca0984" }
+wgpu-hal = { git = "https://github.com/arismoko/horizon", rev = "f5b891948c0cd5bce563496c5fc129b89cce9efc" }
+naga = { git = "https://github.com/arismoko/horizon", rev = "f5b891948c0cd5bce563496c5fc129b89cce9efc" }
+libmimalloc-sys = { git = "https://github.com/arismoko/horizon", rev = "f5b891948c0cd5bce563496c5fc129b89cce9efc" }

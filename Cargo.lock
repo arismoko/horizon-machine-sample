@@ -1082,7 +1082,7 @@ dependencies = [
 [[package]]
 name = "horizon-anticheat"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "serde",
  "toml",
@@ -1091,7 +1091,7 @@ dependencies = [
 [[package]]
 name = "horizon-assets"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "horizon-core",
  "log",
@@ -1102,7 +1102,7 @@ dependencies = [
 [[package]]
 name = "horizon-bench"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "horizon-telemetry",
  "serde",
@@ -1112,7 +1112,7 @@ dependencies = [
 [[package]]
 name = "horizon-chat-filter"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "serde",
  "serde_json",
@@ -1122,7 +1122,7 @@ dependencies = [
 [[package]]
 name = "horizon-client"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "ab_glyph",
  "bytemuck",
@@ -1184,7 +1184,7 @@ dependencies = [
 [[package]]
 name = "horizon-client-core"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "horizon-world",
  "serde_json",
@@ -1193,7 +1193,7 @@ dependencies = [
 [[package]]
 name = "horizon-client-input"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "arboard",
  "horizon-client-core",
@@ -1206,7 +1206,7 @@ dependencies = [
 [[package]]
 name = "horizon-client-lib"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "ab_glyph",
  "bytemuck",
@@ -1264,7 +1264,7 @@ dependencies = [
 [[package]]
 name = "horizon-client-render"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "ab_glyph",
  "base64",
@@ -1319,7 +1319,7 @@ dependencies = [
 [[package]]
 name = "horizon-command"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "horizon-client-core",
  "horizon-core",
@@ -1330,7 +1330,7 @@ dependencies = [
 [[package]]
 name = "horizon-core"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "libm",
 ]
@@ -1338,7 +1338,7 @@ dependencies = [
 [[package]]
 name = "horizon-cosmetics"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "base64",
  "glam",
@@ -1351,7 +1351,7 @@ dependencies = [
 [[package]]
 name = "horizon-dualsense"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "cpal",
  "hidapi",
@@ -1368,7 +1368,7 @@ dependencies = [
 [[package]]
 name = "horizon-friends"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "chacha20poly1305",
  "getrandom 0.3.4",
@@ -1384,7 +1384,7 @@ dependencies = [
 [[package]]
 name = "horizon-hdr"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "ash",
  "wayland-backend",
@@ -1396,7 +1396,7 @@ dependencies = [
 [[package]]
 name = "horizon-items"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "horizon-client-core",
  "horizon-core",
@@ -1409,7 +1409,7 @@ dependencies = [
 [[package]]
 name = "horizon-mcp"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "serde_json",
 ]
@@ -1417,7 +1417,7 @@ dependencies = [
 [[package]]
 name = "horizon-mod-api-gen"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "heck",
  "quote",
@@ -1429,7 +1429,7 @@ dependencies = [
 [[package]]
 name = "horizon-mod-api-macros"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1439,11 +1439,13 @@ dependencies = [
 [[package]]
 name = "horizon-mods"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "horizon-shader-api",
  "log",
  "minisign-verify",
+ "png",
+ "semver",
  "serde",
  "serde_json",
  "sha2",
@@ -1454,7 +1456,7 @@ dependencies = [
 [[package]]
 name = "horizon-narrator"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "libloading",
  "log",
@@ -1467,7 +1469,7 @@ dependencies = [
 [[package]]
 name = "horizon-optifine"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "horizon-core",
  "log",
@@ -1477,7 +1479,7 @@ dependencies = [
 [[package]]
 name = "horizon-protocol"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "aes",
  "flate2",
@@ -1494,7 +1496,7 @@ dependencies = [
 [[package]]
 name = "horizon-server-files"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "base64",
  "horizon-core",
@@ -1507,7 +1509,7 @@ dependencies = [
 [[package]]
 name = "horizon-shader-api"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "bytemuck",
  "naga",
@@ -1522,7 +1524,7 @@ dependencies = [
 [[package]]
 name = "horizon-shaders"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "half",
  "horizon-core",
@@ -1534,7 +1536,7 @@ dependencies = [
 [[package]]
 name = "horizon-telemetry"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "getrandom 0.3.4",
  "ruzstd",
@@ -1546,12 +1548,12 @@ dependencies = [
 [[package]]
 name = "horizon-theme"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 
 [[package]]
 name = "horizon-threads"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "libc",
  "libmimalloc-sys",
@@ -1562,7 +1564,7 @@ dependencies = [
 [[package]]
 name = "horizon-world"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "flate2",
  "horizon-core",
@@ -1944,7 +1946,7 @@ checksum = "b6d2cec3eae94f9f509c767b45932f1ada8350c4bdb85af2fcab4a3c14807981"
 [[package]]
 name = "libmimalloc-sys"
 version = "0.1.49"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "cc",
  "cty",
@@ -2085,7 +2087,7 @@ checksum = "743fb55ba31b18fb1ecef6bdc9aa2743314978ac084044301a7eee33fb99a20d"
 [[package]]
 name = "naga"
 version = "30.0.1"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "arrayvec",
  "bit-set",
@@ -3091,6 +3093,10 @@ name = "semver"
 version = "1.0.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a7852d02fc848982e0c167ef163aaff9cd91dc640ba85e263cb1ce46fae51cd"
+dependencies = [
+ "serde",
+ "serde_core",
+]
 
 [[package]]
 name = "serde"
@@ -4036,7 +4042,7 @@ dependencies = [
 [[package]]
 name = "wgpu-hal"
 version = "30.0.1"
-source = "git+https://github.com/arismoko/horizon?rev=bb0e55bc8359af717aec5a556cc4236b33ca0984#bb0e55bc8359af717aec5a556cc4236b33ca0984"
+source = "git+https://github.com/arismoko/horizon?rev=f5b891948c0cd5bce563496c5fc129b89cce9efc#f5b891948c0cd5bce563496c5fc129b89cce9efc"
 dependencies = [
  "android_system_properties",
  "arrayvec",

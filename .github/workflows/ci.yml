@@ -7,6 +7,9 @@ permissions:
 jobs:
   standalone:
     runs-on: ubuntu-latest
+    env:
+      # Matches the pinned Horizon launcher's native-build toolchain.
+      RUSTUP_TOOLCHAIN: '1.99.1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -15,7 +18,7 @@ jobs:
       - name: Install native build dependencies
         run: sudo apt-get update && sudo apt-get install -y libasound2-dev libudev-dev
       - name: Install pinned Rust
-        run: rustup toolchain install 1.95.0 --profile minimal --component rustfmt --component clippy
+        run: rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
       - run: cargo fetch --locked
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --locked --offline -- -D warnings

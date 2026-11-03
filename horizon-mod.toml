@@ -1,8 +1,13 @@
 id = "machine_sample"
-name = "Machine Sample Content"
+name = "Machine Sample"
 version = "0.1.0"
 description = "Original content for the native machine sample"
 authors = []
 api = "0.2"
 side = "both"
 capabilities = ["registries"]
+
+[native]
+game = "26.3"
+horizon = "f5b891948c0cd5bce563496c5fc129b89cce9efc"
+mixins = "d9c83d7096b7ea5b83678da2efdfd6161f74997e"

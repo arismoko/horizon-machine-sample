@@ -1,30 +1,36 @@
 # Validation
 
-## Current merge pin
+The flat project pins fork Horizon
+`f5b891948c0cd5bce563496c5fc129b89cce9efc`, the main merge of the flat
+native-mod layout. The runtime preserves sample #20's side-split Host API and
+`#[mod_api::horizon_mod]` entry. There is no handwritten entry, packaging filter
+or compatibility fallback.
 
-The sample pins fork Horizon `bb0e55bc8359af717aec5a556cc4236b33ca0984`, the main
-merge of #335. Committed source hashes and the seeded lock are updated together.
-Formatting and pin/lock checks are run before publishing; final exact-head
-stage/check evidence is pending the paired item 11 run. No linked, in-game or
-dedicated-server proof is claimed for this merge pin.
+## Source and package checks
 
-## Prior candidate results
+Before a pin is ready, check its committed source hashes and seed the development
+`Cargo.lock` from that game's lockfile, then resolve offline. Shared dependency
+versions must agree with the game. Run the formatting, clippy, unit, staging and
+package commands documented in README.md. Exact-head results belong in the PR's
+validation section and CI, not in a status table that becomes stale at each pin.
 
-The following recorded results describe the earlier candidate at
-`c64f46ac4fe95b02d5a14bacf074b1991d187ae1`, before the Host-split sample merge.
-They are not exact-head evidence for the current merge pin.
+`tools/test_stage.py` verifies the original checkout is unchanged and repeated
+exports have identical source bytes and mtimes. Both staging helpers use the
+pinned game's canonical package writer. `tools/test_package.py` checks the flat
+archive's contents, deterministic output and staging; development provenance,
+Cargo.lock and legacy manifests are not shipped.
 
-| Check | Result |
-|---|---|
-| `tools/test_stage.py` | Pass: committed source export and trait bundle staging; source checkout unchanged; repeated export deterministic. |
-| `tools/horizon.py check` | Pass: trait crate compiles against the pin. This does **not** link a game executable. |
-| `cargo fmt --all --check`; workspace clippy and tests | Pass; clippy warnings denied, 3 runtime tests pass. |
-| `tools/test_package.py` | Pass: deterministic package and native bundle mapping. |
-| Launcher `native-build --profile dev` | Pass: trait executable built and linked at the pin. |
-| Integrated-server game | Pass: four cobblestone from the west chest became four stone in the east chest through the machine and pipe; screen opened and drew. Deposit moved four carried cobblestone into the input, and four more stone reached the east chest. |
+`tools/horizon.py check` compiles the trait crate against the exact pin. It does
+**not** link a game executable. A successful paired item 11 reports pin, lock,
+stage and check separately; linking is an additional, explicitly named proof.
 
-The in-game test used the launcher's linked client, the dev profile and the
-integrated server thread. The machine pulled from the west neighbor's east face
-and pushed to the east neighbor's west face through `ITEMS`. This is not a
-dedicated-server test. No player data or Minecraft assets belong in this
-repository.
+Mods don't ship a toolchain file; Horizon's pinned toolchain builds them. The
+helper and CI explicitly select the pinned launcher's Rust 1.99.1.
+
+## In-game proof scope
+
+A linked dev build and an integrated or dedicated-server run are distinct from
+source compilation. Do not carry the previous nested-layout sample's linked
+and integrated-server machine results forward as evidence for a flat pin.
+State the exact source and tested server side whenever reporting new gameplay
+proof. No player data or Minecraft assets belong in this repository.

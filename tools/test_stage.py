@@ -29,10 +29,14 @@ def main():
             first = snapshot(output)
             second, changed = horizon.trait_stage(checkout, root)
             assert second == output and not changed and first == snapshot(output)
-            manifest = horizon.tomllib.loads((root/'mods/machine_sample/horizon-mixin.toml').read_text())
-            assert manifest['api']['path'] == 'rust'
-            assert 'injection' not in manifest and 'crate' not in manifest
-            assert (root/'mods/machine_sample/rust/src/machine.rs').read_bytes() == (horizon.ROOT/'native/rust/src/machine.rs').read_bytes()
+            staged = root/'mods/machine_sample'
+            manifest = horizon.tomllib.loads((staged/'horizon-mod.toml').read_text())
+            assert manifest['native']['horizon'] == horizon.PIN
+            assert 'injection' not in manifest['native']
+            assert (staged/'src/machine.rs').read_bytes() == (horizon.ROOT/'src/machine.rs').read_bytes()
+            assert (staged/'Cargo.toml').is_file()
+            assert not any((staged/path).exists() for path in
+                           ('native', 'rust', 'horizon-native.json', 'horizon-mixin.toml'))
             mismatched = root/'mismatched.lock'
             mismatched.write_text('[[package]]\nname = "libc"\nversion = "999.0.0"\n')
             try:
@@ -44,7 +48,8 @@ def main():
     assert all((checkout/p).read_bytes() == content for p, content in before.items())
     assert subprocess.check_output(['git', '-C', str(checkout), 'status', '--porcelain']) == status
     print(json.dumps({'status': 'ok', 'original_checkout_unchanged': True,
-                      'trait_bundle_staged': True, 'deterministic_source_bytes_and_mtimes': True}, indent=2))
+                      'flat_package_staged': True, 'canonical_package_writer': True,
+                      'deterministic_source_bytes_and_mtimes': True}, indent=2))
 
 
 if __name__ == '__main__':

@@ -5,9 +5,10 @@ separate from Horizon and horizon-mixins. Only export committed pinned Horizon
 sources into ignored target trees; never modify the original checkout or player
 resources. Do not commit binaries, exported sources or Minecraft assets.
 
-The runtime crate lives in native/rust/ and injected helpers call that shared
-implementation. Keep helper functions small and gameplay logic testable there. All AST changes go through
-horizon-mixins plan/apply; do not add string-based Rust source rewriting.
+The runtime crate lives at the project root in src/. The sole mod manifest is
+horizon-mod.toml; the launcher generates its own injection-tool manifest. Keep
+helper functions small and gameplay logic testable there. All AST changes go
+through horizon-mixins plan/apply; do not add string-based Rust source rewriting.
 
 Validate with cargo fmt, clippy with warnings denied, cargo test and
 the standalone tests. For bundle/compatibility changes also run
