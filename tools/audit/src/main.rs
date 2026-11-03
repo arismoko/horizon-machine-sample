@@ -83,8 +83,11 @@ fn main() {
     for (file, tree) in trees {
         let original =
             syn::parse_file(&fs::read_to_string(Path::new(&args[1]).join(file)).unwrap()).unwrap();
+        // The mixin formatter has already unparsed and reparsed its source once.
+        // Normalize the original through the same round trip before comparing.
+        let normalized = syn::parse_file(&prettyplease::unparse(&original)).unwrap();
         assert!(
-            prettyplease::unparse(&original) == prettyplease::unparse(&tree),
+            prettyplease::unparse(&normalized) == prettyplease::unparse(&tree),
             "unexpected source change in {file}"
         );
     }
