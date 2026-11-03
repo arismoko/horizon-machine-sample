@@ -17,8 +17,11 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `c64f46ac4fe95b02d5a14bacf074b1991d187ae1`.
-The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
+This flat-layout development branch targets fork Horizon commit
+`0bb67654f331843dd312327c4562d0ba17ead3df`. The exact Horizon and Mixins
+revisions are in [horizon-mod.toml](horizon-mod.toml). It also requires the
+generated `horizon_mod` entry API; see [VALIDATION.md](VALIDATION.md) for the
+current check state rather than assuming a development pin is ready to play.
 Native mods run code with the player's rights; only build code you trust. The
 launcher builds the sample from the source the mod pins and links its generated
 entry into the game. With a scratch launcher instance and an installed base version:
@@ -40,28 +43,50 @@ python3 tools/horizon.py check --horizon /path/to/horizon --target-dir "$PWD/tar
 ```
 
 The stage test exports the pinned committed source, verifies shared dependency
-versions against its lockfile, and stages the trait bundle; the check compiles
+versions against its lockfile, and stages the flat package using the pinned
+game's shared package writer; the check compiles
 the trait crate, **not** a linked executable. Both leave the
 original checkout unchanged. The launcher's native build is necessary to verify
 linking and gameplay. `--offline` needs the dependencies in Cargo's cache.
 
 ## Package and API
 
-Install `cargo-horizon-mod` from the matching Horizon fork build. The current
-package contains `horizon-mod.toml`, `assets/`, `data/`,
-`horizon-native.json`, and `native/`. Its `native/horizon-mixin.toml` declares
-`[api] path = "rust"`; `native/rust/src/lib.rs` marks its `Hooks` implementation
-with `#[mod_api::horizon_mod]`, which exports the entry and registers the
-machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring inventories
-and scoped screen and menu hooks for its UI. Raw mixin injections are a rare
-escape hatch; this sample uses none.
+Install `cargo-horizon-mod` from the matching Horizon fork build. The project
+and archive have the same flat layout:
 
-Run `python3 tools/package.py` to create `target/horizon-mod/machine_sample.hmod`
-with Horizon's shared writer. `python3 tools/test_package.py` checks packaging
-and the native bundle's staging mapping. The engine pin is recorded in
-`compatibility.json`, `horizon-native.json`, the native manifest and the crate
-dependency and workspace dependency patches; update them together and seed
-`Cargo.lock` from the pinned game's lockfile. No game assets are included.
+```text
+horizon-mod.toml
+Cargo.toml
+src/lib.rs
+src/machine.rs
+assets/machine_sample/
+data/machine_sample/
+```
+
+`horizon-mod.toml` is the sole mod manifest: it owns the id and version and
+its `[native]` section owns the game and exact source pins. Cargo's package
+name and version are not mod identity. `src/lib.rs` marks its `Hooks`
+implementation with `#[mod_api::horizon_mod]`, which exports the entry and
+registers the machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring
+inventories and scoped screen and menu hooks for its UI. There are no raw
+injections or handwritten factories. The launcher generates its own
+`horizon-mixin.toml` in its build area; legacy `native/`, `rust/` and
+`horizon-native.json` inputs are not supported.
+
+Run `python3 tools/package.py --horizon /path/to/horizon` to create
+`target/horizon-mod/machine_sample.hmod` with the pinned game's shared writer,
+not a second Python ZIP implementation. `python3 tools/test_package.py` checks
+the canonical archive, determinism and flat staging.
+
+`tools/horizon.py` exports committed sources into ignored `target/` trees,
+verifies source hashes and leaves the original checkout and game resources
+unchanged. `compatibility.json` is developer provenance for those exports,
+not a packaged or runtime manifest. Its hashes and revision, and the standalone
+Cargo dependency/patch pins, must agree with `horizon-mod.toml`.
+The development `Cargo.lock` is seeded from that Horizon revision's committed
+lockfile before the standalone crate is resolved; it is not packaged. The
+launcher uses the game's lockfile when staging the sole native crate.
+No game assets are included.
 
 To test a hook or helper end to end, change the trait mod, build the linked game
 with the launcher and exercise the behavior on the intended game thread. This

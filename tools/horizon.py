@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Export pinned sources, stage the trait bundle and check its crate."""
+"""Export pinned sources, stage the flat package and check its crate."""
 import argparse
 import contextlib
 import fcntl
 import hashlib
 import json
 import os
-import re
 import tomllib
 from pathlib import Path
 import shutil
@@ -14,10 +13,12 @@ import subprocess
 import sys
 import tempfile
 import time
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+MANIFEST = tomllib.loads((ROOT / "horizon-mod.toml").read_text())
 COMPAT = json.loads((ROOT / "compatibility.json").read_text())
-PIN = COMPAT["horizon_revision"]
+PIN = MANIFEST["native"]["horizon"]
 
 
 def digest(data):
@@ -73,15 +74,18 @@ def stage(horizon, stages):
     return out, True
 
 
-def stage_mods(stages):
-    """Stage the package's current native bundle under its mod id."""
-    source = ROOT / "native"
-    mod = tomllib.loads((source / "horizon-mixin.toml").read_text())["mod"]
-    if not re.fullmatch(r"[a-z0-9_]{1,64}", mod["id"]):
-        raise ValueError("native manifest has an invalid mod id")
+def stage_mods(source, stages):
+    """Package with the pinned game's writer, then stage its validated flat input."""
+    command = ["nice", "-n", "19", "cargo", "run", "-j", "4", "--locked", "--offline",
+               "--manifest-path", str(source / "Cargo.toml"),
+               "--target-dir", str(ROOT / "target/package-tool"),
+               "-p", "cargo-horizon-mod", "--", "build"]
+    subprocess.run(command, cwd=ROOT, check=True, stdout=subprocess.PIPE, text=True)
+    package = ROOT / "target/horizon-mod" / f"{MANIFEST['id']}.hmod"
     mods = stages / "mods"
     shutil.rmtree(mods, ignore_errors=True)
-    shutil.copytree(source, mods / mod["id"], ignore=shutil.ignore_patterns("target", ".git"))
+    with zipfile.ZipFile(package) as archive:
+        archive.extractall(mods / MANIFEST["id"])
     return mods
 
 
@@ -101,20 +105,17 @@ def check_lock(horizon_lock, sample_lock):
 
 
 def trait_stage(horizon, stages):
-    """Export the pinned game and stage the trait bundle without changing game sources."""
-    manifest = tomllib.loads((ROOT / "native/horizon-mixin.toml").read_text())
-    crate = tomllib.loads((ROOT / "native/rust/Cargo.toml").read_text())
-    native = json.loads((ROOT / "horizon-native.json").read_text())
-    workspace = tomllib.loads((ROOT / "Cargo.toml").read_text())
-    patches = workspace["patch"]["crates-io"]
-    if (manifest["compatibility"]["horizon_revision"] != PIN
+    """Export the pinned game and stage its flat mod without changing game sources."""
+    crate = tomllib.loads((ROOT / "Cargo.toml").read_text())
+    patches = crate["patch"]["crates-io"]
+    if (COMPAT["horizon_revision"] != PIN
             or crate["dependencies"]["horizon-client"]["rev"] != PIN
             or any(patch["rev"] != PIN for patch in patches.values())
-            or native["horizon"] != PIN):
-        raise ValueError("Horizon pins in compatibility, native manifests and crate must match")
+            or MANIFEST["native"]["mixins"] != COMPAT["horizon_mixins_revision"]):
+        raise ValueError("The manifest, crate and development provenance pins must match")
     output, changed = stage(horizon, stages / "original")
     check_lock(output / "Cargo.lock", ROOT / "Cargo.lock")
-    stage_mods(stages)
+    stage_mods(output, stages)
     return output, changed
 
 
@@ -146,10 +147,11 @@ def main():
         if args.action != "stage":
             if args.action == "build":
                 raise ValueError("trait mods must be linked with horizon-launcher native-build; see README.md")
-            command = ["cargo", args.action, "--locked", "--offline", "-p", "horizon-example-mod",
+            command = ["nice", "-n", "19", "cargo", args.action, "-j", "4",
+                       "--locked", "--offline", "-p", "horizon-example-mod",
                        "--target-dir", str(target)]
             if args.action == "test":
-                command.extend(["--", "--nocapture"])
+                command.extend(["--", "--nocapture", "--test-threads=4"])
             with lock(target.parent / (target.name + ".mod-template.lock")):
                 run_start = time.monotonic()
                 result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)

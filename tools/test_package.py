@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Exercise the real shared package writer and native-to-tool staging mapping."""
+"""Exercise the real shared package writer and flat staging input."""
+import argparse
 import json
 from pathlib import Path
 import subprocess
@@ -9,29 +10,35 @@ import horizon
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--horizon', type=Path, default=horizon.ROOT.parent/'horizon')
+    args = parser.parse_args()
     root = horizon.ROOT
-    pin = (root / 'compatibility.json').read_bytes()
-    subprocess.run(['python3', str(root / 'tools/package.py')], check=True)
+    pin = (root / 'horizon-mod.toml').read_bytes()
+    command = ['python3', str(root / 'tools/package.py'), '--horizon', str(args.horizon)]
+    subprocess.run(command, check=True)
     package = root / 'target/horizon-mod/machine_sample.hmod'
     first = package.read_bytes()
-    subprocess.run(['python3', str(root / 'tools/package.py')], check=True)
+    subprocess.run(command, check=True)
     assert package.read_bytes() == first
     with zipfile.ZipFile(package) as archive:
         names = set(archive.namelist())
-        assert {'horizon-mod.toml', 'horizon-native.json', 'native/horizon-mixin.toml',
-                'native/rust/Cargo.toml', 'native/rust/src/lib.rs'} <= names
+        assert {'horizon-mod.toml', 'Cargo.toml', 'src/lib.rs', 'src/machine.rs'} <= names
         assert any(name.startswith('assets/machine_sample/') for name in names)
         assert any(name.startswith('data/machine_sample/') for name in names)
-        assert not any(name.startswith(('mixins/', 'api/', 'content/', 'native/machine_sample/'))
+        assert not any(name.startswith(('native/', 'rust/', 'mixins/', 'api/', 'content/'))
                        for name in names)
+        assert not {'horizon-native.json', 'horizon-mixin.toml', 'compatibility.json', 'Cargo.lock'} & names
     with tempfile.TemporaryDirectory(dir=root / 'target') as scratch:
-        mods = horizon.stage_mods(Path(scratch))
+        with horizon.lock(root/'target/stage.lock'):
+            source, _ = horizon.stage(args.horizon.resolve(), Path(scratch)/'original')
+            mods = horizon.stage_mods(source, Path(scratch))
         staged = mods / 'machine_sample'
-        assert (staged / 'horizon-mixin.toml').read_bytes() == (root / 'native/horizon-mixin.toml').read_bytes()
-        assert (staged / 'rust/src/lib.rs').read_bytes() == (root / 'native/rust/src/lib.rs').read_bytes()
+        assert (staged / 'horizon-mod.toml').read_bytes() == pin
+        assert (staged / 'src/lib.rs').read_bytes() == (root / 'src/lib.rs').read_bytes()
         assert not (staged / 'native').exists()
-    assert (root / 'compatibility.json').read_bytes() == pin
-    print(json.dumps({'canonical_package': True, 'deterministic': True, 'tool_mapping': True}))
+    assert (root / 'horizon-mod.toml').read_bytes() == pin
+    print(json.dumps({'canonical_package': True, 'deterministic': True, 'flat_staging': True}))
 
 
 if __name__ == '__main__':

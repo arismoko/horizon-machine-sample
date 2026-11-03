@@ -1,19 +1,25 @@
 # Validation
 
-The sample is being ported to a trait mod at fork Horizon
-`c64f46ac4fe95b02d5a14bacf074b1991d187ae1`.
+The flat project currently targets fork Horizon
+`0bb67654f331843dd312327c4562d0ba17ead3df`.
 
-| Check | Result |
+This is a development migration, not a claim that this head can run the mod.
+The machine keeps both the side-split Host API and the generated
+`#[mod_api::horizon_mod]` entry. The target does not yet export that attribute;
+its owning Horizon lane must bring in the generated-entry API. No handwritten
+factory or fallback is used.
+
+| Check at this flat pin | Result |
 |---|---|
-| `tools/test_stage.py` | Pass: committed source export and trait bundle staging; source checkout unchanged; repeated export deterministic. |
-| `tools/horizon.py check` | Pass: trait crate compiles against the pin. This does **not** link a game executable. |
-| `cargo fmt --all --check`; workspace clippy and tests | Pass; clippy warnings denied, 3 runtime tests pass. |
-| `tools/test_package.py` | Pass: deterministic package and native bundle mapping. |
-| Launcher `native-build --profile dev` | Pass: trait executable built and linked at the pin. |
-| Integrated-server game | Pass: four cobblestone from the west chest became four stone in the east chest through the machine and pipe; screen opened and drew. Deposit moved four carried cobblestone into the input, and four more stone reached the east chest. |
+| Committed pin, source hashes and standalone lock | Pass: exact source hashes and offline resolution seeded from the pinned Horizon lock. |
+| `tools/test_stage.py` | Pending: uses the pinned game's shared package writer and stages its validated flat input. |
+| `tools/horizon.py check` | Pending; expected to require the missing generated-entry API. This does not link a game executable. |
+| `cargo fmt --all --check` | Pass. |
+| Standalone clippy and tests | Not run: generated-entry API is missing at this target. |
+| `tools/test_package.py` | Pending: deterministic canonical archive and flat staging. |
+| Launcher linked dev build / in-game run | Not performed for the flat migration. |
 
-The in-game test used the launcher's linked client, the dev profile and the
-integrated server thread. The machine pulled from the west neighbor's east face
-and pushed to the east neighbor's west face through `ITEMS`. This is not a
-dedicated-server test. No player data or Minecraft assets belong in this
+The previous nested-layout sample had linked and integrated-server machine
+proofs, but those are not exact-head evidence for this flat pin. Dedicated-server
+proof is also not claimed. No player data or Minecraft assets belong in this
 repository.
