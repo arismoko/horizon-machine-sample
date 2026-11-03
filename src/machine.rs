@@ -7,14 +7,6 @@ pub struct Machine;
 impl BlockPart for Machine {}
 
 impl BlockEntityPart for Machine {
-    fn block_entity(
-        &self,
-        _: HostSide<'_>,
-        _: &mut BlockEntityEvent<'_>,
-    ) -> Option<(String, Compound)> {
-        Some((MACHINE.to_owned(), Compound::new()))
-    }
-
     fn block_entity_ticks(&self, _: &dyn Host, event: &mut BlockEntityTicksEvent<'_>) {
         event.ticks = true;
     }

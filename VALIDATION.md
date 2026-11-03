@@ -1,10 +1,10 @@
 # Validation
 
 The flat project pins fork Horizon
-`f5b891948c0cd5bce563496c5fc129b89cce9efc`, the main merge of the flat
-native-mod layout. The runtime preserves sample #20's side-split Host API and
-`#[mod_api::horizon_mod]` entry. There is no handwritten entry, packaging filter
-or compatibility fallback.
+`64f0f161a365bee27ea80a711734e5da97f93f5f`, B1's typed block-entity declaration
+head. It includes the merged flat native-mod layout. The runtime preserves
+the side-split Host API and `#[mod_api::horizon_mod]` entry. There is no
+handwritten entry, packaging filter or compatibility fallback.
 
 ## Source and package checks
 

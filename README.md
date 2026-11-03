@@ -17,7 +17,7 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `f5b891948c0cd5bce563496c5fc129b89cce9efc`.
+The sample pins fork Horizon commit `64f0f161a365bee27ea80a711734e5da97f93f5f`.
 The exact Horizon and Mixins revisions are in [horizon-mod.toml](horizon-mod.toml).
 See [VALIDATION.md](VALIDATION.md) for the scope of the current checks.
 Native mods run code with the player's rights; only build code you trust. The
@@ -66,9 +66,13 @@ data/machine_sample/
 its `[native]` section owns the game and exact source pins. Cargo's package
 name and version are not mod identity. `src/lib.rs` marks its `Hooks`
 implementation with `#[mod_api::horizon_mod]`, which exports the entry and
-registers the machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring
-inventories and scoped screen and menu hooks for its UI. There are no raw
-injections or handwritten factories. The launcher generates its own
+registers the machine's `BlockEntityPart`. Registration declares the unqualified
+`machine` type for the existing machine block and attaches its Part through the
+returned type key. The declaration retains save id `machine_sample:machine`;
+empty initial NBT uses its default, with no factory override. The pipe remains
+a plain block. The machine uses `ITEMS` to reach neighboring inventories and
+scoped screen and menu hooks for its UI. There are no raw injections or
+handwritten factories. The launcher generates its own
 `horizon-mixin.toml` in its build area; legacy `native/`, `rust/` and
 `horizon-native.json` inputs are not supported. Mods don't ship a toolchain
 file; Horizon's pinned toolchain builds them. The local helper and CI use Rust

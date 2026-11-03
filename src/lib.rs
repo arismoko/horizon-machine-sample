@@ -9,7 +9,11 @@ struct Sample;
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
     fn register(&self, registrar: &mut Registrar) {
-        registrar.block_entity_part(MACHINE, &[MACHINE], machine::Machine);
+        let machine = registrar
+            .block_entity_type("machine")
+            .blocks(&[MACHINE])
+            .build();
+        registrar.block_entity_part(&machine, machine::Machine);
     }
 
     fn block_entity_container(
