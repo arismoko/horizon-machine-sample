@@ -19,8 +19,7 @@ cargo test --workspace --locked --offline
 
 For bundle or compatibility changes, also run `python3 tools/test_stage.py` and
 `python3 tools/horizon.py check` and `test` against the pinned Horizon source.
-Pass `--horizon` and set `HORIZON_MIXINS` as described in the README. The old
-`tools/test_template.py` fixture targets the template, not this sample.
+Pass `--horizon` and set `HORIZON_MIXINS` as described in the README.
 Do not commit exported sources, game assets, or build output.
 
 Contributions are licensed under the repository's [MIT license](LICENSE).

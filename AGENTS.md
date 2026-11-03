@@ -10,6 +10,6 @@ functions small and gameplay logic testable there. All AST changes go through
 horizon-mixins plan/apply; do not add string-based Rust source rewriting.
 
 Validate with cargo fmt, clippy with warnings denied, cargo test and
-python3 tools/test_template.py. For bundle/compatibility changes also run
+the standalone tests. For bundle/compatibility changes also run
 python3 tools/test_stage.py and python3 tools/horizon.py check/test against the
 pinned source export. Keep validation claims and supported revisions honest.
