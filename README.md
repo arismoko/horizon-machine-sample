@@ -35,9 +35,10 @@ Play the resulting build with this content mod enabled in a fresh world. See
 what has and has not been verified. For local source and trait-crate checks:
 
 ```sh
-cargo fmt --all --check
-cargo clippy --workspace --all-targets --locked --offline -- -D warnings
-cargo test --workspace --locked --offline
+rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
+cargo +1.99.1 fmt --all --check
+cargo +1.99.1 clippy --workspace --all-targets --locked --offline -- -D warnings
+cargo +1.99.1 test --workspace --locked --offline
 python3 tools/test_stage.py --horizon /path/to/horizon
 python3 tools/horizon.py check --horizon /path/to/horizon --target-dir "$PWD/target/horizon-cargo"
 ```
@@ -71,7 +72,9 @@ registers the machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring
 inventories and scoped screen and menu hooks for its UI. There are no raw
 injections or handwritten factories. The launcher generates its own
 `horizon-mixin.toml` in its build area; legacy `native/`, `rust/` and
-`horizon-native.json` inputs are not supported.
+`horizon-native.json` inputs are not supported. Mods don't ship a toolchain
+file; Horizon's pinned toolchain builds them. The local helper and CI use Rust
+1.99.1, matching the pinned Horizon launcher's toolchain.
 
 Run `python3 tools/package.py --horizon /path/to/horizon` to create
 `target/horizon-mod/machine_sample.hmod` with the pinned game's shared writer,

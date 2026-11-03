@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = tomllib.loads((ROOT / "horizon-mod.toml").read_text())
 COMPAT = json.loads((ROOT / "compatibility.json").read_text())
 PIN = MANIFEST["native"]["horizon"]
+# Matches launcher/src/rust_toolchain.rs at the pinned Horizon revision.
+TOOLCHAIN = "1.99.1"
 
 
 def digest(data):
@@ -80,7 +82,8 @@ def stage_mods(source, stages):
                "--manifest-path", str(source / "Cargo.toml"),
                "--target-dir", str(ROOT / "target/package-tool"),
                "-p", "cargo-horizon-mod", "--", "build"]
-    subprocess.run(command, cwd=ROOT, check=True, stdout=subprocess.PIPE, text=True)
+    subprocess.run(command, cwd=ROOT, check=True, stdout=subprocess.PIPE, text=True,
+                   env=dict(os.environ, RUSTUP_TOOLCHAIN=TOOLCHAIN))
     package = ROOT / "target/horizon-mod" / f"{MANIFEST['id']}.hmod"
     mods = stages / "mods"
     shutil.rmtree(mods, ignore_errors=True)
@@ -154,7 +157,8 @@ def main():
                 command.extend(["--", "--nocapture", "--test-threads=4"])
             with lock(target.parent / (target.name + ".mod-template.lock")):
                 run_start = time.monotonic()
-                result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+                result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True,
+                                        env=dict(os.environ, RUSTUP_TOOLCHAIN=TOOLCHAIN))
             report.update(cargo_seconds=time.monotonic()-run_start, cargo_command=command,
                           cargo_exit=result.returncode)
             log = ROOT / "target" / f"horizon-{args.action}.log"
