@@ -8,7 +8,7 @@ struct Sample;
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
-    fn register(&self, registrar: &mut Registrar) {
+    fn register(&self, registrar: &mut Registrar, _: &RegistrationContext<'_>) {
         let machine = registrar
             .block_entity_type("machine")
             .blocks(&[MACHINE])
