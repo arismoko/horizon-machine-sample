@@ -17,11 +17,11 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `2bb2f0f5435b9844b42a93e8bf4d7513f9679f40`.
+The sample pins fork Horizon commit `bb0e55bc8359af717aec5a556cc4236b33ca0984`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 Native mods run code with the player's rights; only build code you trust. The
-launcher builds the sample from the source the mod pins and links its `hooks()`
-into the game. With a scratch launcher instance and an installed base version:
+launcher builds the sample from the source the mod pins and links its generated
+entry into the game. With a scratch launcher instance and an installed base version:
 
 ```sh
 horizon-launcher native-build "$PWD" --instance INSTANCE --trust-native-code --profile dev
@@ -50,8 +50,9 @@ linking and gameplay. `--offline` needs the dependencies in Cargo's cache.
 Install `cargo-horizon-mod` from the matching Horizon fork build. The current
 package contains `horizon-mod.toml`, `assets/`, `data/`,
 `horizon-native.json`, and `native/`. Its `native/horizon-mixin.toml` declares
-`[api] path = "rust"`; `native/rust/src/lib.rs` exports `hooks()` and registers
-the machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring inventories
+`[api] path = "rust"`; `native/rust/src/lib.rs` marks its `Hooks` implementation
+with `#[mod_api::horizon_mod]`, which exports the entry and registers the
+machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring inventories
 and scoped screen and menu hooks for its UI. Raw mixin injections are a rare
 escape hatch; this sample uses none.
 
