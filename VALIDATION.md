@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`64f0f161a365bee27ea80a711734e5da97f93f5f`, B1's typed block-entity declaration
+`7dc8d9a880a72f1c1eeca6372fb609c90b805856`, B1's typed block-entity declaration
 head. It includes the merged flat native-mod layout. The runtime preserves
 the side-split Host API and `#[mod_api::horizon_mod]` entry. There is no
 handwritten entry, packaging filter or compatibility fallback.
