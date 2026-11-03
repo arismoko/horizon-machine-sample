@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`6ca7ac4f37afa379de70d105f5c786d15296eafa`, the bootstrap registration-context
+`47447042ca52bca0d0589fbbd6ddd1d6f7a7b021`, the bootstrap registration-context
 change. The sample keeps sample main's typed block-entity declaration
 and the merged flat native-mod layout, and its `register` hook takes the
 registration context. The runtime preserves the side-split
