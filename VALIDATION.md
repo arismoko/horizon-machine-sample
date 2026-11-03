@@ -1,25 +1,36 @@
 # Validation
 
-The flat project pins fork Horizon `f5b891948c0cd5bce563496c5fc129b89cce9efc`,
-the main merge of the flat native-mod layout. The sample retains the side-split
-Host API and generated `#[mod_api::horizon_mod]` entry from merged sample #20.
-There is no handwritten entry, packaging filter or compatibility fallback.
+The flat project pins fork Horizon
+`f5b891948c0cd5bce563496c5fc129b89cce9efc`, the main merge of the flat
+native-mod layout. The runtime preserves sample #20's side-split Host API and
+`#[mod_api::horizon_mod]` entry. There is no handwritten entry, packaging filter
+or compatibility fallback.
 
-| Check at this flat pin | Result |
-|---|---|
-| Committed pin, source hashes and standalone lock | Checked before publishing: exact committed hashes and offline resolution seeded from the pinned Horizon lock. |
-| `tools/test_stage.py` | Pending the exact-head paired run; uses the pinned game's shared package writer. |
-| `tools/horizon.py check` | Pending the exact-head paired run. This compiles the trait crate, not a linked executable. |
-| `cargo fmt --all --check` | Checked before publishing. |
-| Standalone clippy and tests | Pending at this pin. |
-| `tools/test_package.py` | Pending at this pin. |
-| Launcher linked dev build / in-game run | Not performed for this flat pin. |
+## Source and package checks
+
+Before a pin is ready, check its committed source hashes and seed the development
+`Cargo.lock` from that game's lockfile, then resolve offline. Shared dependency
+versions must agree with the game. Run the formatting, clippy, unit, staging and
+package commands documented in README.md. Exact-head results belong in the PR's
+validation section and CI, not in a status table that becomes stale at each pin.
+
+`tools/test_stage.py` verifies the original checkout is unchanged and repeated
+exports have identical source bytes and mtimes. Both staging helpers use the
+pinned game's canonical package writer. `tools/test_package.py` checks the flat
+archive's contents, deterministic output and staging; development provenance,
+Cargo.lock and legacy manifests are not shipped.
+
+`tools/horizon.py check` compiles the trait crate against the exact pin. It does
+**not** link a game executable. A successful paired item 11 reports pin, lock,
+stage and check separately; linking is an additional, explicitly named proof.
 
 Mods don't ship a toolchain file; Horizon's pinned toolchain builds them. The
-helper and CI explicitly select the pinned launcher's Rust 1.99.1. The development
-`Cargo.lock` checks shared versions but is not shipped in the package.
+helper and CI explicitly select the pinned launcher's Rust 1.99.1.
 
-The previous nested-layout sample had linked and integrated-server machine
-proofs, but those are not exact-head evidence for this flat pin. Dedicated-server
-proof is also not claimed. No player data or Minecraft assets belong in this
-repository.
+## In-game proof scope
+
+A linked dev build and an integrated or dedicated-server run are distinct from
+source compilation. Do not carry the previous nested-layout sample's linked
+and integrated-server machine results forward as evidence for a flat pin.
+State the exact source and tested server side whenever reporting new gameplay
+proof. No player data or Minecraft assets belong in this repository.
