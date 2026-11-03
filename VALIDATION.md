@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`2654aad28f3f6350f0e4b61d4b7bdd2f719fe512`, the typed block-entity access
+`a835eaf64ee35b1f474eea1229e0f1cbb964d4e5`, the typed block-entity access
 change. The sample keeps sample main's typed block-entity declaration and
 scoped-Part subscriptions, and handles the Part registration `Result`. The runtime preserves the side-split
 Host API and `#[mod_api::horizon_mod]` entry, and its Part implementations
