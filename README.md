@@ -20,8 +20,8 @@ from a mod through to a running game.
   east of the machine and the container directly east of the pipe. The machine
   attempts to insert one item per tick into the container's west face. Other
   orientations and pipe networks are not supported.
-- A native bundle and a separate `machine_sample` content mod. The bundle ID
-  and module name are also `machine_sample`.
+- One `.hmod` with native code and `machine_sample` content. The mod ID is
+  `machine_sample`; the shared runtime crate is `horizon-example-mod`.
 
 ![Machine screen showing cobblestone and a partly filled progress bar](docs/images/machine-screen.png)
 
@@ -30,7 +30,7 @@ layout has not yet been visually verified at the current pin.*
 
 ## Try it
 
-The sample pins fork Horizon commit `36d5515f1b1d13988204f30c9c87ad6290261b3b`.
+The sample pins fork Horizon commit `13d8c06d6772803ca266e8a1a926dbf45b0d5674`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 The native bundle runs code with the player's rights. Only use native mods you
 trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
@@ -47,16 +47,30 @@ resources and this repository's content folder:
 
 ```sh
 /path/to/cargo-target/fast/horizon-client --resources /path/to/prepared/26.3 \
-  --game-dir /path/to/a/fresh/game --dev-mod "$PWD/content" --world Sample --creative
+  --game-dir /path/to/a/fresh/game --dev-mod "$PWD" --world Sample --creative
 ```
 
 The game needs a display. On a headless machine, use a virtual display such as
 Xvfb. The game loads the content folder directly for this run. For a packaged
-content mod and installation steps, see [content/README.md](content/README.md).
+content mod and installation steps, see [CONTENT.md](CONTENT.md).
+
+## Package
+
+Install `cargo-horizon-mod` from the matching Horizon fork build. The project and archive share one layout:
+`horizon-mod.toml`, `assets/` and `data/` at the top, `horizon-native.json`, and `native/` containing
+`horizon-mixin.toml`, `data/` and the crate in `rust/`. The raw crate declaration is `[[crate]] path = "rust"`.
+The exact manifest filename and non-dot crate path are required by horizon-mixins.
+
+Run `python3 tools/package.py` to create `target/horizon-mod/machine_sample.hmod` with Horizon's shared writer.
+The writer checks identities, source paths and size limits. `python3 tools/test_package.py` exercises packaging
+and the mapping from `native/` into the tool's `<mods>/<id>/` staging folder. Native code is trusted.
+
+The engine pin is recorded in both `compatibility.json` and `horizon-native.json`; update them together with
+`native/horizon-mixin.toml` when targeting another exact engine build.
 
 ## Test a hook or helper end to end
 
-Change the bundle under `mixins/machine_sample/` to call the hook or helper you
+Change the bundle under `native/` to call the hook or helper you
 want to test. Run the standalone tests, stage and build the pinned client, then
 launch it with the content folder as shown above. Exercise the behavior in a
 fresh world and check the result on the intended game thread. This is the

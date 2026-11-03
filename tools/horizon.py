@@ -6,6 +6,8 @@ import fcntl
 import hashlib
 import json
 import os
+import re
+import tomllib
 from pathlib import Path
 import shutil
 import subprocess
@@ -72,6 +74,18 @@ def stage(horizon, stages):
     return out, True
 
 
+def stage_mods(stages):
+    """Map the package's native/ into the tool's <mods>/<id>/ directory."""
+    source = ROOT / "native"
+    mod = tomllib.loads((source / "horizon-mixin.toml").read_text())["mod"]
+    if not re.fullmatch(r"[a-z0-9_]{1,64}", mod["id"]):
+        raise ValueError("native manifest has an invalid mod id")
+    mods = stages / "mods"
+    shutil.rmtree(mods, ignore_errors=True)
+    shutil.copytree(source, mods / mod["id"], ignore=shutil.ignore_patterns("target", ".git"))
+    return mods
+
+
 def mixin_stage(horizon, stages):
     revision = subprocess.check_output(["git", "-C", str(MIXINS), "rev-parse", "HEAD"], text=True).strip()
     if revision != COMPAT["horizon_mixins_revision"]:
@@ -82,7 +96,7 @@ def mixin_stage(horizon, stages):
     cli = MIXINS / "target/debug/horizon-mixins"
     output = stages / "modded"
     plan = stages / "plan.json"
-    base = ["--workspace", str(original), "--mods", str(ROOT / "mixins")]
+    base = ["--workspace", str(original), "--mods", str(stage_mods(stages))]
     subprocess.run([str(cli), "plan", *base, "--out", str(plan)], check=True, capture_output=True, text=True)
     applied = subprocess.run([str(cli), "apply", *base, "--out", str(output)], check=True, capture_output=True, text=True)
     report = json.loads(applied.stdout)
@@ -120,7 +134,8 @@ def main():
             if args.action == "build":
                 command.extend(["--profile", "fast"])
             if args.action == "test":
-                command.extend(["game::machine_sample::tests", "--", "--nocapture"])
+                command = ["cargo", "test", "--locked", "--offline", "-p", "horizon-example-mod",
+                           "--target-dir", str(target), "--", "--nocapture"]
             with lock(target.parent / (target.name + ".mod-template.lock")):
                 run_start = time.monotonic()
                 result = subprocess.run(command, cwd=output, capture_output=True, text=True)

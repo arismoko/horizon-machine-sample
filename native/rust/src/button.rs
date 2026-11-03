@@ -4,7 +4,7 @@ fn sample_button(
     context: &horizon_client::menu::MenuButtonContext,
     carried: &mut Option<ItemStack>,
 ) {
-    if entity.id != super::machine_sample::MACHINE || context.id != super::machine_sample::DEPOSIT {
+    if entity.id != horizon_example_mod::MACHINE || context.id != horizon_example_mod::DEPOSIT {
         return;
     }
     let (Some(input), Some(stack)) = (entity.items.first_mut(), carried.as_mut()) else {
@@ -17,7 +17,7 @@ fn sample_button(
     let compatible = input.as_ref().is_none_or(|item| {
         item.item == stack.item && item.damage == stack.damage && item.extra == stack.extra
     });
-    let count = super::machine_sample::deposit_count(
+    let count = horizon_example_mod::deposit_count(
         stack.count,
         input.as_ref().map_or(0, |item| item.count),
         limit,

@@ -19,8 +19,8 @@ the revision in `compatibility.json`. Then run from the sample checkout:
 ```sh
 git -C /path/to/horizon fetch origin main
 cp examples/level-random/compatibility.json compatibility.json
-cp examples/level-random/horizon-mixin.toml mixins/machine_sample/horizon-mixin.toml
-cp examples/level-random/tick.rs mixins/machine_sample/tick.rs
+cp examples/level-random/horizon-mixin.toml native/horizon-mixin.toml
+cp examples/level-random/tick.rs native/rust/src/tick.rs
 python3 tools/horizon.py build --horizon /path/to/horizon --target-dir "$HOME/.cache/horizon-sample-mod/level-random-target"
 ```
 

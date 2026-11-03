@@ -57,7 +57,12 @@ fn main() {
         );
         b.stmts.remove(0);
     }
-    for m in plan["modules"].as_array().unwrap() {
+    for m in plan
+        .get("modules")
+        .map(|modules| modules.as_array().unwrap())
+        .into_iter()
+        .flatten()
+    {
         let file = m["file"].as_str().unwrap();
         let tree = trees.entry(file).or_insert_with(|| {
             syn::parse_file(&fs::read_to_string(Path::new(&args[2]).join(file)).unwrap()).unwrap()

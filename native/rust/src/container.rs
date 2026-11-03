@@ -1,5 +1,5 @@
 fn sample_container(block: &str, container: &mut Option<ModContainer>) {
-    if block == super::machine_sample::MACHINE && container.is_none() {
+    if block == horizon_example_mod::MACHINE && container.is_none() {
         *container = Some(ModContainer {
             // The hopper menu has five backing slots; the custom screen shows two.
             slots: 5,

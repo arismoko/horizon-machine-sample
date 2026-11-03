@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "id": "machine_sample",
+  "version": "0.1.0",
+  "game": "26.3",
+  "horizon": "13d8c06d6772803ca266e8a1a926dbf45b0d5674",
+  "mixins": "d9c83d7096b7ea5b83678da2efdfd6161f74997e"
+}

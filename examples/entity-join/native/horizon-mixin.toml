@@ -10,5 +10,5 @@ horizon_revision = "1b6e55d4f3bd14079551bcad173d0fac8f8225bb"
 id = "entity_join"
 kind = "HEAD"
 target = "horizon_client::game::native_hooks::Game<'_>::native_entity_join_level"
-helper = "entity_join.rs"
+helper = "rust/src/entity_join.rs"
 bindings = [{ name = "dimension", ty = "&str", value = "dimension" }, { name = "entity", ty = "u32", value = "entity" }, { name = "kind", ty = "&str", value = "kind" }, { name = "pos", ty = "[f64; 3]", value = "pos" }, { name = "loaded_from_disk", ty = "bool", value = "loaded_from_disk" }, { name = "canceled", ty = "&mut bool", value = "canceled" }]

@@ -1,6 +1,6 @@
 fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) {
     use horizon_world::nbt::Tag;
-    if entity.id == super::machine_sample::MACHINE {
+    if entity.id == horizon_example_mod::MACHINE {
         if !entity.nbt.contains_key(&"random_probe".into()) {
             use horizon_core::random::RandomSource;
             let draw = game
@@ -47,7 +47,7 @@ fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) 
             Some(Tag::Int(n)) => *n,
             _ => 0,
         };
-        let (progress, done) = super::machine_sample::advance(progress, result.is_some());
+        let (progress, done) = horizon_example_mod::advance(progress, result.is_some());
         entity.nbt.insert("progress".into(), Tag::Int(progress));
         entity.data = vec![progress];
         if done {
@@ -70,7 +70,7 @@ fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) 
             .and_then(|level| {
                 level.block(host, [pos[0] + 1, pos[1], pos[2]])
             });
-        if pipe.as_deref() == Some(super::machine_sample::PIPE) {
+        if pipe.as_deref() == Some(horizon_example_mod::PIPE) {
             if let Some(output) = &mut entity.items[1] {
                 use horizon_client::mod_api::{Host, ITEMS, ItemResource};
                 let resource = ItemResource::of(output);

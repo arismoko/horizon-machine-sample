@@ -21,9 +21,8 @@ work=/home/ari/.cache/horizon-sample-mod/entity-join-work
 mkdir "$work"  # Fail if an earlier build already exists.
 git archive HEAD | tar -x -C "$work"
 cp "$work/examples/entity-join/compatibility.json" "$work/compatibility.json"
-rm -rf "$work/mixins"
-mkdir -p "$work/mixins"
-cp -R "$work/examples/entity-join/bundle" "$work/mixins/entity_join_example"
+rm -rf "$work/native"
+cp -R "$work/examples/entity-join/native" "$work/native"
 python3 "$work/tools/horizon.py" build --horizon /path/to/horizon \
   --target-dir /home/ari/.cache/horizon-sample-mod/entity-join-target
 cargo build --locked --offline \
