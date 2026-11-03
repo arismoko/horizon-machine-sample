@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`ff0e9b84a4ce038ec979ce4960ea17d6b6ef9f85`, the scoped-Part subscription
+`520a95535f90c38da61be950e977ca8c6c833b46`, the scoped-Part subscription
 index change. The runtime preserves the flat native-mod layout, sample #20's
 side-split Host API and `#[mod_api::horizon_mod]` entry. Its Part implementations
 use `#[mod_api::horizon_part]` to record subscriptions. There is no handwritten
