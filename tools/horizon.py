@@ -10,7 +10,6 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-import tarfile
 import tempfile
 import time
 
@@ -44,9 +43,7 @@ def stage(horizon, stages):
     try:
         process = subprocess.Popen(["git", "-C", str(horizon), "archive", "--format=tar", PIN], stdout=subprocess.PIPE)
         try:
-            with tarfile.open(fileobj=process.stdout, mode="r|") as archive:
-                for member in archive:
-                    archive.extract(member, temporary, filter="data")
+            subprocess.run(["tar", "-x", "-C", str(temporary)], stdin=process.stdout, check=True)
         finally:
             process.stdout.close()
             code = process.wait()

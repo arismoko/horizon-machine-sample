@@ -1,7 +1,7 @@
 # Validation
 
-Validated on Linux with Rust 1.95.0 on 2026-10-30, using the exact revisions in
-`compatibility.json` and the real bundle committed here.
+Historical validation on Linux with Rust 1.95.0 on 2026-10-30, using the
+revisions and bundle at that time. These results do not validate the current pin.
 
 | Check | Result |
 |---|---|
@@ -25,6 +25,7 @@ prepared resources. The source audit verifies only the declared HEAD statement
 and support module differ from pristine Rust ASTs; it does not claim compatibility
 with other Horizon revisions or arbitrary third-party mods.
 
-CI reproduces the formatting, clippy, standalone runtime and tiny-fixture tests.
+The tiny-fixture test targets the original example and does not pass for the
+current machine bundle (also true on sample main at `ae4859978a`).
 The full native checks additionally need a Horizon Git history containing the
 pin and its cached dependencies; use the commands in README.md to reproduce them.

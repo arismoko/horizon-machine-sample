@@ -30,7 +30,7 @@ layout has not yet been visually verified at the current pin.*
 
 ## Try it
 
-The sample pins fork Horizon commit `46a7b8e7f50ff82ff282cf7f78ddfd1853b95a8e`.
+The sample pins fork Horizon commit `36d5515f1b1d13988204f30c9c87ad6290261b3b`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 The native bundle runs code with the player's rights. Only use native mods you
 trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
@@ -67,6 +67,11 @@ original checkout.
 
 ## Recipe status
 
+At the current pin, an integrated-server dev build moved four cobblestone from
+an input chest through the machine and pipe into an output chest as four stone.
+With the output chest full, one further stone stayed in the machine across 100
+ticks; the chest remained full.
+
 The pinned revision includes [Horizon PR #5120](https://github.com/horizon-rust/horizon/pull/5120),
 which fixes recipe lookup on the normal server thread. In an integrated-server
 game test at an earlier pin (`571ec1b76e186d0b5cd17c8f4eb35cb6894b5d35`),
@@ -75,8 +80,9 @@ machine slots were empty; no stone was added by hand. This test covers one
 recipe and the east pipe, not a dedicated server. At the previous pin
 (`1b6e55d4f3bd14079551bcad173d0fac8f8225bb`), an integrated-server game test
 also converted four cobblestone into four stone
-in the east chest. At the current pin, the Deposit button moved four carried
-cobblestone into the input and the machine processed them into four stone.
+in the east chest. At the previous pin (`46a7b8e7f50ff82ff282cf7f78ddfd1853b95a8e`),
+the Deposit button moved four carried cobblestone into the input and the
+machine processed them into four stone.
 
 At an earlier pin, the screen opened but four cobblestone stayed idle. Four
 manually loaded stone moved through the pipe into the east chest.
