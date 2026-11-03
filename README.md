@@ -17,11 +17,9 @@ output.
 
 ## Build and test
 
-This flat-layout development branch targets fork Horizon commit
-`0bb67654f331843dd312327c4562d0ba17ead3df`. The exact Horizon and Mixins
-revisions are in [horizon-mod.toml](horizon-mod.toml). It also requires the
-generated `horizon_mod` entry API; see [VALIDATION.md](VALIDATION.md) for the
-current check state rather than assuming a development pin is ready to play.
+The sample pins fork Horizon commit `f5b891948c0cd5bce563496c5fc129b89cce9efc`.
+The exact Horizon and Mixins revisions are in [horizon-mod.toml](horizon-mod.toml).
+See [VALIDATION.md](VALIDATION.md) for the scope of the current checks.
 Native mods run code with the player's rights; only build code you trust. The
 launcher builds the sample from the source the mod pins and links its generated
 entry into the game. With a scratch launcher instance and an installed base version:

@@ -1,23 +1,23 @@
 # Validation
 
-The flat project currently targets fork Horizon
-`0bb67654f331843dd312327c4562d0ba17ead3df`.
-
-This is a development migration, not a claim that this head can run the mod.
-The machine keeps both the side-split Host API and the generated
-`#[mod_api::horizon_mod]` entry. The target does not yet export that attribute;
-its owning Horizon lane must bring in the generated-entry API. No handwritten
-factory or fallback is used.
+The flat project pins fork Horizon `f5b891948c0cd5bce563496c5fc129b89cce9efc`,
+the main merge of the flat native-mod layout. The sample retains the side-split
+Host API and generated `#[mod_api::horizon_mod]` entry from merged sample #20.
+There is no handwritten entry, packaging filter or compatibility fallback.
 
 | Check at this flat pin | Result |
 |---|---|
-| Committed pin, source hashes and standalone lock | Pass: exact source hashes and offline resolution seeded from the pinned Horizon lock. |
-| `tools/test_stage.py` | Pending: uses the pinned game's shared package writer and stages its validated flat input. |
-| `tools/horizon.py check` | Pending; expected to require the missing generated-entry API. This does not link a game executable. |
-| `cargo fmt --all --check` | Pass. |
-| Standalone clippy and tests | Not run: generated-entry API is missing at this target. |
-| `tools/test_package.py` | Pending: deterministic canonical archive and flat staging. |
-| Launcher linked dev build / in-game run | Not performed for the flat migration. |
+| Committed pin, source hashes and standalone lock | Checked before publishing: exact committed hashes and offline resolution seeded from the pinned Horizon lock. |
+| `tools/test_stage.py` | Pending the exact-head paired run; uses the pinned game's shared package writer. |
+| `tools/horizon.py check` | Pending the exact-head paired run. This compiles the trait crate, not a linked executable. |
+| `cargo fmt --all --check` | Checked before publishing. |
+| Standalone clippy and tests | Pending at this pin. |
+| `tools/test_package.py` | Pending at this pin. |
+| Launcher linked dev build / in-game run | Not performed for this flat pin. |
+
+Mods don't ship a toolchain file; Horizon's pinned toolchain builds them. The
+helper and CI explicitly select the pinned launcher's Rust 1.99.1. The development
+`Cargo.lock` checks shared versions but is not shipped in the package.
 
 The previous nested-layout sample had linked and integrated-server machine
 proofs, but those are not exact-head evidence for this flat pin. Dedicated-server
