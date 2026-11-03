@@ -6,7 +6,11 @@ from pathlib import Path
 import subprocess
 import tempfile
 import horizon
-from test_template import audit, snapshot
+
+
+def snapshot(root):
+    return {str(p.relative_to(root)): (horizon.digest(p.read_bytes()), p.stat().st_mtime_ns)
+            for p in root.rglob('*') if p.is_file()}
 
 
 def main():
@@ -29,7 +33,9 @@ def main():
             assert plan['schema'] == horizon.COMPAT['mixin_schema']
             assert len(plan['injections']) == 8 and len(plan['modules']) == 1
             original = next((root/'original').glob('*/.horizon-mod-template.json')).parent
-            audit(original, output, root/'plan.json')
+            subprocess.run(['cargo', 'run', '--quiet', '--locked', '--offline',
+                            '-p', 'native-mod-source-audit', '--', str(original),
+                            str(output), str(root/'plan.json')], cwd=horizon.ROOT, check=True)
     assert all((checkout/p).read_bytes() == content for p, content in before.items())
     assert subprocess.check_output(['git', '-C', str(checkout), 'status', '--porcelain']) == status
     print(json.dumps({'status': 'ok', 'original_checkout_unchanged': True,

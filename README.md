@@ -89,8 +89,6 @@ manually loaded stone moved through the pipe into the east chest.
 
 ## Notes
 
-The legacy `tools/test_template.py` fixture targets the original break-block
-example; it does not validate this bundle. Use `tools/test_stage.py` against
-the pinned Horizon source instead. See [CONTRIBUTING.md](CONTRIBUTING.md) and
+Use `tools/test_stage.py` against the pinned Horizon source. See [CONTRIBUTING.md](CONTRIBUTING.md) and
 `tools/` for validation and source audit details. The repository does not
 include game assets.

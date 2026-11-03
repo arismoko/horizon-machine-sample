@@ -8,7 +8,7 @@ revisions and bundle at that time. These results do not validate the current pin
 | `cargo fmt --all --check` | Pass |
 | `cargo clippy --workspace --all-targets --locked --offline -- -D warnings` | Pass |
 | `cargo test --workspace --locked --offline` | Runtime unit test passes |
-| `python3 tools/test_template.py` | Actual bundle compiles in the tiny fixture; original method calls/result, shared runtime, AST audit, unchanged bytes/mtimes and incompatible revision/target rejection pass |
+| Former tiny-fixture test | Passed for the earlier bundle; removed because it no longer targeted the machine |
 | `python3 tools/test_stage.py` | Complete pinned Horizon export stages deterministically; original checkout unchanged; exact HEAD/module audit passes |
 | `python3 tools/horizon.py check` | Actual `horizon-client` binary checks successfully with `--no-default-features` |
 | `python3 tools/horizon.py test` | The runtime's embedded test passes inside the actual Horizon game test binary |
@@ -25,7 +25,6 @@ prepared resources. The source audit verifies only the declared HEAD statement
 and support module differ from pristine Rust ASTs; it does not claim compatibility
 with other Horizon revisions or arbitrary third-party mods.
 
-The tiny-fixture test targets the original example and does not pass for the
-current machine bundle (also true on sample main at `ae4859978a`).
+The obsolete tiny-fixture test was removed; use the pinned-source stage test.
 The full native checks additionally need a Horizon Git history containing the
 pin and its cached dependencies; use the commands in README.md to reproduce them.
