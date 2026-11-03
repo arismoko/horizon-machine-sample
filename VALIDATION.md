@@ -1,30 +1,19 @@
 # Validation
 
-Historical validation on Linux with Rust 1.95.0 on 2026-10-30, using the
-revisions and bundle at that time. These results do not validate the current pin.
+The sample is being ported to a trait mod at fork Horizon
+`73b3f47767e6f5201abcbb5841f832b284b64ace`.
 
 | Check | Result |
 |---|---|
-| `cargo fmt --all --check` | Pass |
-| `cargo clippy --workspace --all-targets --locked --offline -- -D warnings` | Pass |
-| `cargo test --workspace --locked --offline` | Runtime unit test passes |
-| Former tiny-fixture test | Passed for the earlier bundle; removed because it no longer targeted the machine |
-| `python3 tools/test_stage.py` | Complete pinned Horizon export stages deterministically; original checkout unchanged; exact HEAD/module audit passes |
-| `python3 tools/horizon.py check` | Actual `horizon-client` binary checks successfully with `--no-default-features` |
-| `python3 tools/horizon.py test` | The runtime's embedded test passes inside the actual Horizon game test binary |
+| `tools/test_stage.py` | Pass: committed source export and trait bundle staging; source checkout unchanged; repeated export deterministic. |
+| `tools/horizon.py check` | Pass: trait crate compiles against the pin. This does **not** link a game executable. |
+| `cargo fmt --all --check`; workspace clippy and tests | Pass; clippy warnings denied, 3 runtime tests pass. |
+| `tools/test_package.py` | Pass: deterministic package and native bundle mapping. |
+| Launcher `native-build --profile dev` | Pass: trait executable built and linked at the pin. |
+| Integrated-server game | Pass: four cobblestone from the west chest became four stone in the east chest through the machine and pipe; screen opened and drew. Deposit moved four carried cobblestone into the input, and four more stone reached the east chest. |
 
-The native check reported 69.55 seconds in Cargo, and the native test passed.
-Both reused an existing external Cargo target directory with cached
-Horizon dependencies. These are compilation/test checks, not a fresh-build
-benchmark. Staging the full export took about 24 seconds per command on this
-machine; a repeated application preserved the stage.
-
-No game was launched and no Minecraft resources or player data were read or
-changed. Interactive logging/gameplay remains a manual check with the compatible
-prepared resources. The source audit verifies only the declared HEAD statement
-and support module differ from pristine Rust ASTs; it does not claim compatibility
-with other Horizon revisions or arbitrary third-party mods.
-
-The obsolete tiny-fixture test was removed; use the pinned-source stage test.
-The full native checks additionally need a Horizon Git history containing the
-pin and its cached dependencies; use the commands in README.md to reproduce them.
+The in-game test used the launcher's linked client, the dev profile and the
+integrated server thread. The machine pulled from the west neighbor's east face
+and pushed to the east neighbor's west face through `ITEMS`. This is not a
+dedicated-server test. No player data or Minecraft assets belong in this
+repository.

@@ -1,4 +1,10 @@
 // Shared by the standalone tests and the native bundle.
+mod machine;
+
+pub fn hooks() -> Box<dyn horizon_client::mod_api::Hooks> {
+    Box::new(machine::Sample)
+}
+
 pub const MACHINE: &str = "machine_sample:machine";
 pub const PIPE: &str = "machine_sample:pipe";
 pub const DURATION: i32 = 40;

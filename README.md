@@ -1,108 +1,68 @@
 # Horizon machine sample
 
-This native mod shows a small machine, its screen, a recipe, and a fixed pipe
-transfer in Horizon. It also provides a way to test native hooks and helpers
-from a mod through to a running game.
+This native trait mod demonstrates a small machine, its screen, a recipe, and a
+fixed pipe transfer in Horizon. It also provides an end-to-end test for the
+native mod API.
 
 ![A machine connected to a pipe and chest in the world](docs/images/world.png)
 
-## What's in it
+The machine has a custom two-slot screen backed by a five-slot hopper menu.
+The Deposit button moves the carried stack into input slot 0; compatible items
+are processed in 40 ticks into output slot 1. It pulls one item from slot 0 of a
+container directly west, through that container's east face. A pipe directly
+east sends one output item per tick into a container east of the pipe, through
+its west face. Other orientations and pipe networks are not supported. The
+machine exposes both slots on every face; slot 0 accepts input and slot 1 allows
+output.
 
-- A machine with a custom two-slot screen backed by a five-slot hopper menu.
-  Only the input and output slots are shown. Its
-  `machine_sample:processing` recipe is designed to finish in 40 ticks.
-  Its Deposit button moves the carried stack into the input slot, up to the
-  item stack limit. Incompatible items remain on the cursor.
-- The machine extracts one item from slot 0 of a container directly west,
-  through its east face, when the machine input is empty. Other orientations
-  are not supported.
-- One pipe segment that moves output into a container. Place the pipe directly
-  east of the machine and the container directly east of the pipe. The machine
-  attempts to insert one item per tick into the container's west face. Other
-  orientations and pipe networks are not supported.
-- One `.hmod` with native code and `machine_sample` content. The mod ID is
-  `machine_sample`; the shared runtime crate is `horizon-example-mod`.
-
-![Machine screen showing cobblestone and a partly filled progress bar](docs/images/machine-screen.png)
-
-*Machine screen from an earlier build with a generic menu. The hopper-backed
-layout has not yet been visually verified at the current pin.*
-
-## Try it
+## Build and test
 
 The sample pins fork Horizon commit `f864d122173877e1b81f210577110558760e008b`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
-The native bundle runs code with the player's rights. Only use native mods you
-trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
+Native mods run code with the player's rights; only build code you trust. The
+launcher builds the sample from the source the mod pins and links its `hooks()`
+into the game. With a scratch launcher instance and an installed base version:
 
 ```sh
+horizon-launcher native-build "$PWD" --instance INSTANCE --trust-native-code --profile dev
+```
+
+Play the resulting build with this content mod enabled in a fresh world. See
+[CONTENT.md](CONTENT.md) for packaging and [VALIDATION.md](VALIDATION.md) for
+what has and has not been verified. For local source and trait-crate checks:
+
+```sh
+cargo fmt --all --check
+cargo clippy --workspace --all-targets --locked --offline -- -D warnings
 cargo test --workspace --locked --offline
-python3 tools/horizon.py stage --horizon /path/to/horizon
-python3 tools/horizon.py check --horizon /path/to/horizon --target-dir /path/to/cargo-target
-python3 tools/horizon.py build --horizon /path/to/horizon --target-dir /path/to/cargo-target
+python3 tools/test_stage.py --horizon /path/to/horizon
+python3 tools/horizon.py check --horizon /path/to/horizon --target-dir "$PWD/target/horizon-cargo"
 ```
 
-The build prints the `horizon-client` path. Run it with your own prepared 26.3
-resources and this repository's content folder:
+The stage test exports the pinned committed source, verifies shared dependency
+versions against its lockfile, and stages the trait bundle; the check compiles
+the trait crate, **not** a linked executable. Both leave the
+original checkout unchanged. The launcher's native build is necessary to verify
+linking and gameplay. `--offline` needs the dependencies in Cargo's cache.
 
-```sh
-/path/to/cargo-target/fast/horizon-client --resources /path/to/prepared/26.3 \
-  --game-dir /path/to/a/fresh/game --dev-mod "$PWD" --world Sample --creative
-```
+## Package and API
 
-The game needs a display. On a headless machine, use a virtual display such as
-Xvfb. The game loads the content folder directly for this run. For a packaged
-content mod and installation steps, see [CONTENT.md](CONTENT.md).
+Install `cargo-horizon-mod` from the matching Horizon fork build. The current
+package contains `horizon-mod.toml`, `assets/`, `data/`,
+`horizon-native.json`, and `native/`. Its `native/horizon-mixin.toml` declares
+`[api] path = "rust"`; `native/rust/src/lib.rs` exports `hooks()` and registers
+the machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring inventories
+and scoped screen and menu hooks for its UI. Raw mixin injections are a rare
+escape hatch; this sample uses none.
 
-## Package
+Run `python3 tools/package.py` to create `target/horizon-mod/machine_sample.hmod`
+with Horizon's shared writer. `python3 tools/test_package.py` checks packaging
+and the native bundle's staging mapping. The engine pin is recorded in
+`compatibility.json`, `horizon-native.json`, the native manifest and the crate
+dependency and workspace dependency patches; update them together and seed
+`Cargo.lock` from the pinned game's lockfile. No game assets are included.
 
-Install `cargo-horizon-mod` from the matching Horizon fork build. The project and archive share one layout:
-`horizon-mod.toml`, `assets/` and `data/` at the top, `horizon-native.json`, and `native/` containing
-`horizon-mixin.toml`, `data/` and the crate in `rust/`. The raw crate declaration is `[[crate]] path = "rust"`.
-The exact manifest filename and non-dot crate path are required by horizon-mixins.
-
-Run `python3 tools/package.py` to create `target/horizon-mod/machine_sample.hmod` with Horizon's shared writer.
-The writer checks identities, source paths and size limits. `python3 tools/test_package.py` exercises packaging
-and the mapping from `native/` into the tool's `<mods>/<id>/` staging folder. Native code is trusted.
-
-The engine pin is recorded in both `compatibility.json` and `horizon-native.json`; update them together with
-`native/horizon-mixin.toml` when targeting another exact engine build.
-
-## Test a hook or helper end to end
-
-Change the bundle under `native/` to call the hook or helper you
-want to test. Run the standalone tests, stage and build the pinned client, then
-launch it with the content folder as shown above. Exercise the behavior in a
-fresh world and check the result on the intended game thread. This is the
-recommended mod test route for hook work in
+To test a hook or helper end to end, change the trait mod, build the linked game
+with the launcher and exercise the behavior on the intended game thread. This
+is the recommended mod test route for hook work in
 [Horizon #4953](https://github.com/horizon-rust/horizon/issues/4953).
-The staging tools export committed Horizon sources; they do not change the
-original checkout.
-
-## Recipe status
-
-At the current pin, an integrated-server dev build moved four cobblestone from
-an input chest through the machine and pipe into an output chest as four stone.
-With the output chest full, one further stone stayed in the machine across 100
-ticks; the chest remained full.
-
-The pinned revision includes [Horizon PR #5120](https://github.com/horizon-rust/horizon/pull/5120),
-which fixes recipe lookup on the normal server thread. In an integrated-server
-game test at an earlier pin (`571ec1b76e186d0b5cd17c8f4eb35cb6894b5d35`),
-four cobblestone became four stone in the east chest after 250 ticks. Both
-machine slots were empty; no stone was added by hand. This test covers one
-recipe and the east pipe, not a dedicated server. At the previous pin
-(`1b6e55d4f3bd14079551bcad173d0fac8f8225bb`), an integrated-server game test
-also converted four cobblestone into four stone
-in the east chest. At the previous pin (`46a7b8e7f50ff82ff282cf7f78ddfd1853b95a8e`),
-the Deposit button moved four carried cobblestone into the input and the
-machine processed them into four stone.
-
-At an earlier pin, the screen opened but four cobblestone stayed idle. Four
-manually loaded stone moved through the pipe into the east chest.
-
-## Notes
-
-Use `tools/test_stage.py` against the pinned Horizon source. See [CONTRIBUTING.md](CONTRIBUTING.md) and
-`tools/` for validation and source audit details. The repository does not
-include game assets.

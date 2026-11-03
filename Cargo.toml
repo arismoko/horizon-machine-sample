@@ -1,3 +1,9 @@
 [workspace]
-members = ["native/rust", "tools/audit"]
+members = ["native/rust"]
 resolver = "2"
+
+# Match the pinned game's patched dependencies when checking the trait crate.
+[patch.crates-io]
+wgpu-hal = { git = "https://github.com/arismoko/horizon", rev = "f864d122173877e1b81f210577110558760e008b" }
+naga = { git = "https://github.com/arismoko/horizon", rev = "f864d122173877e1b81f210577110558760e008b" }
+libmimalloc-sys = { git = "https://github.com/arismoko/horizon", rev = "f864d122173877e1b81f210577110558760e008b" }

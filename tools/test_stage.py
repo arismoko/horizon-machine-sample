@@ -24,23 +24,27 @@ def main():
     with horizon.lock(horizon.ROOT/'target/stage.lock'):
         with tempfile.TemporaryDirectory(prefix='native-stage-test-', dir=horizon.ROOT/'target') as scratch:
             root = Path(scratch)
-            output, changed = horizon.mixin_stage(checkout, root)
+            output, changed = horizon.trait_stage(checkout, root)
             assert changed
             first = snapshot(output)
-            second, changed = horizon.mixin_stage(checkout, root)
+            second, changed = horizon.trait_stage(checkout, root)
             assert second == output and not changed and first == snapshot(output)
-            plan = json.loads((root/'plan.json').read_text())
-            assert plan['schema'] == horizon.COMPAT['mixin_schema']
-            assert len(plan['injections']) == 8 and not plan.get('modules')
-            assert len(plan['crates']) == 1 and plan['crates'][0]['package'] == 'horizon-example-mod'
-            original = next((root/'original').glob('*/.horizon-mod-template.json')).parent
-            subprocess.run(['cargo', 'run', '--quiet', '--locked', '--offline',
-                            '-p', 'native-mod-source-audit', '--', str(original),
-                            str(output), str(root/'plan.json')], cwd=horizon.ROOT, check=True)
+            manifest = horizon.tomllib.loads((root/'mods/machine_sample/horizon-mixin.toml').read_text())
+            assert manifest['api']['path'] == 'rust'
+            assert 'injection' not in manifest and 'crate' not in manifest
+            assert (root/'mods/machine_sample/rust/src/machine.rs').read_bytes() == (horizon.ROOT/'native/rust/src/machine.rs').read_bytes()
+            mismatched = root/'mismatched.lock'
+            mismatched.write_text('[[package]]\nname = "libc"\nversion = "999.0.0"\n')
+            try:
+                horizon.check_lock(output/'Cargo.lock', mismatched)
+            except ValueError as error:
+                assert 'libc 999.0.0' in str(error)
+            else:
+                raise AssertionError('a mismatched shared dependency was accepted')
     assert all((checkout/p).read_bytes() == content for p, content in before.items())
     assert subprocess.check_output(['git', '-C', str(checkout), 'status', '--porcelain']) == status
     print(json.dumps({'status': 'ok', 'original_checkout_unchanged': True,
-                      'only_planned_asts_changed': True, 'deterministic_bytes_and_mtimes': True}, indent=2))
+                      'trait_bundle_staged': True, 'deterministic_source_bytes_and_mtimes': True}, indent=2))
 
 
 if __name__ == '__main__':

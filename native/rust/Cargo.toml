@@ -7,5 +7,7 @@ license = "MIT"
 description = "A minimal native Horizon Mixins mod"
 
 [lib]
-# The shared runtime is linked once through the manifest's raw crate declaration.
 path = "src/lib.rs"
+
+[dependencies]
+horizon-client = { git = "https://github.com/arismoko/horizon", rev = "f864d122173877e1b81f210577110558760e008b" }

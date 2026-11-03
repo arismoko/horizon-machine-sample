@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export pinned sources, apply the template bundle and build a native Horizon."""
+"""Export pinned sources, stage the trait bundle and check its crate."""
 import argparse
 import contextlib
 import fcntl
@@ -18,7 +18,6 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 COMPAT = json.loads((ROOT / "compatibility.json").read_text())
 PIN = COMPAT["horizon_revision"]
-MIXINS = Path(os.environ.get("HORIZON_MIXINS", ROOT.parent / "horizon-mixins")).resolve()
 
 
 def digest(data):
@@ -54,8 +53,8 @@ def stage(horizon, stages):
         for path, expected in COMPAT["source_sha256"].items():
             if digest((temporary / path).read_bytes()) != expected:
                 raise ValueError(f"pinned source hash mismatch: {path}")
-        # Materialize the committed documentation symlink for the mixin CLI's
-        # symlink-free source snapshot. No Rust source is edited here.
+        # Materialize the committed documentation symlink in the source snapshot.
+        # No Rust source is edited here.
         for file in temporary.rglob("*"):
             if file.is_symlink():
                 content = file.read_bytes()
@@ -75,7 +74,7 @@ def stage(horizon, stages):
 
 
 def stage_mods(stages):
-    """Map the package's native/ into the tool's <mods>/<id>/ directory."""
+    """Stage the package's current native bundle under its mod id."""
     source = ROOT / "native"
     mod = tomllib.loads((source / "horizon-mixin.toml").read_text())["mod"]
     if not re.fullmatch(r"[a-z0-9_]{1,64}", mod["id"]):
@@ -86,21 +85,37 @@ def stage_mods(stages):
     return mods
 
 
-def mixin_stage(horizon, stages):
-    revision = subprocess.check_output(["git", "-C", str(MIXINS), "rev-parse", "HEAD"], text=True).strip()
-    if revision != COMPAT["horizon_mixins_revision"]:
-        raise ValueError(f"horizon-mixins must be pinned at {COMPAT['horizon_mixins_revision']}, got {revision}")
-    subprocess.run(["git", "-C", str(MIXINS), "diff", "--quiet", "HEAD", "--", "Cargo.toml", "Cargo.lock", "crates"], check=True)
-    original, _ = stage(horizon, stages / "original")
-    subprocess.run(["cargo", "build", "--locked", "--offline", "--target-dir", str(MIXINS / "target"), "-p", "horizon-mixins-cli"], cwd=MIXINS, check=True, stdout=sys.stderr)
-    cli = MIXINS / "target/debug/horizon-mixins"
-    output = stages / "modded"
-    plan = stages / "plan.json"
-    base = ["--workspace", str(original), "--mods", str(stage_mods(stages))]
-    subprocess.run([str(cli), "plan", *base, "--out", str(plan)], check=True, capture_output=True, text=True)
-    applied = subprocess.run([str(cli), "apply", *base, "--out", str(output)], check=True, capture_output=True, text=True)
-    report = json.loads(applied.stdout)
-    return output, report["stage_changed"]
+def check_lock(horizon_lock, sample_lock):
+    """Refuse a shared dependency version absent from the pinned game lock."""
+    with horizon_lock.open("rb") as file:
+        packages = tomllib.load(file)["package"]
+    versions = {}
+    for package in packages:
+        versions.setdefault(package["name"], set()).add(package["version"])
+    with sample_lock.open("rb") as file:
+        sample = tomllib.load(file)["package"]
+    for package in sample:
+        name, version = package["name"], package["version"]
+        if name in versions and version not in versions[name]:
+            raise ValueError(f"{name} {version} differs from pinned Horizon lock: {sorted(versions[name])}")
+
+
+def trait_stage(horizon, stages):
+    """Export the pinned game and stage the trait bundle without changing game sources."""
+    manifest = tomllib.loads((ROOT / "native/horizon-mixin.toml").read_text())
+    crate = tomllib.loads((ROOT / "native/rust/Cargo.toml").read_text())
+    native = json.loads((ROOT / "horizon-native.json").read_text())
+    workspace = tomllib.loads((ROOT / "Cargo.toml").read_text())
+    patches = workspace["patch"]["crates-io"]
+    if (manifest["compatibility"]["horizon_revision"] != PIN
+            or crate["dependencies"]["horizon-client"]["rev"] != PIN
+            or any(patch["rev"] != PIN for patch in patches.values())
+            or native["horizon"] != PIN):
+        raise ValueError("Horizon pins in compatibility, native manifests and crate must match")
+    output, changed = stage(horizon, stages / "original")
+    check_lock(output / "Cargo.lock", ROOT / "Cargo.lock")
+    stage_mods(stages)
+    return output, changed
 
 
 @contextlib.contextmanager
@@ -123,22 +138,21 @@ def main():
         parser.error("Cargo target must be outside the original Horizon checkout")
     started = time.monotonic()
     with lock(ROOT / "target/stage.lock"):
-        output, changed = mixin_stage(horizon, ROOT / "target/mixins")
+        output, changed = trait_stage(horizon, ROOT / "target/trait")
         if target.is_relative_to(output) or output.is_relative_to(target):
             parser.error("Cargo target and generated source stage must be separate")
         report = {"stage": str(output), "stage_changed": changed,
                   "horizon_revision": PIN, "staging_seconds": time.monotonic()-started}
         if args.action != "stage":
-            command = ["cargo", args.action, "--locked", "--offline", "-p", "horizon-client",
-                       "--bin", "horizon-client", "--no-default-features", "--target-dir", str(target)]
             if args.action == "build":
-                command.extend(["--profile", "fast"])
+                raise ValueError("trait mods must be linked with horizon-launcher native-build; see README.md")
+            command = ["cargo", args.action, "--locked", "--offline", "-p", "horizon-example-mod",
+                       "--target-dir", str(target)]
             if args.action == "test":
-                command = ["cargo", "test", "--locked", "--offline", "-p", "horizon-example-mod",
-                           "--target-dir", str(target), "--", "--nocapture"]
+                command.extend(["--", "--nocapture"])
             with lock(target.parent / (target.name + ".mod-template.lock")):
                 run_start = time.monotonic()
-                result = subprocess.run(command, cwd=output, capture_output=True, text=True)
+                result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
             report.update(cargo_seconds=time.monotonic()-run_start, cargo_command=command,
                           cargo_exit=result.returncode)
             log = ROOT / "target" / f"horizon-{args.action}.log"
@@ -148,8 +162,7 @@ def main():
                 print(result.stderr[-12000:], file=sys.stderr)
                 print(json.dumps(report), file=sys.stderr)
                 return result.returncode
-            if args.action == "build":
-                report["binary"] = str(target / "fast/horizon-client")
+            report["linked_executable"] = False
         print(json.dumps(report, indent=2))
         return 0
 

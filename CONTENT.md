@@ -20,6 +20,6 @@ cargo horizon-mod build
 cargo horizon-mod check target/horizon-mod/machine_sample.hmod
 ```
 
-Install `target/horizon-mod/machine_sample.hmod` through the launcher's Mods page and build its native code.
+Install `target/horizon-mod/machine_sample.hmod` through the launcher's Mods page and build its native trait mod. The machine registers a `BlockEntityPart` and uses `ITEMS` and screen hooks; it has no raw injections. Raw mixins are a rare escape hatch, not the recommended route.
 This single package contains both content and native behavior. Use the same mod on both client and server. Removing registered blocks from an existing world can
 lose world data; test in a fresh world.
