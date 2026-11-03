@@ -17,11 +17,11 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `73b3f47767e6f5201abcbb5841f832b284b64ace`.
+The sample pins fork Horizon commit `c64f46ac4fe95b02d5a14bacf074b1991d187ae1`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 Native mods run code with the player's rights; only build code you trust. The
-launcher builds the sample from the source the mod pins and links its `hooks()`
-into the game. With a scratch launcher instance and an installed base version:
+launcher builds the sample from the source the mod pins and links its generated
+entry into the game. With a scratch launcher instance and an installed base version:
 
 ```sh
 horizon-launcher native-build "$PWD" --instance INSTANCE --trust-native-code --profile dev

@@ -1,7 +1,7 @@
 # Validation
 
 The sample is being ported to a trait mod at fork Horizon
-`73b3f47767e6f5201abcbb5841f832b284b64ace`.
+`c64f46ac4fe95b02d5a14bacf074b1991d187ae1`.
 
 | Check | Result |
 |---|---|
