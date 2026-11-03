@@ -1,6 +1,6 @@
 use horizon_client::mod_api::*;
 
-use crate::{DEPOSIT, DURATION, MACHINE, PIPE, advance, deposit_count, fill_empty};
+use crate::{DEPOSIT, DURATION, PIPE, advance, deposit_count, fill_empty};
 
 pub struct Machine;
 
