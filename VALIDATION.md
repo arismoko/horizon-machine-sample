@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`27d93691e6cac286f7d119251eb2413e303fd99c`, the native `BuiltMod` export
+`726878a07921b49dfa10e4f205f2872a1cba06ce`, the native `BuiltMod` export
 change. The sample keeps sample main's typed block-entity declaration,
 scoped-Part subscriptions and flat layout. The launcher owns the generated
 main and its mod and inventory markers; the staging check lays the canonical
