@@ -1,11 +1,13 @@
-use horizon_client::mod_api::*;
+use horizon_client::mod_api::{self, *};
 
 use crate::{DEPOSIT, DURATION, PIPE, advance, deposit_count, fill_empty};
 
 pub struct Machine;
 
+#[mod_api::horizon_part]
 impl BlockPart for Machine {}
 
+#[mod_api::horizon_part]
 impl BlockEntityPart for Machine {
     fn block_entity_ticks(&self, _: &dyn Host, event: &mut BlockEntityTicksEvent<'_>) {
         event.ticks = true;

@@ -17,7 +17,7 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `37cea41324283eadecbbea043141c666b0c99256`.
+The sample pins fork Horizon commit `e10f3eef5a9b825ce27244afcb782f4fc23119b5`.
 The exact Horizon and Mixins revisions are in [horizon-mod.toml](horizon-mod.toml).
 See [VALIDATION.md](VALIDATION.md) for the scope of the current checks.
 Native mods run code with the player's rights; only build code you trust. The
@@ -70,7 +70,9 @@ registers the machine's `BlockEntityPart`. Registration declares the unqualified
 `machine` type for the existing machine block and attaches its Part through the
 returned type key. The declaration retains save id `machine_sample:machine`;
 empty initial NBT uses its default, with no factory override. The pipe remains
-a plain block. The machine uses `ITEMS` to reach neighboring inventories and
+a plain block. Each scoped Part implementation uses
+`#[mod_api::horizon_part]` to declare its hook subscriptions at compile time.
+The machine uses `ITEMS` to reach neighboring inventories and
 scoped screen and menu hooks for its UI. There are no raw injections or
 handwritten factories. The launcher generates its own
 `horizon-mixin.toml` in its build area; legacy `native/`, `rust/` and
