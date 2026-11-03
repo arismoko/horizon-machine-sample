@@ -8,7 +8,7 @@ id = "machine"
 path = "rust"
 
 [compatibility]
-horizon_revision = "13d8c06d6772803ca266e8a1a926dbf45b0d5674"
+horizon_revision = "f864d122173877e1b81f210577110558760e008b"
 
 [[injection]]
 id = "entity"

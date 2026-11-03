@@ -30,7 +30,7 @@ layout has not yet been visually verified at the current pin.*
 
 ## Try it
 
-The sample pins fork Horizon commit `13d8c06d6772803ca266e8a1a926dbf45b0d5674`.
+The sample pins fork Horizon commit `f864d122173877e1b81f210577110558760e008b`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 The native bundle runs code with the player's rights. Only use native mods you
 trust. Set `HORIZON_MIXINS` to a checkout at the pinned Mixins revision.
