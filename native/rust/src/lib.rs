@@ -2,15 +2,14 @@
 mod machine;
 
 use horizon_client::mod_api::{self, *};
-use machine::Machine;
 
 #[derive(Default)]
-pub struct Sample;
+struct Sample;
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
     fn register(&self, registrar: &mut Registrar) {
-        registrar.block_entity_part(MACHINE, &[MACHINE], Machine);
+        registrar.block_entity_part(MACHINE, &[MACHINE], machine::Machine);
     }
 
     fn block_entity_container(
