@@ -85,7 +85,7 @@ def stage_mods(source, stages):
     subprocess.run(command, cwd=ROOT, check=True, stdout=subprocess.PIPE, text=True,
                    env=dict(os.environ, RUSTUP_TOOLCHAIN=TOOLCHAIN))
     package = ROOT / "target/horizon-mod" / f"{MANIFEST['id']}.hmod"
-    mods = stages / "mods"
+    mods = stages / "horizon-native-mods"
     shutil.rmtree(mods, ignore_errors=True)
     with zipfile.ZipFile(package) as archive:
         archive.extractall(mods / MANIFEST["id"])

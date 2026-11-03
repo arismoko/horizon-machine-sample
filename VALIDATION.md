@@ -1,12 +1,14 @@
 # Validation
 
 The flat project pins fork Horizon
-`e10f3eef5a9b825ce27244afcb782f4fc23119b5`, the scoped-Part subscription
-index change. The sample keeps sample main's typed block-entity declaration
-and the merged flat native-mod layout. The runtime preserves the side-split
-Host API and `#[mod_api::horizon_mod]` entry, and its Part implementations
-use `#[mod_api::horizon_part]` to record subscriptions. There is no handwritten
-entry, packaging filter or compatibility fallback.
+`27d93691e6cac286f7d119251eb2413e303fd99c`, the native `BuiltMod` export
+change. The sample keeps sample main's typed block-entity declaration,
+scoped-Part subscriptions and flat layout. The launcher owns the generated
+main and its mod and inventory markers; the staging check lays the canonical
+flat package out at `horizon-native-mods/<id>/`, where the engine validates
+id, version and side and refuses startup on mismatch, with no record
+fallback. There is no handwritten entry, packaging filter or compatibility
+fallback.
 
 ## Source and package checks
 
