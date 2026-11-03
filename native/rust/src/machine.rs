@@ -1,4 +1,4 @@
-use horizon_client::mod_api::{self, *};
+use horizon_client::mod_api::*;
 
 use crate::{DEPOSIT, DURATION, MACHINE, PIPE, advance, deposit_count, fill_empty};
 
@@ -206,27 +206,5 @@ impl BlockEntityPart for Machine {
         if stack.count == 0 {
             *event.carried = None;
         }
-    }
-}
-
-pub struct Sample;
-#[mod_api::hooks]
-impl Hooks for Sample {
-    fn register(&self, registrar: &mut Registrar) {
-        registrar.block_entity_part(MACHINE, &[MACHINE], Machine);
-    }
-
-    fn block_entity_container(
-        &self,
-        _: &dyn Host,
-        event: &mut BlockEntityContainerEvent<'_>,
-    ) -> Option<ModContainer> {
-        (event.block == MACHINE).then(|| ModContainer {
-            slots: 5,
-            faces: std::array::from_fn(|_| vec![0, 1]),
-            inputs: vec![0],
-            outputs: vec![1],
-            menu: Some("minecraft:hopper".into()),
-        })
     }
 }

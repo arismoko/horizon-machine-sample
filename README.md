@@ -50,8 +50,9 @@ linking and gameplay. `--offline` needs the dependencies in Cargo's cache.
 Install `cargo-horizon-mod` from the matching Horizon fork build. The current
 package contains `horizon-mod.toml`, `assets/`, `data/`,
 `horizon-native.json`, and `native/`. Its `native/horizon-mixin.toml` declares
-`[api] path = "rust"`; `native/rust/src/lib.rs` exports `hooks()` and registers
-the machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring inventories
+`[api] path = "rust"`; `native/rust/src/lib.rs` marks its `Hooks` implementation
+with `#[mod_api::horizon_mod]`, which exports the entry and registers the
+machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring inventories
 and scoped screen and menu hooks for its UI. Raw mixin injections are a rare
 escape hatch; this sample uses none.
 

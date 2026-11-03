@@ -1,8 +1,31 @@
 // Shared by the standalone tests and the native bundle.
 mod machine;
 
-pub fn hooks() -> Box<dyn horizon_client::mod_api::Hooks> {
-    Box::new(machine::Sample)
+use horizon_client::mod_api::{self, *};
+use machine::Machine;
+
+#[derive(Default)]
+pub struct Sample;
+
+#[mod_api::horizon_mod]
+impl Hooks for Sample {
+    fn register(&self, registrar: &mut Registrar) {
+        registrar.block_entity_part(MACHINE, &[MACHINE], Machine);
+    }
+
+    fn block_entity_container(
+        &self,
+        _: &dyn Host,
+        event: &mut BlockEntityContainerEvent<'_>,
+    ) -> Option<ModContainer> {
+        (event.block == MACHINE).then(|| ModContainer {
+            slots: 5,
+            faces: std::array::from_fn(|_| vec![0, 1]),
+            inputs: vec![0],
+            outputs: vec![1],
+            menu: Some("minecraft:hopper".into()),
+        })
+    }
 }
 
 pub const MACHINE: &str = "machine_sample:machine";
