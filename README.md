@@ -17,7 +17,7 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `f864d122173877e1b81f210577110558760e008b`.
+The sample pins fork Horizon commit `5bd2ac814a8fd735f22ae2e63efe022358cf1741`.
 The exact Horizon and Mixins revisions are in [compatibility.json](compatibility.json).
 Native mods run code with the player's rights; only build code you trust. The
 launcher builds the sample from the source the mod pins and links its `hooks()`

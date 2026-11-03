@@ -4,6 +4,6 @@ resolver = "2"
 
 # Match the pinned game's patched dependencies when checking the trait crate.
 [patch.crates-io]
-wgpu-hal = { git = "https://github.com/arismoko/horizon", rev = "f864d122173877e1b81f210577110558760e008b" }
-naga = { git = "https://github.com/arismoko/horizon", rev = "f864d122173877e1b81f210577110558760e008b" }
-libmimalloc-sys = { git = "https://github.com/arismoko/horizon", rev = "f864d122173877e1b81f210577110558760e008b" }
+wgpu-hal = { git = "https://github.com/arismoko/horizon", rev = "5bd2ac814a8fd735f22ae2e63efe022358cf1741" }
+naga = { git = "https://github.com/arismoko/horizon", rev = "5bd2ac814a8fd735f22ae2e63efe022358cf1741" }
+libmimalloc-sys = { git = "https://github.com/arismoko/horizon", rev = "5bd2ac814a8fd735f22ae2e63efe022358cf1741" }

@@ -10,4 +10,4 @@ description = "A minimal native Horizon Mixins mod"
 path = "src/lib.rs"
 
 [dependencies]
-horizon-client = { git = "https://github.com/arismoko/horizon", rev = "f864d122173877e1b81f210577110558760e008b" }
+horizon-client = { git = "https://github.com/arismoko/horizon", rev = "5bd2ac814a8fd735f22ae2e63efe022358cf1741" }
