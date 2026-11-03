@@ -19,7 +19,9 @@ cargo test --workspace --locked --offline
 
 For bundle or compatibility changes, also run `python3 tools/test_stage.py` and
 `python3 tools/horizon.py check` and `test` against the pinned Horizon source.
-Pass `--horizon` and set `HORIZON_MIXINS` as described in the README.
+Pass `--horizon` as described in the README. These checks do not link the game:
+use the launcher's native build and test the behavior in game as well. Trait
+hooks and parts are the normal route; raw injections are a rare escape hatch.
 Do not commit exported sources, game assets, or build output.
 
 Contributions are licensed under the repository's [MIT license](LICENSE).

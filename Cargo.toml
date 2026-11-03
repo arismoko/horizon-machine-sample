@@ -1,3 +1,3 @@
 [workspace]
-members = ["native/rust", "tools/audit"]
+members = ["native/rust"]
 resolver = "2"
