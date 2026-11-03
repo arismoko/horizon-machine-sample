@@ -1,4 +1,4 @@
-use horizon_client::mod_api::*;
+use horizon_client::mod_api::{self, *};
 
 use crate::{DEPOSIT, DURATION, MACHINE, PIPE, advance, deposit_count, fill_empty};
 
@@ -210,6 +210,7 @@ impl BlockEntityPart for Machine {
 }
 
 pub struct Sample;
+#[mod_api::hooks]
 impl Hooks for Sample {
     fn register(&self, registrar: &mut Registrar) {
         registrar.block_entity_part(MACHINE, &[MACHINE], Machine);
