@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`520a95535f90c38da61be950e977ca8c6c833b46`, the scoped-Part subscription
+`e10f3eef5a9b825ce27244afcb782f4fc23119b5`, the scoped-Part subscription
 index change. The sample keeps sample main's typed block-entity declaration
 and the merged flat native-mod layout. The runtime preserves the side-split
 Host API and `#[mod_api::horizon_mod]` entry, and its Part implementations
