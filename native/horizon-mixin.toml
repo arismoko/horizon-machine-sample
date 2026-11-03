@@ -7,4 +7,4 @@ priority = 100
 path = "rust"
 
 [compatibility]
-horizon_revision = "73b3f47767e6f5201abcbb5841f832b284b64ace"
+horizon_revision = "2bb2f0f5435b9844b42a93e8bf4d7513f9679f40"
