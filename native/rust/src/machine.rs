@@ -9,7 +9,7 @@ impl BlockPart for Machine {}
 impl BlockEntityPart for Machine {
     fn block_entity(
         &self,
-        _: &mut dyn Host,
+        _: HostSide<'_>,
         _: &mut BlockEntityEvent<'_>,
     ) -> Option<(String, Compound)> {
         Some((MACHINE.to_owned(), Compound::new()))
@@ -19,7 +19,7 @@ impl BlockEntityPart for Machine {
         event.ticks = true;
     }
 
-    fn block_entity_tick(&self, host: &mut dyn Host, event: &mut BlockEntityTickEvent<'_>) {
+    fn block_entity_tick(&self, host: &mut dyn ServerHost, event: &mut BlockEntityTickEvent<'_>) {
         let pos = event.pos;
         let entity = &mut event.entity;
         let dimension = host.dimension();
@@ -137,7 +137,7 @@ impl BlockEntityPart for Machine {
         })
     }
 
-    fn screen_draw(&self, host: &dyn Host, event: &mut ScreenDrawEvent<'_>) {
+    fn screen_draw(&self, host: &dyn ClientHost, event: &mut ScreenDrawEvent<'_>) {
         let [x, y] = event.origin;
         host.fill(event.batch, [x + 66.0, y + 55.0, 44.0, 16.0], 0xff555555);
         host.text(
@@ -166,14 +166,14 @@ impl BlockEntityPart for Machine {
         );
     }
 
-    fn screen_click(&self, _: &dyn Host, event: &mut ScreenClickEvent<'_>) -> Option<i32> {
+    fn screen_click(&self, _: &dyn ClientHost, event: &mut ScreenClickEvent<'_>) -> Option<i32> {
         (!event.right
             && (66.0..110.0).contains(&event.at[0])
             && (55.0..71.0).contains(&event.at[1]))
         .then_some(DEPOSIT)
     }
 
-    fn menu_button(&self, host: &mut dyn Host, event: &mut MenuButtonEvent<'_>) {
+    fn menu_button(&self, host: &mut dyn ServerHost, event: &mut MenuButtonEvent<'_>) {
         if event.context.id != DEPOSIT {
             return;
         }
