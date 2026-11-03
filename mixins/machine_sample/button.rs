@@ -1,10 +1,10 @@
 fn sample_button(
     game: &mut Game<'_>,
     entity: &mut ModBlockEntity,
-    id: i32,
+    context: &horizon_client::menu::MenuButtonContext,
     carried: &mut Option<ItemStack>,
 ) {
-    if entity.id != super::machine_sample::MACHINE || id != super::machine_sample::DEPOSIT {
+    if entity.id != super::machine_sample::MACHINE || context.id != super::machine_sample::DEPOSIT {
         return;
     }
     let (Some(input), Some(stack)) = (entity.items.first_mut(), carried.as_mut()) else {
