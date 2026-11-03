@@ -1,6 +1,6 @@
 fn sample_draw(game: &Game<'_>, block: &str, data: &[i32], batch: &mut HudBatch, origin: [f32; 2]) {
     use horizon_client::mod_api::Host;
-    if block == super::machine_sample::MACHINE {
+    if block == horizon_example_mod::MACHINE {
         Host::fill(
             game,
             batch,
@@ -19,7 +19,7 @@ fn sample_draw(game: &Game<'_>, block: &str, data: &[i32], batch: &mut HudBatch,
             .first()
             .copied()
             .unwrap_or_default()
-            .clamp(0, super::machine_sample::DURATION);
+            .clamp(0, horizon_example_mod::DURATION);
         Host::fill(
             game,
             batch,
@@ -32,7 +32,7 @@ fn sample_draw(game: &Game<'_>, block: &str, data: &[i32], batch: &mut HudBatch,
             [
                 origin[0] + 72.0,
                 origin[1] + 40.0,
-                32.0 * progress as f32 / super::machine_sample::DURATION as f32,
+                32.0 * progress as f32 / horizon_example_mod::DURATION as f32,
                 6.0,
             ],
             0xff55bb55,

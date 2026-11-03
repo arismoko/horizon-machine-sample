@@ -1,6 +1,6 @@
 # Machine sample content
 
-This data-only content mod supplies `machine_sample:machine` and
+The top-level content in this mod supplies `machine_sample:machine` and
 `machine_sample:pipe`, their block items, and original pixel textures. The
 machine copies the vanilla chest block template. The pipe copies the iron
 block template. Both blocks use simple cube models.
@@ -20,8 +20,6 @@ cargo horizon-mod build
 cargo horizon-mod check target/horizon-mod/machine_sample.hmod
 ```
 
-Copy `target/horizon-mod/machine_sample.hmod` to the game's `horizon-mods/` folder.
-Enable it in Options > Mods, then restart the game. Install the native sample separately using the root
-README if its behavior is needed. Use the same content and native mods on
-both client and server. Removing registered blocks from an existing world can
+Install `target/horizon-mod/machine_sample.hmod` through the launcher's Mods page and build its native code.
+This single package contains both content and native behavior. Use the same mod on both client and server. Removing registered blocks from an existing world can
 lose world data; test in a fresh world.

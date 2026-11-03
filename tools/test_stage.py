@@ -31,7 +31,8 @@ def main():
             assert second == output and not changed and first == snapshot(output)
             plan = json.loads((root/'plan.json').read_text())
             assert plan['schema'] == horizon.COMPAT['mixin_schema']
-            assert len(plan['injections']) == 8 and len(plan['modules']) == 1
+            assert len(plan['injections']) == 8 and not plan.get('modules')
+            assert len(plan['crates']) == 1 and plan['crates'][0]['package'] == 'horizon-example-mod'
             original = next((root/'original').glob('*/.horizon-mod-template.json')).parent
             subprocess.run(['cargo', 'run', '--quiet', '--locked', '--offline',
                             '-p', 'native-mod-source-audit', '--', str(original),

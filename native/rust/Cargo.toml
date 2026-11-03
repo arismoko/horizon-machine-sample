@@ -1,0 +1,11 @@
+[package]
+name = "horizon-example-mod"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+description = "A minimal native Horizon Mixins mod"
+
+[lib]
+# The shared runtime is linked once through the manifest's raw crate declaration.
+path = "src/lib.rs"

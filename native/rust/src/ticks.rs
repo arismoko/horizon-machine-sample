@@ -1,5 +1,5 @@
 fn sample_ticks(block: &str, ticks: &mut bool) {
-    if block == super::machine_sample::MACHINE {
+    if block == horizon_example_mod::MACHINE {
         *ticks = true;
     }
 }
