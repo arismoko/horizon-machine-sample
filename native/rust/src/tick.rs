@@ -1,9 +1,9 @@
 fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) {
     use horizon_world::nbt::Tag;
     if entity.id == horizon_example_mod::MACHINE {
-        use horizon_client::mod_api::{Host, ITEMS, ItemResource};
+        use horizon_client::mod_api::{Host, HostTransaction, ITEMS, ItemResource, ServerHost};
         let dimension = Host::dimension(game);
-        let host: &mut dyn Host = game;
+        let host: &mut dyn ServerHost = game;
         horizon_example_mod::fill_empty(&mut entity.items[0], || {
             let source = host.level(dimension)?.capability(
                 host,
@@ -74,7 +74,7 @@ fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) 
             }
         }
         let dimension = Host::dimension(game);
-        let host: &mut dyn Host = game;
+        let host: &mut dyn ServerHost = game;
         let pipe = host
             .level(dimension)
             .and_then(|level| {
@@ -84,7 +84,7 @@ fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) 
             if let Some(output) = &mut entity.items[1] {
                 let resource = ItemResource::of(output);
                 let dimension = Host::dimension(game);
-                let host: &mut dyn Host = game;
+                let host: &mut dyn ServerHost = game;
                 let inserted = host
                     .level(dimension)
                     .and_then(|level| {

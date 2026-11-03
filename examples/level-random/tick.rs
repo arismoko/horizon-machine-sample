@@ -72,10 +72,10 @@ fn sample_tick(game: &mut Game<'_>, pos: [i32; 3], entity: &mut ModBlockEntity) 
             });
         if pipe.as_deref() == Some(horizon_example_mod::PIPE) {
             if let Some(output) = &mut entity.items[1] {
-                use horizon_client::mod_api::{Host, ITEMS, ItemResource};
+                use horizon_client::mod_api::{Host, HostTransaction, ITEMS, ItemResource, ServerHost};
                 let resource = ItemResource::of(output);
                 let dimension = Host::dimension(game);
-                let host: &mut dyn Host = game;
+                let host: &mut dyn ServerHost = game;
                 let inserted = host
                     .level(dimension)
                     .and_then(|level| {
