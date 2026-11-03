@@ -75,7 +75,8 @@ machine slots were empty; no stone was added by hand. This test covers one
 recipe and the east pipe, not a dedicated server. At the previous pin
 (`1b6e55d4f3bd14079551bcad173d0fac8f8225bb`), an integrated-server game test
 also converted four cobblestone into four stone
-in the east chest. The current pin has not yet been game-tested.
+in the east chest. At the current pin, the Deposit button moved four carried
+cobblestone into the input and the machine processed them into four stone.
 
 At an earlier pin, the screen opened but four cobblestone stayed idle. Four
 manually loaded stone moved through the pipe into the east chest.
