@@ -1,7 +1,18 @@
 # Validation
 
-The sample is being ported to a trait mod at fork Horizon
-`c64f46ac4fe95b02d5a14bacf074b1991d187ae1`.
+## Current merge pin
+
+The sample pins fork Horizon `bb0e55bc8359af717aec5a556cc4236b33ca0984`, the main
+merge of #335. Committed source hashes and the seeded lock are updated together.
+Formatting and pin/lock checks are run before publishing; final exact-head
+stage/check evidence is pending the paired item 11 run. No linked, in-game or
+dedicated-server proof is claimed for this merge pin.
+
+## Prior candidate results
+
+The following recorded results describe the earlier candidate at
+`c64f46ac4fe95b02d5a14bacf074b1991d187ae1`, before the Host-split sample merge.
+They are not exact-head evidence for the current merge pin.
 
 | Check | Result |
 |---|---|
