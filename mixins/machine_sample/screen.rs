@@ -7,6 +7,7 @@ fn sample_screen(block: &str, screen: &mut Option<NativeScreen>) {
             inventory_x: 8.0,
             inventory_y: 84.0,
             own_labels: false,
+            own_background: false,
         });
     }
 }
