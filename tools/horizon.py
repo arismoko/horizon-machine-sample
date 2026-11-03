@@ -85,16 +85,35 @@ def stage_mods(stages):
     return mods
 
 
+def check_lock(horizon_lock, sample_lock):
+    """Refuse a shared dependency version absent from the pinned game lock."""
+    with horizon_lock.open("rb") as file:
+        packages = tomllib.load(file)["package"]
+    versions = {}
+    for package in packages:
+        versions.setdefault(package["name"], set()).add(package["version"])
+    with sample_lock.open("rb") as file:
+        sample = tomllib.load(file)["package"]
+    for package in sample:
+        name, version = package["name"], package["version"]
+        if name in versions and version not in versions[name]:
+            raise ValueError(f"{name} {version} differs from pinned Horizon lock: {sorted(versions[name])}")
+
+
 def trait_stage(horizon, stages):
     """Export the pinned game and stage the trait bundle without changing game sources."""
     manifest = tomllib.loads((ROOT / "native/horizon-mixin.toml").read_text())
     crate = tomllib.loads((ROOT / "native/rust/Cargo.toml").read_text())
     native = json.loads((ROOT / "horizon-native.json").read_text())
+    workspace = tomllib.loads((ROOT / "Cargo.toml").read_text())
+    patches = workspace["patch"]["crates-io"]
     if (manifest["compatibility"]["horizon_revision"] != PIN
             or crate["dependencies"]["horizon-client"]["rev"] != PIN
+            or any(patch["rev"] != PIN for patch in patches.values())
             or native["horizon"] != PIN):
         raise ValueError("Horizon pins in compatibility, native manifests and crate must match")
     output, changed = stage(horizon, stages / "original")
+    check_lock(output / "Cargo.lock", ROOT / "Cargo.lock")
     stage_mods(stages)
     return output, changed
 

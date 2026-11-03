@@ -39,8 +39,9 @@ python3 tools/test_stage.py --horizon /path/to/horizon
 python3 tools/horizon.py check --horizon /path/to/horizon --target-dir "$PWD/target/horizon-cargo"
 ```
 
-The stage test exports the pinned committed source and stages the trait bundle;
-the check compiles the trait crate, **not** a linked executable. Both leave the
+The stage test exports the pinned committed source, verifies shared dependency
+versions against its lockfile, and stages the trait bundle; the check compiles
+the trait crate, **not** a linked executable. Both leave the
 original checkout unchanged. The launcher's native build is necessary to verify
 linking and gameplay. `--offline` needs the dependencies in Cargo's cache.
 
@@ -58,7 +59,8 @@ Run `python3 tools/package.py` to create `target/horizon-mod/machine_sample.hmod
 with Horizon's shared writer. `python3 tools/test_package.py` checks packaging
 and the native bundle's staging mapping. The engine pin is recorded in
 `compatibility.json`, `horizon-native.json`, the native manifest and the crate
-dependency; update them together. No game assets are included.
+dependency and workspace dependency patches; update them together and seed
+`Cargo.lock` from the pinned game's lockfile. No game assets are included.
 
 To test a hook or helper end to end, change the trait mod, build the linked game
 with the launcher and exercise the behavior on the intended game thread. This

@@ -33,6 +33,14 @@ def main():
             assert manifest['api']['path'] == 'rust'
             assert 'injection' not in manifest and 'crate' not in manifest
             assert (root/'mods/machine_sample/rust/src/machine.rs').read_bytes() == (horizon.ROOT/'native/rust/src/machine.rs').read_bytes()
+            mismatched = root/'mismatched.lock'
+            mismatched.write_text('[[package]]\nname = "libc"\nversion = "999.0.0"\n')
+            try:
+                horizon.check_lock(output/'Cargo.lock', mismatched)
+            except ValueError as error:
+                assert 'libc 999.0.0' in str(error)
+            else:
+                raise AssertionError('a mismatched shared dependency was accepted')
     assert all((checkout/p).read_bytes() == content for p, content in before.items())
     assert subprocess.check_output(['git', '-C', str(checkout), 'status', '--porcelain']) == status
     print(json.dumps({'status': 'ok', 'original_checkout_unchanged': True,
