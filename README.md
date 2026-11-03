@@ -17,7 +17,7 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `f5b891948c0cd5bce563496c5fc129b89cce9efc`.
+The sample pins fork Horizon commit `43a17dcdbae312f79e375c2ac5eb602538ef2b93`.
 The exact Horizon and Mixins revisions are in [horizon-mod.toml](horizon-mod.toml).
 See [VALIDATION.md](VALIDATION.md) for the scope of the current checks.
 Native mods run code with the player's rights; only build code you trust. The
@@ -66,12 +66,13 @@ data/machine_sample/
 its `[native]` section owns the game and exact source pins. Cargo's package
 name and version are not mod identity. `src/lib.rs` marks its `Hooks`
 implementation with `#[mod_api::horizon_mod]`, which exports the entry and
-registers the machine's `BlockEntityPart`. It uses `ITEMS` to reach neighboring
-inventories and scoped screen and menu hooks for its UI. There are no raw
-injections or handwritten factories. The launcher generates its own
-`horizon-mixin.toml` in its build area; legacy `native/`, `rust/` and
-`horizon-native.json` inputs are not supported. Mods don't ship a toolchain
-file; Horizon's pinned toolchain builds them. The local helper and CI use Rust
+registers the machine's `BlockEntityPart`. Each scoped Part implementation uses
+`#[mod_api::horizon_part]` to declare its hook subscriptions at compile time.
+It uses `ITEMS` to reach neighboring inventories and scoped screen and menu
+hooks for its UI. There are no raw injections or handwritten factories. The
+launcher generates its own `horizon-mixin.toml` in its build area; legacy
+`native/`, `rust/` and `horizon-native.json` inputs are not supported. Mods don't
+ship a toolchain file; Horizon's pinned toolchain builds them. The local helper and CI use Rust
 1.99.1, matching the pinned Horizon launcher's toolchain.
 
 Run `python3 tools/package.py --horizon /path/to/horizon` to create
