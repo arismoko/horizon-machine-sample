@@ -7,10 +7,10 @@ license = "MIT"
 description = "A minimal native Horizon mod"
 
 [dependencies]
-horizon-client = { git = "https://github.com/arismoko/horizon", rev = "727fdefc2e79492157ecb7d93f37917237e70137" }
+horizon-client = { git = "https://github.com/arismoko/horizon", rev = "228015fa37511cecc90098a1bef1bbdf0ec83cc5" }
 
 # Match the pinned game's patched dependencies for standalone checks.
 [patch.crates-io]
-wgpu-hal = { git = "https://github.com/arismoko/horizon", rev = "727fdefc2e79492157ecb7d93f37917237e70137" }
-naga = { git = "https://github.com/arismoko/horizon", rev = "727fdefc2e79492157ecb7d93f37917237e70137" }
-libmimalloc-sys = { git = "https://github.com/arismoko/horizon", rev = "727fdefc2e79492157ecb7d93f37917237e70137" }
+wgpu-hal = { git = "https://github.com/arismoko/horizon", rev = "228015fa37511cecc90098a1bef1bbdf0ec83cc5" }
+naga = { git = "https://github.com/arismoko/horizon", rev = "228015fa37511cecc90098a1bef1bbdf0ec83cc5" }
+libmimalloc-sys = { git = "https://github.com/arismoko/horizon", rev = "228015fa37511cecc90098a1bef1bbdf0ec83cc5" }

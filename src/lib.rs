@@ -13,7 +13,9 @@ impl Hooks for Sample {
             .block_entity_type("machine")
             .blocks(&[MACHINE])
             .build();
-        registrar.block_entity_part(&machine, machine::Machine);
+        registrar
+            .block_entity_part(&machine, machine::Machine)
+            .expect("native block entity type");
     }
 
     fn block_entity_container(
