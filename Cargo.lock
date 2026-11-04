@@ -9,6 +9,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "320119579fcad9c21884f5c4861d16174d0e06250625266f50fe6898340abefa"
 
 [[package]]
+name = "anyhow"
+version = "1.0.104"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "330a5ed07fa54e4702c9d6c4174f74427fc0ef6e214bbd677ae50a5099946470"
+
+[[package]]
 name = "arrayvec"
 version = "0.7.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -199,6 +205,12 @@ dependencies = [
 
 [[package]]
 name = "foldhash"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d9c4f5dac5e15c24eb999c26181a6ca40b39fe946cbe4c263c7209467bc83af2"
+
+[[package]]
+name = "foldhash"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
@@ -270,11 +282,20 @@ dependencies = [
 
 [[package]]
 name = "hashbrown"
+version = "0.15.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9229cfe53dfd69f0609a49f65461bd93001ea1ef889cd5529dd176593f5338a1"
+dependencies = [
+ "foldhash 0.1.5",
+]
+
+[[package]]
+name = "hashbrown"
 version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a"
 dependencies = [
- "foldhash",
+ "foldhash 0.2.0",
 ]
 
 [[package]]
@@ -286,7 +307,7 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 [[package]]
 name = "horizon-assets"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38#e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38"
+source = "git+https://github.com/arismoko/horizon?rev=e9647173fc59c86455dec84ef66c2583af161ac9#e9647173fc59c86455dec84ef66c2583af161ac9"
 dependencies = [
  "horizon-core",
  "log",
@@ -297,7 +318,7 @@ dependencies = [
 [[package]]
 name = "horizon-client-core"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38#e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38"
+source = "git+https://github.com/arismoko/horizon?rev=e9647173fc59c86455dec84ef66c2583af161ac9#e9647173fc59c86455dec84ef66c2583af161ac9"
 dependencies = [
  "horizon-world",
  "serde_json",
@@ -306,7 +327,7 @@ dependencies = [
 [[package]]
 name = "horizon-core"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38#e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38"
+source = "git+https://github.com/arismoko/horizon?rev=e9647173fc59c86455dec84ef66c2583af161ac9#e9647173fc59c86455dec84ef66c2583af161ac9"
 dependencies = [
  "libm",
 ]
@@ -321,7 +342,7 @@ dependencies = [
 [[package]]
 name = "horizon-items"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38#e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38"
+source = "git+https://github.com/arismoko/horizon?rev=e9647173fc59c86455dec84ef66c2583af161ac9#e9647173fc59c86455dec84ef66c2583af161ac9"
 dependencies = [
  "horizon-client-core",
  "horizon-core",
@@ -334,7 +355,7 @@ dependencies = [
 [[package]]
 name = "horizon-mod-api"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38#e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38"
+source = "git+https://github.com/arismoko/horizon?rev=e9647173fc59c86455dec84ef66c2583af161ac9#e9647173fc59c86455dec84ef66c2583af161ac9"
 dependencies = [
  "bytemuck",
  "glam",
@@ -350,24 +371,26 @@ dependencies = [
  "serde",
  "serde_json",
  "wgpu",
+ "wit-bindgen",
 ]
 
 [[package]]
 name = "horizon-mod-api-gen"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38#e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38"
+source = "git+https://github.com/arismoko/horizon?rev=e9647173fc59c86455dec84ef66c2583af161ac9#e9647173fc59c86455dec84ef66c2583af161ac9"
 dependencies = [
  "heck",
  "quote",
  "serde",
  "serde_json",
  "syn 2.0.119",
+ "toml",
 ]
 
 [[package]]
 name = "horizon-mod-api-macros"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38#e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38"
+source = "git+https://github.com/arismoko/horizon?rev=e9647173fc59c86455dec84ef66c2583af161ac9#e9647173fc59c86455dec84ef66c2583af161ac9"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -377,13 +400,14 @@ dependencies = [
 [[package]]
 name = "horizon-mods"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38#e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38"
+source = "git+https://github.com/arismoko/horizon?rev=e9647173fc59c86455dec84ef66c2583af161ac9#e9647173fc59c86455dec84ef66c2583af161ac9"
 dependencies = [
  "log",
  "png",
  "semver",
  "serde",
  "serde_json",
+ "sha2",
  "toml",
  "zip",
 ]
@@ -391,7 +415,7 @@ dependencies = [
 [[package]]
 name = "horizon-world"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38#e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38"
+source = "git+https://github.com/arismoko/horizon?rev=e9647173fc59c86455dec84ef66c2583af161ac9#e9647173fc59c86455dec84ef66c2583af161ac9"
 dependencies = [
  "flate2",
  "horizon-core",
@@ -406,13 +430,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "id-arena"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d3067d79b975e8844ca9eb072e16b31c3c1c36928edf9c6789548c524d0d954"
+
+[[package]]
 name = "indexmap"
 version = "2.14.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cc4e190f5d26ca7051642629da2c52fc03bde85a03197c99408dcd291734c855"
 dependencies = [
  "equivalent",
- "hashbrown",
+ "hashbrown 0.17.1",
+ "serde",
+ "serde_core",
 ]
 
 [[package]]
@@ -431,6 +463,12 @@ dependencies = [
  "futures-util",
  "wasm-bindgen",
 ]
+
+[[package]]
+name = "leb128fmt"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09edd9e8b54e49e587e4f6295a7d29c3ea94d469cb40ab8ca70b288248a81db2"
 
 [[package]]
 name = "libc"
@@ -520,7 +558,7 @@ dependencies = [
  "cfg_aliases",
  "codespan-reporting",
  "half",
- "hashbrown",
+ "hashbrown 0.17.1",
  "indexmap",
  "libm",
  "log",
@@ -538,7 +576,7 @@ version = "30.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "590afbf58a6f4f62873cd5cff4468061844bafa1cdf399cc954537c22d768d49"
 dependencies = [
- "hashbrown",
+ "hashbrown 0.17.1",
  "indexmap",
  "rustc-hash",
  "thiserror",
@@ -639,6 +677,16 @@ dependencies = [
  "embedded-io 0.4.0",
  "embedded-io 0.6.1",
  "serde",
+]
+
+[[package]]
+name = "prettyplease"
+version = "0.2.37"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "479ca8adacdd7ce8f1fb39ce9ecccbfe93a3f1344b3d0d97f20bc0196208f62b"
+dependencies = [
+ "proc-macro2",
+ "syn 2.0.119",
 ]
 
 [[package]]
@@ -922,6 +970,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4ac048d71ede7ee76d585517add45da530660ef4390e49b098733c6e897f254"
 
 [[package]]
+name = "unicode-xid"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ebc1c04c71510c7f702b52b7c350734c9ff1295c464a03335b00bb84fc54f853"
+
+[[package]]
 name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -984,6 +1038,40 @@ dependencies = [
 ]
 
 [[package]]
+name = "wasm-encoder"
+version = "0.239.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5be00faa2b4950c76fe618c409d2c3ea5a3c9422013e079482d78544bb2d184c"
+dependencies = [
+ "leb128fmt",
+ "wasmparser",
+]
+
+[[package]]
+name = "wasm-metadata"
+version = "0.239.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "20b3ec880a9ac69ccd92fbdbcf46ee833071cf09f82bb005b2327c7ae6025ae2"
+dependencies = [
+ "anyhow",
+ "indexmap",
+ "wasm-encoder",
+ "wasmparser",
+]
+
+[[package]]
+name = "wasmparser"
+version = "0.239.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8c9d90bb93e764f6beabf1d02028c70a2156a6583e63ac4218dd07ef733368b0"
+dependencies = [
+ "bitflags",
+ "hashbrown 0.15.5",
+ "indexmap",
+ "semver",
+]
+
+[[package]]
 name = "web-sys"
 version = "0.3.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1005,7 +1093,7 @@ dependencies = [
  "cfg-if",
  "cfg_aliases",
  "document-features",
- "hashbrown",
+ "hashbrown 0.17.1",
  "js-sys",
  "log",
  "portable-atomic",
@@ -1034,7 +1122,7 @@ dependencies = [
  "bytemuck",
  "cfg_aliases",
  "document-features",
- "hashbrown",
+ "hashbrown 0.17.1",
  "indexmap",
  "log",
  "naga",
@@ -1071,7 +1159,7 @@ dependencies = [
  "bitflags",
  "cfg-if",
  "cfg_aliases",
- "hashbrown",
+ "hashbrown 0.17.1",
  "libloading",
  "log",
  "naga",
@@ -1132,6 +1220,94 @@ name = "winnow"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23b97319f7b8343df12cc98938e5c3eb436064524c8d2b4e30a1d3a36eecdf81"
+
+[[package]]
+name = "wit-bindgen"
+version = "0.46.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f17a85883d4e6d00e8a97c586de764dabcc06133f7f1d55dce5cdc070ad7fe59"
+dependencies = [
+ "wit-bindgen-rust-macro",
+]
+
+[[package]]
+name = "wit-bindgen-core"
+version = "0.46.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cabd629f94da277abc739c71353397046401518efb2c707669f805205f0b9890"
+dependencies = [
+ "anyhow",
+ "heck",
+ "wit-parser",
+]
+
+[[package]]
+name = "wit-bindgen-rust"
+version = "0.46.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9a4232e841089fa5f3c4fc732a92e1c74e1a3958db3b12f1de5934da2027f1f4"
+dependencies = [
+ "anyhow",
+ "heck",
+ "indexmap",
+ "prettyplease",
+ "syn 2.0.119",
+ "wasm-metadata",
+ "wit-bindgen-core",
+ "wit-component",
+]
+
+[[package]]
+name = "wit-bindgen-rust-macro"
+version = "0.46.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e0d4698c2913d8d9c2b220d116409c3f51a7aa8d7765151b886918367179ee9"
+dependencies = [
+ "anyhow",
+ "prettyplease",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.119",
+ "wit-bindgen-core",
+ "wit-bindgen-rust",
+]
+
+[[package]]
+name = "wit-component"
+version = "0.239.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "88a866b19dba2c94d706ec58c92a4c62ab63e482b4c935d2a085ac94caecb136"
+dependencies = [
+ "anyhow",
+ "bitflags",
+ "indexmap",
+ "log",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "wasm-encoder",
+ "wasm-metadata",
+ "wasmparser",
+ "wit-parser",
+]
+
+[[package]]
+name = "wit-parser"
+version = "0.239.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "55c92c939d667b7bf0c6bf2d1f67196529758f99a2a45a3355cc56964fd5315d"
+dependencies = [
+ "anyhow",
+ "id-arena",
+ "indexmap",
+ "log",
+ "semver",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "unicode-xid",
+ "wasmparser",
+]
 
 [[package]]
 name = "xxhash-rust"
