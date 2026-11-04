@@ -1,4 +1,4 @@
-use horizon_client::mod_api::{self, *};
+use mod_api::*;
 
 use crate::{DEPOSIT, DURATION, PIPE, advance, deposit_count, fill_empty};
 
@@ -131,25 +131,22 @@ impl BlockEntityPart for Machine {
         })
     }
 
-    fn screen_draw(&self, host: &dyn ClientHost, event: &mut ScreenDrawEvent<'_>) {
+    fn screen_draw(&self, _: &dyn ClientHost, event: &mut ScreenDrawEvent<'_>) {
         let [x, y] = event.origin;
-        host.fill(event.batch, [x + 66.0, y + 55.0, 44.0, 16.0], 0xff555555);
-        host.text(
-            event.batch,
-            "Deposit",
-            [x + 68.0, y + 59.0],
-            0xffffff,
-            false,
-        );
+        event
+            .draw
+            .fill([x + 66.0, y + 55.0, 44.0, 16.0], 0xff555555);
+        event
+            .draw
+            .text("Deposit", [x + 68.0, y + 59.0], 0xffffff, false);
         let progress = event
             .data
             .first()
             .copied()
             .unwrap_or_default()
             .clamp(0, DURATION);
-        host.fill(event.batch, [x + 72.0, y + 40.0, 32.0, 6.0], 0xff555555);
-        host.fill(
-            event.batch,
+        event.draw.fill([x + 72.0, y + 40.0, 32.0, 6.0], 0xff555555);
+        event.draw.fill(
             [
                 x + 72.0,
                 y + 40.0,

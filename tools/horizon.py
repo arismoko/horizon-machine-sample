@@ -110,10 +110,8 @@ def check_lock(horizon_lock, sample_lock):
 def trait_stage(horizon, stages):
     """Export the pinned game and stage its flat mod without changing game sources."""
     crate = tomllib.loads((ROOT / "Cargo.toml").read_text())
-    patches = crate["patch"]["crates-io"]
     if (COMPAT["horizon_revision"] != PIN
-            or crate["dependencies"]["horizon-client"]["rev"] != PIN
-            or any(patch["rev"] != PIN for patch in patches.values())
+            or crate["dependencies"]["horizon-mod-api"]["rev"] != PIN
             or MANIFEST["native"]["mixins"] != COMPAT["horizon_mixins_revision"]):
         raise ValueError("The manifest, crate and development provenance pins must match")
     output, changed = stage(horizon, stages / "original")

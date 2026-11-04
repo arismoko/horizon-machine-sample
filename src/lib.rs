@@ -1,7 +1,7 @@
 // Shared by the standalone tests and the native bundle.
 mod machine;
 
-use horizon_client::mod_api::{self, *};
+use mod_api::*;
 
 #[derive(Default)]
 struct Sample;
