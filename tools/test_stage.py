@@ -29,7 +29,7 @@ def main():
             first = snapshot(output)
             second, changed = horizon.trait_stage(checkout, root)
             assert second == output and not changed and first == snapshot(output)
-            staged = root/'mods/machine_sample'
+            staged = root/'horizon-native-mods/machine_sample'
             manifest = horizon.tomllib.loads((staged/'horizon-mod.toml').read_text())
             assert manifest['native']['horizon'] == horizon.PIN
             assert 'injection' not in manifest['native']

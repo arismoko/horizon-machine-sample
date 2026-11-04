@@ -1,13 +1,16 @@
 # Validation
 
 The flat project pins fork Horizon
-`47447042ca52bca0d0589fbbd6ddd1d6f7a7b021`, the bootstrap registration-context
-change. The sample keeps sample main's typed block-entity declaration
-and the merged flat native-mod layout, and its `register` hook takes the
-registration context. The runtime preserves the side-split
-Host API and `#[mod_api::horizon_mod]` entry, and its Part implementations
-use `#[mod_api::horizon_part]` to record subscriptions. There is no handwritten
-entry, packaging filter or compatibility fallback.
+`1765439a35adf3bee8d6ed14a45c6ab1470e3de9`, the bootstrap registration-context
+change on a sample main that carries the native `BuiltMod` export and the
+typed block-entity access change. The sample keeps sample main's typed
+block-entity declaration, scoped-Part subscriptions and flat layout, handles
+the Part registration `Result`, and its `register` hook takes the
+registration context. The launcher owns the generated main and its mod and
+inventory markers; the staging check lays the canonical flat package out at
+`horizon-native-mods/<id>/`, where the engine validates id, version and side
+and refuses startup on mismatch, with no record fallback. There is no
+handwritten entry, packaging filter or compatibility fallback.
 
 ## Source and package checks
 
