@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`1765439a35adf3bee8d6ed14a45c6ab1470e3de9`, the bootstrap registration-context
+`2fa0238765782b9c474796135c98664269929721`, the bootstrap registration-context
 change on a sample main that carries the native `BuiltMod` export and the
 typed block-entity access change. The sample keeps sample main's typed
 block-entity declaration, scoped-Part subscriptions and flat layout, handles
