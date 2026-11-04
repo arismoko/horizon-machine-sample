@@ -1,15 +1,16 @@
 # Validation
 
 The flat project pins fork Horizon
-`228015fa37511cecc90098a1bef1bbdf0ec83cc5`, the native `BuiltMod` export
-change on a main that also carries the typed block-entity access change. The
-sample keeps sample main's typed block-entity declaration, scoped-Part
-subscriptions and flat layout, and handles the Part registration `Result`.
-The launcher owns the generated main and its mod and inventory markers; the
-staging check lays the canonical flat package out at `horizon-native-mods/<id>/`,
-where the engine validates id, version and side and refuses startup on
-mismatch, with no record fallback. There is no handwritten entry, packaging
-filter or compatibility fallback.
+`3c39044b22de60d6e1bee273b55bf489bf52166c`, the bootstrap registration-context
+change on a sample main that carries the native `BuiltMod` export and the
+typed block-entity access change. The sample keeps sample main's typed
+block-entity declaration, scoped-Part subscriptions and flat layout, handles
+the Part registration `Result`, and its `register` hook takes the
+registration context. The launcher owns the generated main and its mod and
+inventory markers; the staging check lays the canonical flat package out at
+`horizon-native-mods/<id>/`, where the engine validates id, version and side
+and refuses startup on mismatch, with no record fallback. There is no
+handwritten entry, packaging filter or compatibility fallback.
 
 ## Source and package checks
 
