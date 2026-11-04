@@ -7,4 +7,4 @@ license = "MIT"
 description = "A minimal native Horizon mod"
 
 [dependencies]
-horizon-mod-api = { git = "https://github.com/arismoko/horizon", rev = "c3e3fa7dfe2b9716d70b9a8ac86dc3866ae884a9" }
+horizon-mod-api = { git = "https://github.com/arismoko/horizon", rev = "b726681f1b58f9a5cee5bfdd1aa18809bd28c982" }
