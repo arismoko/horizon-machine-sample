@@ -43,7 +43,7 @@ impl BlockEntityPart for Machine {
                     .iter()
                     .find_map(|recipe| {
                         let ingredient = host.recipe_ingredient(&recipe.json["ingredient"])?;
-                        if !ingredient.test(input) {
+                        if !ingredient.test(&*host, input) {
                             return None;
                         }
                         host.recipe_result(&recipe.json["result"])
