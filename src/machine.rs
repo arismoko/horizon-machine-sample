@@ -138,7 +138,7 @@ impl BlockEntityPart for Machine {
             .fill([x + 66.0, y + 55.0, 44.0, 16.0], 0xff555555);
         event
             .draw
-            .text("Deposit", [x + 68.0, y + 59.0], 0xffffff, false);
+            .text("Deposit", [x + 68.0, y + 59.0], 0xffffffff, false);
         let progress = event
             .data
             .first()
