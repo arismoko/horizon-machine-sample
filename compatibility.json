@@ -1,8 +1,8 @@
 {
-  "horizon_revision": "8671f24dc67511f5ed44998b8945ac91bfc84602",
+  "horizon_revision": "e5b2c0d93d0a3bbfabfe8bc03ec23521098aae38",
   "source_sha256": {
     "crates/horizon-client/src/game.rs": "5aa0fbb34d07912448dfc0d723b2a50f654b73d0e9e09634813fa6a3aaee8239",
-    "crates/horizon-client/src/game/native_hooks.rs": "41a59bd4d83f06a950292f074ccf68e6a71a0764da3cb249d19a7a71762fa8b5"
+    "crates/horizon-client/src/game/native_hooks.rs": "5409b4e5a2596c422d528c5df6192167200015d5ca41ca004b24be9bd3eabd60"
   },
   "horizon_repository": "https://github.com/arismoko/horizon",
   "horizon_mixins_repository": "https://github.com/horizon-rust/horizon-mixins",
