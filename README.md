@@ -56,6 +56,10 @@ other API features independently:
 - `services.rs`: `/machine_sample announce <message>` (operator level 2) broadcasts
   an announcement using typed command sources and source-routed feedback.
 
+- `client.rs`: a remappable Inspect machine view key (default I) toggles first/
+  third-person while targeting a machine and plays a local UI click. The machine
+  screen also demonstrates a small draw overlay.
+
 See [VALIDATION.md](VALIDATION.md) for gameplay triggers and tested scope.
 
 ## Package and API

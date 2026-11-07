@@ -9,6 +9,10 @@ struct Sample;
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
+    fn input_key(&self, host: &mut dyn ClientHost, event: &mut InputKeyEvent<'_>) {
+        tour::client::input(host, event);
+    }
+
     fn register_commands(&self, _: &mut dyn ServerHost, event: &mut RegisterCommandsEvent<'_>) {
         tour::services::register(event);
     }
@@ -22,6 +26,7 @@ impl Hooks for Sample {
     }
 
     fn register(&self, registrar: &mut dyn Registrar, _: &RegistrationContext) {
+        tour::client::register(registrar);
         let machine = registrar
             .block_entity_type("machine")
             .blocks(&[MACHINE])

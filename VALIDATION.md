@@ -48,6 +48,22 @@ be able to execute this level 2 command. An unrelated command must be untouched.
 Unit tests cover literal routing and parsed message formatting. These gameplay
 triggers are documented, not yet exercised at this pin.
 
+### Client inspection and screen overlay
+
+Look at a sample machine with no screen open and press I. The view should switch
+from first person to third person behind, and a local UI click should play.
+With the machine still targeted, press again to return; vanilla F5 also remains
+available. Looking at another block, an entity or empty space must do nothing,
+as must holding the key (repeat events). Rebind Inspect machine view under
+Options > Controls and confirm only the new binding works. Open the machine
+screen and inspect the `40 tick cycle` overlay above its two slots; the Deposit
+button and progress bar must remain unobscured. No other player should hear the
+click or have their camera changed.
+
+The unit test covers the camera toggle policy, not rendering, sound or input
+routing. These visual/audio triggers have not been exercised at this pin and
+need a reviewer client run.
+
 ## In-game proof scope
 
 A linked dev build and an integrated or dedicated-server run are distinct from

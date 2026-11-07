@@ -132,6 +132,7 @@ impl BlockEntityPart for Machine {
     }
 
     fn screen_draw(&self, _: &dyn ClientHost, event: &mut ScreenDrawEvent<'_>) {
+        crate::tour::client::overlay(event);
         let [x, y] = event.origin;
         event
             .draw

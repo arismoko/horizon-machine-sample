@@ -1,4 +1,5 @@
 {
   "block.machine_sample.machine": "Sample Machine",
-  "block.machine_sample.pipe": "Sample Pipe"
+  "block.machine_sample.pipe": "Sample Pipe",
+  "key.machine_sample.inspect": "Inspect machine view"
 }
