@@ -118,6 +118,33 @@ mod tests {
     }
 
     #[test]
+    fn republished_ingredient_membership_and_invalid_entries() {
+        let cache = ProcessingRecipes::default();
+        let mut host = data(&[2]);
+        let input = ItemStack::new(key(1), 1).unwrap();
+        cache.publish(&host);
+        assert!(result(&cache, &host, &input).is_some());
+        // Stand-in for a tag-only publication: the parser now resolves a different set.
+        host.recipes = vec![
+            Recipe::new(
+                "test:invalid",
+                "machine_sample:processing",
+                Arc::new(serde_json::json!({"ingredient": null, "result": 3})),
+            ),
+            Recipe::new(
+                "test:changed",
+                "machine_sample:processing",
+                Arc::new(serde_json::json!({"ingredient": "2", "result": 4})),
+            ),
+        ]
+        .into();
+        cache.publish(&host);
+        assert!(result(&cache, &host, &input).is_none());
+        let changed = ItemStack::new(key(1), 2).unwrap();
+        assert_eq!(result(&cache, &host, &changed).unwrap().item(), key(4));
+    }
+
+    #[test]
     fn stopped_and_next_start_cannot_reuse_world_definitions() {
         let sample = crate::Sample::default();
         let source = data(&[2]);
