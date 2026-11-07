@@ -56,6 +56,10 @@ other API features independently:
 - `services.rs`: `/machine_sample announce <message>` (operator level 2) broadcasts
   an announcement using typed command sources and source-routed feedback.
 
+- `client.rs`: a remappable Inspect machine view key (default I) toggles first/
+  third-person while targeting a machine and plays a local UI click. The machine
+  screen also demonstrates a small draw overlay.
+
 - `fluids.rs`: a saved 4,000 mB machine tank with operator commands
   `/machine_sample fill <tank:block_pos>` and `/machine_sample drain <tank:block_pos>`.
   They transfer up to one bucket between the main hand and the machine atomically.
