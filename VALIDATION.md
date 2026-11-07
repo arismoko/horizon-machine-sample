@@ -48,6 +48,24 @@ be able to execute this level 2 command. An unrelated command must be untouched.
 Unit tests cover literal routing and parsed message formatting. These gameplay
 triggers are documented, not yet exercised at this pin.
 
+### Fluid tank and buckets
+
+As an operator holding a water bucket in the main hand, run
+`/machine_sample fill X Y Z` targeting a sample machine in your dimension.
+Expect `Transferred 1000 mB.` and an empty bucket in place of the water bucket.
+Hold the empty bucket and run `/machine_sample drain X Y Z` to reverse the move.
+Fill four times, then verify a fifth fill moves zero and leaves the held bucket
+unchanged. Try lava while the tank contains water: no mixing or bucket loss.
+Save and reopen with a nonempty tank and drain it to check persistence. A
+non-machine or unloaded target must refuse the transfer, and console sources
+must receive the player-only explanation. The operator commands intentionally
+allow a target anywhere loaded in the player's current dimension.
+
+This reuses the game's transactional `FLUIDS` and `ITEM_FLUIDS` providers and
+`move_resources`, not handwritten tank or bucket NBT. Unit tests cover the tank
+configuration and command routing. Gameplay and save/load triggers have not
+been exercised at this pin.
+
 ## In-game proof scope
 
 A linked dev build and an integrated or dedicated-server run are distinct from
