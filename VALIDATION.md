@@ -8,8 +8,8 @@ key runtime split, plus API 2c's access declarations and generated host
 forwarders, plus API 2d's per-kind registrar and capability-provider traits.
 Calls through `dyn Registrar` and the machine's Part implementations retain
 their existing shape; no gameplay code port is needed. The inherent game-helper
-rename changes no sample Host or hook call. It retains typed block-entity declarations,
-scoped-Part subscriptions and flat layout, handles the Part registration
+rename changes no sample Host or hook call. It retains typed block-entity
+declarations, scoped-Part subscriptions and flat layout, handles the Part registration
 `Result`, and its `register` hook takes the registration context. The launcher owns the generated main and its mod and
 inventory markers; the staging check lays the canonical flat package out at
 `horizon-native-mods/<id>/`, where the engine validates id, version and side
@@ -53,7 +53,7 @@ receiver. Its crate-root `tick_rate_seen` function takes `HostSide` and
 not change the record's cancellation flag, so vanilla's autosave-wait adjustment
 continues. There is no polling or extra work on ordinary ticks.
 
-At `e8e8109dc3f1c3624187ee425880aa6905d58693`, the generated `points.json`
+At `0a3b486ed7f2fa9c0eccaab141c9bc06306baaee`, the generated `points.json`
 admits this target with a both-side writing Host and no arguments. The paired
 `internals.json` supplies its hash `401a155ce7673f0b`; `points.json` itself has
 no hash field. Copy that pin's hash, not one from another build. The focused
