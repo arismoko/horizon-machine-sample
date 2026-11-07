@@ -50,6 +50,9 @@ triggers are documented, not yet exercised at this pin.
 
 ### Side-typed data and asset reload
 
+The client label appears above the machine panel, clear of its title,
+controls and inventory heading.
+
 Override `data/machine_sample/machine_tour/processing.json` in a datapack with
 `{"minecraft:cobblestone":80}` and run `/reload`. A newly inserted cobblestone
 should now take 80 server ticks to process instead of the default 40. Its screen
