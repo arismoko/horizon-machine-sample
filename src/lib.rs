@@ -17,6 +17,18 @@ impl Hooks for Sample {
         (event.block == MACHINE).then(tour::energy::buffer)
     }
 
+    fn register_commands(&self, _: &mut dyn ServerHost, event: &mut RegisterCommandsEvent<'_>) {
+        tour::services::register(event);
+    }
+
+    fn run_mod_command(
+        &self,
+        host: &mut dyn ServerHost,
+        event: &mut RunModCommandEvent<'_>,
+    ) -> Flow {
+        tour::services::run(host, event)
+    }
+
     fn register(&self, registrar: &mut dyn Registrar, _: &RegistrationContext) {
         let machine = registrar
             .block_entity_type("machine")

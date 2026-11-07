@@ -17,7 +17,7 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `53cc666df8f68c840fc0dd6f86d29c4600417d2d`.
+The sample pins fork Horizon commit `cb01ae304c7136f1598f97650c63ccfc1da47b90`.
 The exact Horizon and Mixins revisions are in [horizon-mod.toml](horizon-mod.toml).
 See [VALIDATION.md](VALIDATION.md) for the scope of the current checks.
 Native mods run code with the player's rights; only build code you trust. The
@@ -50,11 +50,17 @@ linking and gameplay. `--offline` needs the dependencies in Cargo's cache.
 
 ## Feature tour
 
-Small modules in `src/tour/` extend the existing machine. `energy.rs` recovers
-25 energy per completed recipe into a saved 1,000-unit buffer exposed through
-the canonical `ENERGY` capability on all faces (100 units per transfer).
-The original item processing needs no energy and remains unchanged.
-See [VALIDATION.md](VALIDATION.md) for triggers and tested scope.
+The machine remains the main example. Small modules under `src/tour/` demonstrate
+other API features independently:
+
+- `services.rs`: `/machine_sample announce <message>` (operator level 2) broadcasts
+  an announcement using typed command sources and source-routed feedback.
+
+- `energy.rs`: the machine recovers 25 energy per recipe into a saved 1,000-unit
+  buffer exposed through ENERGY on all faces (100 units per transfer).
+  Item processing requires no energy and otherwise stays unchanged.
+
+See [VALIDATION.md](VALIDATION.md) for gameplay triggers and tested scope.
 
 ## Package and API
 
