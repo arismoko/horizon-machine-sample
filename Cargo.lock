@@ -307,7 +307,7 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 [[package]]
 name = "horizon-assets"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "flate2",
  "horizon-core",
@@ -320,7 +320,7 @@ dependencies = [
 [[package]]
 name = "horizon-client-core"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "horizon-assets",
  "horizon-core",
@@ -331,7 +331,7 @@ dependencies = [
 [[package]]
 name = "horizon-core"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "libm",
  "serde",
@@ -347,7 +347,7 @@ dependencies = [
 [[package]]
 name = "horizon-items"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "horizon-client-core",
  "horizon-core",
@@ -361,7 +361,7 @@ dependencies = [
 [[package]]
 name = "horizon-mod-api"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "bytemuck",
  "glam",
@@ -384,7 +384,7 @@ dependencies = [
 [[package]]
 name = "horizon-mod-api-gen"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "heck",
  "horizon-mod-point-shape",
@@ -402,7 +402,7 @@ dependencies = [
 [[package]]
 name = "horizon-mod-api-macros"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "horizon-mod-point-shape",
  "proc-macro2",
@@ -413,7 +413,7 @@ dependencies = [
 [[package]]
 name = "horizon-mod-package"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "horizon-core",
  "log",
@@ -429,7 +429,7 @@ dependencies = [
 [[package]]
 name = "horizon-mod-point-shape"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -439,7 +439,7 @@ dependencies = [
 [[package]]
 name = "horizon-mod-runtime"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "horizon-core",
 ]
@@ -447,7 +447,7 @@ dependencies = [
 [[package]]
 name = "horizon-world"
 version = "0.1.0"
-source = "git+https://github.com/arismoko/horizon?rev=53cc666df8f68c840fc0dd6f86d29c4600417d2d#53cc666df8f68c840fc0dd6f86d29c4600417d2d"
+source = "git+https://github.com/arismoko/horizon?rev=cb01ae304c7136f1598f97650c63ccfc1da47b90#cb01ae304c7136f1598f97650c63ccfc1da47b90"
 dependencies = [
  "flate2",
  "horizon-assets",
