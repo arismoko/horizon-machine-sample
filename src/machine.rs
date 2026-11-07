@@ -2,7 +2,9 @@ use mod_api::*;
 
 use crate::{DEPOSIT, DURATION, PIPE, advance, deposit_count, fill_empty};
 
-pub struct Machine;
+pub struct Machine {
+    pub automatic_input: BoolGameRuleKey,
+}
 
 #[mod_api::horizon_part]
 impl BlockPart for Machine {}
@@ -18,6 +20,9 @@ impl BlockEntityPart for Machine {
         let entity = &mut event.entity;
         let dimension = host.dimension();
         fill_empty(&mut entity.items[0], || {
+            if !crate::tour::policy::automatic_input(host, self.automatic_input) {
+                return None;
+            }
             let source = host.level(dimension)?.capability(
                 host,
                 &ITEMS,
