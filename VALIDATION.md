@@ -1,12 +1,13 @@
 # Validation
 
 The flat project pins fork Horizon
-`3c39044b22de60d6e1bee273b55bf489bf52166c`, the bootstrap registration-context
-change on a sample main that carries the native `BuiltMod` export and the
-typed block-entity access change. The sample keeps sample main's typed
-block-entity declaration, scoped-Part subscriptions and flat layout, handles
-the Part registration `Result`, and its `register` hook takes the
-registration context. The launcher owns the generated main and its mod and
+`5eb3fd87ccb4ec423920c799be21ef8e18d5ca88` and its matching Mixins revision
+`5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
+trait regroup, the `horizon-mod-package` rename, and the attachment and registry
+key runtime split. The sample's existing trait imports and Part implementations
+compile unchanged against this API. It retains typed block-entity declarations,
+scoped-Part subscriptions and flat layout, handles the Part registration
+`Result`, and its `register` hook takes the registration context. The launcher owns the generated main and its mod and
 inventory markers; the staging check lays the canonical flat package out at
 `horizon-native-mods/<id>/`, where the engine validates id, version and side
 and refuses startup on mismatch, with no record fallback. There is no
