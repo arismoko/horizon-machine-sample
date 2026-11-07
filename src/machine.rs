@@ -65,9 +65,12 @@ impl BlockEntityPart for Machine {
             Some(Tag::Int(n)) => *n,
             _ => 0,
         };
-        let (progress, done) = advance(progress, result.is_some());
+        let duration = entity.items[0]
+            .as_ref()
+            .map_or(DURATION, |input| crate::tour::reload::duration(&input.item));
+        let (progress, done) = advance(progress, result.is_some(), duration);
         entity.nbt.insert("progress".into(), Tag::Int(progress));
-        entity.data = vec![progress];
+        entity.data = vec![progress, duration];
         if done {
             let input = entity.items[0].as_mut().unwrap();
             input.count -= 1;
@@ -132,6 +135,7 @@ impl BlockEntityPart for Machine {
     }
 
     fn screen_draw(&self, _: &dyn ClientHost, event: &mut ScreenDrawEvent<'_>) {
+        crate::tour::reload::draw(event);
         let [x, y] = event.origin;
         event
             .draw
@@ -139,18 +143,19 @@ impl BlockEntityPart for Machine {
         event
             .draw
             .text("Deposit", [x + 68.0, y + 59.0], 0xffffffff, false);
+        let duration = event.data.get(1).copied().unwrap_or(DURATION).max(1);
         let progress = event
             .data
             .first()
             .copied()
             .unwrap_or_default()
-            .clamp(0, DURATION);
+            .clamp(0, duration);
         event.draw.fill([x + 72.0, y + 40.0, 32.0, 6.0], 0xff555555);
         event.draw.fill(
             [
                 x + 72.0,
                 y + 40.0,
-                32.0 * progress as f32 / DURATION as f32,
+                32.0 * progress as f32 / duration as f32,
                 6.0,
             ],
             0xff55bb55,

@@ -9,6 +9,22 @@ struct Sample;
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
+    fn add_server_reload_listeners(
+        &self,
+        _: &dyn Host,
+        event: &mut AddServerReloadListenersEvent<'_>,
+    ) {
+        tour::reload::server(event);
+    }
+
+    fn add_client_reload_listeners(
+        &self,
+        _: &dyn ClientHost,
+        event: &mut AddClientReloadListenersEvent<'_>,
+    ) {
+        tour::reload::client(event);
+    }
+
     fn register_commands(&self, _: &mut dyn ServerHost, event: &mut RegisterCommandsEvent<'_>) {
         tour::services::register(event);
     }
@@ -65,12 +81,12 @@ pub fn deposit_count(carried: u32, input: u32, limit: u32, compatible: bool) -> 
     }
 }
 
-pub fn advance(progress: i32, can_process: bool) -> (i32, bool) {
+pub fn advance(progress: i32, can_process: bool, duration: i32) -> (i32, bool) {
     if !can_process {
         return (0, false);
     }
-    let next = progress.clamp(0, DURATION - 1) + 1;
-    if next == DURATION {
+    let next = progress.clamp(0, duration - 1) + 1;
+    if next == duration {
         (0, true)
     } else {
         (next, false)
@@ -105,11 +121,13 @@ mod tests {
     fn completes_after_forty_ticks_and_resets_when_blocked() {
         let mut progress = 0;
         for _ in 0..39 {
-            let (next, done) = advance(progress, true);
+            let (next, done) = advance(progress, true, DURATION);
             assert!(!done);
             progress = next;
         }
-        assert_eq!(advance(progress, true), (0, true));
-        assert_eq!(advance(progress, false), (0, false));
+        assert_eq!(advance(progress, true, DURATION), (0, true));
+        assert_eq!(advance(progress, false, DURATION), (0, false));
+        assert_eq!(advance(79, true, 80), (0, true));
+        assert_eq!(advance(0, true, 1), (0, true));
     }
 }

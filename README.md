@@ -8,7 +8,9 @@ native mod API.
 
 The machine has a custom two-slot screen backed by a five-slot hopper menu.
 The Deposit button moves the carried stack into input slot 0; compatible items
-are processed in 40 ticks into output slot 1. It pulls one item from slot 0 of a
+are processed in 40 ticks by default into output slot 1. The reloadable
+`data/machine_sample/machine_tour/processing.json` table can override the duration
+by input item id. It pulls one item from slot 0 of a
 container directly west, through that container's east face. A pipe directly
 east sends one output item per tick into a container east of the pipe, through
 its west face. Other orientations and pipe networks are not supported. The
@@ -17,7 +19,7 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `cb01ae304c7136f1598f97650c63ccfc1da47b90`.
+The sample pins fork Horizon commit `57f0b36960bbe26915d1af3f4053d64d8ebbf0a8`.
 The exact Horizon and Mixins revisions are in [horizon-mod.toml](horizon-mod.toml).
 See [VALIDATION.md](VALIDATION.md) for the scope of the current checks.
 Native mods run code with the player's rights; only build code you trust. The
@@ -55,6 +57,10 @@ other API features independently:
 
 - `services.rs`: `/machine_sample announce <message>` (operator level 2) broadcasts
   an announcement using typed command sources and source-routed feedback.
+
+- `reload.rs`: typed server and client reload listeners read the sample's own
+  processing-time table in `data/` and screen-label JSON in `assets/`. Pack
+  overrides apply on reload, and malformed replacements abort publication.
 
 See [VALIDATION.md](VALIDATION.md) for gameplay triggers and tested scope.
 
