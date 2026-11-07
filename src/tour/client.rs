@@ -46,7 +46,7 @@ pub fn overlay(event: &mut ScreenDrawEvent<'_>) {
     let [x, y] = event.origin;
     event
         .draw
-        .text("40 tick cycle", [x + 8.0, y + 18.0], 0xffaaaaaa, false);
+        .text("Processing cycle", [x + 8.0, y + 18.0], 0xffaaaaaa, false);
 }
 
 #[cfg(test)]

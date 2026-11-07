@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`cb01ae304c7136f1598f97650c63ccfc1da47b90` and its matching Mixins revision
+`57f0b36960bbe26915d1af3f4053d64d8ebbf0a8` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split. The sample's existing trait imports and Part implementations
@@ -48,6 +48,28 @@ be able to execute this level 2 command. An unrelated command must be untouched.
 Unit tests cover literal routing and parsed message formatting. These gameplay
 triggers are documented, not yet exercised at this pin.
 
+### Side-typed data and asset reload
+
+Override `data/machine_sample/machine_tour/processing.json` in a datapack with
+`{"minecraft:cobblestone":80}` and run `/reload`. A newly inserted cobblestone
+should now take 80 server ticks to process instead of the default 40. Its screen
+progress bar should still reach the end exactly on completion. Processing-time
+keys must be namespaced item ids and durations integers in 1..=10,000; other
+inputs keep the 40 tick default. Changing the duration mid-cycle keeps the saved
+progress and applies the new threshold on the next tick.
+
+Override `assets/machine_sample/machine_tour/screen.json` in a resource pack with
+a JSON string of at most 24 characters, for example `"Cooling sample"`. Reload
+client assets (F3+T) and open the machine to see it above the player inventory.
+This asset listener cannot read server data; the server listener cannot read
+client assets. A malformed table, out-of-range duration or multiline/overlong
+label must fail prepare without publishing a replacement. Restore the file and
+reload to recover.
+
+Tests cover both parsers and duration thresholds, not actual pack overrides or
+client drawing. Those triggers have not been run at this pin. Files are read
+only during prepare; ticks use the published table, never filesystem reads.
+
 ### Energy buffer
 
 Complete a machine recipe. Its scoped ticking Part recovers 25 energy in the
@@ -69,7 +91,7 @@ With the machine still targeted, press again to return; vanilla F5 also remains
 available. Looking at another block, an entity or empty space must do nothing,
 as must holding the key (repeat events). Rebind Inspect machine view under
 Options > Controls and confirm only the new binding works. Open the machine
-screen and inspect the `40 tick cycle` overlay above its two slots; the Deposit
+screen and inspect the `Processing cycle` overlay above its two slots; the Deposit
 button and progress bar must remain unobscured. No other player should hear the
 click or have their camera changed.
 
