@@ -1,5 +1,6 @@
 // Shared by the standalone tests and the native bundle.
 mod machine;
+mod processing;
 mod tour;
 
 use mod_api::*;
@@ -10,10 +11,24 @@ pub fn tick_rate_seen(host: HostSide<'_>, args: &mut mod_points::OnTickRateChang
 }
 
 #[derive(Default)]
-struct Sample;
+struct Sample {
+    recipes: std::sync::Arc<processing::ProcessingRecipes>,
+}
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
+    fn server_about_to_start(&self, _: &mut dyn ServerHost, _: &mut ServerAboutToStartEvent) {
+        self.recipes.clear();
+    }
+
+    fn server_data_loaded(&self, host: &mut dyn ServerHost, _: &mut ServerDataLoadedEvent) {
+        self.recipes.publish(host);
+    }
+
+    fn server_stopped(&self, _: &mut dyn ServerHost, _: &mut ServerStoppedEvent) {
+        self.recipes.clear();
+    }
+
     fn entity_interact(
         &self,
         host: &mut dyn ServerHost,
@@ -82,7 +97,13 @@ impl Hooks for Sample {
             .blocks(&[MACHINE])
             .build();
         registrar
-            .block_entity_part(&machine, machine::Machine { automatic_input })
+            .block_entity_part(
+                &machine,
+                machine::Machine {
+                    automatic_input,
+                    recipes: self.recipes.clone(),
+                },
+            )
             .expect("native block entity type");
     }
 
