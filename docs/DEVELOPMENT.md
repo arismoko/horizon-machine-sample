@@ -90,6 +90,18 @@ Deposit moves the carried stack into input slot 0. Compatible input processes
 into output slot 1 in 40 ticks by default; the server reload table can override
 the duration by input item id.
 
+Item identities are load-fixed. During `register`, the sample captures
+`RegistrationContext::registry("minecraft:item")` through `Registrar::item_key`.
+Each reload validates its new duration table against those captured keys and
+publishes a fresh keyed map; ticks never resolve an item name. Unknown item ids
+refuse the reload rather than silently adding an unusable duration.
+
+`ItemStack` is an owned, nonempty value. Empty slots use `None`, consumed stacks
+use `shrink` or `split`, and growth uses fallible `set_count` after the capacity
+check. Merging compares both item identity and component patches, including
+numeric damage presence. The game's write boundary owns registry-dependent
+validation; the sample does not duplicate that component validator.
+
 It pulls one item from slot 0 of a container directly west through that
 container's east face. A pipe directly east sends one output item per tick into
 a container east of the pipe through its west face. Other orientations and pipe
