@@ -13,6 +13,7 @@ pub fn tick_rate_seen(host: HostSide<'_>, _args: &mut OnTickRateChangedArgs) {
 mod tests {
     #[test]
     fn listener_has_the_pinned_api_head_signature() {
+        // Signature compatibility and slot owner id only, not dispatch or listener behavior.
         let slot = mod_points::listeners::on_tick_rate_changed(
             "machine_sample",
             0,
