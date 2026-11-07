@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`43f7fffa1e4d7b82f44e47cf7e7ef4d1c8e1658f` and its matching Mixins revision
+`5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split. The sample's existing trait imports and Part implementations
