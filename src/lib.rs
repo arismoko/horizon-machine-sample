@@ -1,5 +1,6 @@
 // Shared by the standalone tests and the native bundle.
 mod machine;
+mod tour;
 
 use mod_api::*;
 
@@ -8,6 +9,18 @@ struct Sample;
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
+    fn register_commands(&self, _: &mut dyn ServerHost, event: &mut RegisterCommandsEvent<'_>) {
+        tour::services::register(event);
+    }
+
+    fn run_mod_command(
+        &self,
+        host: &mut dyn ServerHost,
+        event: &mut RunModCommandEvent<'_>,
+    ) -> Flow {
+        tour::services::run(host, event)
+    }
+
     fn register(&self, registrar: &mut dyn Registrar, _: &RegistrationContext) {
         let machine = registrar
             .block_entity_type("machine")

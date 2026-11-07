@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`5eb3fd87ccb4ec423920c799be21ef8e18d5ca88` and its matching Mixins revision
+`53cc666df8f68c840fc0dd6f86d29c4600417d2d` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split. The sample's existing trait imports and Part implementations
@@ -33,6 +33,20 @@ stage and check separately; linking is an additional, explicitly named proof.
 
 Mods don't ship a toolchain file; Horizon's pinned toolchain builds them. The
 helper and CI explicitly select the pinned launcher's Rust 1.99.1.
+
+## Feature tour triggers
+
+### Commands and messages
+
+As an operator, run `/machine_sample announce Machine ready`. Every player should
+receive `[Machine Sample / player] Machine ready`; the caller also receives
+`Announcement delivered.` Run the same command without the slash from the
+console, or from a command block/function, to exercise typed non-player sources.
+The prefix names the original source even under `execute as`; feedback follows
+vanilla silence and command-block track-output rules. A non-operator must not
+be able to execute this level 2 command. An unrelated command must be untouched.
+Unit tests cover literal routing and parsed message formatting. These gameplay
+triggers are documented, not yet exercised at this pin.
 
 ## In-game proof scope
 
