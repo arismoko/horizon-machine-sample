@@ -24,13 +24,18 @@ fn decode(saved: &Compound) -> Result<u32, AttachmentError> {
 }
 
 pub fn inspect(host: &mut dyn ServerHost, event: &EntityInteractEvent<'_>) -> Flow {
-    if event.stack.is_some() {
-        return Flow::Continue;
-    }
     let Some(player) = host.players().acting_player() else {
         return Flow::Continue;
     };
     if player.is_secondary_use_active(host) != Some(true) {
+        return Flow::Continue;
+    }
+    let main = ItemPlace::PlayerHand {
+        player: player.uuid(),
+        hand: Hand::Main,
+    }
+    .stack(host);
+    if !inspection_hands_empty(main.as_ref(), event.stack) {
         return Flow::Continue;
     }
     let Ok(id) = u32::try_from(event.entity) else {
@@ -64,9 +69,22 @@ pub fn inspect(host: &mut dyn ServerHost, event: &EntityInteractEvent<'_>) -> Fl
     }
 }
 
+fn inspection_hands_empty(main: Option<&ItemStack>, used: Option<&ItemStack>) -> bool {
+    main.is_none() && used.is_none()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn an_empty_off_hand_does_not_bypass_an_occupied_main_hand() {
+        let stick = ItemStack::new("minecraft:stick", 1);
+        assert!(inspection_hands_empty(None, None));
+        assert!(!inspection_hands_empty(Some(&stick), None));
+        assert!(!inspection_hands_empty(None, Some(&stick)));
+        assert!(!inspection_hands_empty(Some(&stick), Some(&stick)));
+    }
 
     #[test]
     fn persisted_visit_count_round_trips_without_truncation() {
