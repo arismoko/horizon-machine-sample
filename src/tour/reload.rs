@@ -3,22 +3,19 @@ use mod_api::*;
 use std::{
     collections::{BTreeMap, HashMap},
     io,
-    sync::{Arc, LazyLock, RwLock},
+    sync::{Arc, LazyLock, OnceLock, RwLock},
 };
 
-static TIMES: LazyLock<RwLock<HashMap<ItemKey, i32>>> = LazyLock::new(RwLock::default);
+static TIMES: LazyLock<RwLock<Durations>> = LazyLock::new(RwLock::default);
 static LABEL: LazyLock<RwLock<String>> = LazyLock::new(|| RwLock::new("Machine processing".into()));
 
-pub fn server(
-    event: &mut AddServerReloadListenersEvent<'_>,
-    items: Arc<BTreeMap<String, ItemKey>>,
-) {
+pub fn server(event: &mut AddServerReloadListenersEvent<'_>) {
     event
         .listeners
         .add_listener(
             Identifier::parse("machine_sample:processing_times").unwrap(),
             FileToIdConverter::json("machine_tour").unwrap(),
-            Arc::new(Times { items }),
+            Arc::new(Times),
         )
         .expect("unique sample server listener");
 }
@@ -34,9 +31,28 @@ pub fn client(event: &mut AddClientReloadListenersEvent<'_>) {
         .expect("unique sample client listener");
 }
 
-struct Times {
-    items: Arc<BTreeMap<String, ItemKey>>,
+#[derive(Default)]
+struct Durations {
+    entries: Vec<(Identifier, i32)>,
+    resolved: OnceLock<HashMap<ItemKey, i32>>,
 }
+
+impl Durations {
+    fn duration(&self, host: &dyn Host, item: ItemKey) -> i32 {
+        // Prepare has no resolver. Resolve once on the first server lookup, never per tick.
+        self.resolved.get_or_init(|| self.entries.iter().filter_map(|(id, ticks)| {
+            match host.item_key(id) {
+                Some(key) => Some((key, *ticks)),
+                None => {
+                    log::warn!(target: "machine_sample::reload", "Skipping processing time for unknown item {id}");
+                    None
+                }
+            }
+        }).collect()).get(&item).copied().unwrap_or(crate::DURATION)
+    }
+}
+
+struct Times;
 impl ServerReloadListener for Times {
     fn prepare(
         &self,
@@ -49,27 +65,20 @@ impl ServerReloadListener for Times {
                 io::Error::new(io::ErrorKind::NotFound, "missing processing table"),
             )
         })?;
-        let table =
-            parse_times(bytes, &self.items).map_err(|error| ReloadResourceError::new(id, error))?;
+        let table = parse_times(bytes).map_err(|error| ReloadResourceError::new(id, error))?;
         Ok(<dyn ReloadApply>::new(move || {
             *TIMES.write().unwrap_or_else(|e| e.into_inner()) = table;
         }))
     }
 }
 
-fn parse_times(
-    bytes: &[u8],
-    items: &BTreeMap<String, ItemKey>,
-) -> io::Result<HashMap<ItemKey, i32>> {
+fn parse_times(bytes: &[u8]) -> io::Result<Durations> {
     let table: BTreeMap<String, i32> = serde_json::from_slice(bytes)?;
-    table
+    let entries = table
         .into_iter()
         .map(|(item, ticks)| {
-            let key = items.get(&item).copied().ok_or_else(|| {
-                io::Error::new(
-                    io::ErrorKind::InvalidData,
-                    "expected a registered namespaced item id",
-                )
+            let id = Identifier::parse_namespaced(&item).ok_or_else(|| {
+                io::Error::new(io::ErrorKind::InvalidData, "expected a namespaced item id")
             })?;
             if !(1..=10_000).contains(&ticks) {
                 return Err(io::Error::new(
@@ -77,9 +86,13 @@ fn parse_times(
                     "processing ticks must be in 1..=10000",
                 ));
             }
-            Ok((key, ticks))
+            Ok((id, ticks))
         })
-        .collect()
+        .collect::<io::Result<_>>()?;
+    Ok(Durations {
+        entries,
+        resolved: OnceLock::new(),
+    })
 }
 
 struct Label;
@@ -113,13 +126,11 @@ fn parse_label(bytes: &[u8]) -> io::Result<String> {
     Ok(label)
 }
 
-pub fn duration(item: ItemKey) -> i32 {
+pub fn duration(host: &dyn Host, item: ItemKey) -> i32 {
     TIMES
         .read()
         .unwrap_or_else(|e| e.into_inner())
-        .get(&item)
-        .copied()
-        .unwrap_or(crate::DURATION)
+        .duration(host, item)
 }
 
 pub fn draw(event: &mut ScreenDrawEvent<'_>) {
@@ -133,32 +144,61 @@ pub fn draw(event: &mut ScreenDrawEvent<'_>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use mod_api::prelude::ItemsHost;
 
     #[test]
     fn validates_processing_table_once_at_reload() {
-        let mut host = mod_api::testing::FakeHost::new();
-        let id = Identifier::parse("minecraft:cobblestone").unwrap();
-        host.registries.resolve_items([id.clone()]).unwrap();
-        let key = host.item_key(&id).unwrap();
-        let items = BTreeMap::from([(id.to_string(), key)]);
+        let table = parse_times(br#"{"minecraft:cobblestone":80}"#).unwrap();
         assert_eq!(
-            parse_times(br#"{"minecraft:cobblestone":80}"#, &items).unwrap()[&key],
-            80
+            table.entries,
+            vec![(Identifier::parse("minecraft:cobblestone").unwrap(), 80)]
         );
-        assert_eq!(
-            parse_times(br#"{"minecraft:cobblestone":20}"#, &items).unwrap()[&key],
-            20
-        );
-        assert!(parse_times(br#"{}"#, &items).unwrap().is_empty());
+        assert!(table.resolved.get().is_none());
         for bad in [
             br#"{"minecraft:cobblestone":0}"#.as_slice(),
             br#"{"minecraft:cobblestone":10001}"#,
             br#"{"invalid id":40}"#,
-            br#"{"minecraft:unregistered":40}"#,
             br#"{"minecraft:cobblestone":"40"}"#,
         ] {
-            assert!(parse_times(bad, &items).is_err());
+            assert!(parse_times(bad).is_err());
         }
+    }
+
+    #[test]
+    fn replacing_reload_data_drops_keys_and_warns_once_per_missing_item() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        struct Warnings(AtomicUsize);
+        impl log::Log for Warnings {
+            fn enabled(&self, metadata: &log::Metadata<'_>) -> bool {
+                metadata.target() == "machine_sample::reload"
+            }
+            fn log(&self, record: &log::Record<'_>) {
+                if self.enabled(record.metadata()) {
+                    self.0.fetch_add(1, Ordering::Relaxed);
+                }
+            }
+            fn flush(&self) {}
+        }
+        static WARNINGS: Warnings = Warnings(AtomicUsize::new(0));
+        log::set_logger(&WARNINGS).unwrap();
+        log::set_max_level(log::LevelFilter::Warn);
+        let mut host = mod_api::testing::FakeHost::new();
+        let id = Identifier::parse("minecraft:cobblestone").unwrap();
+        host.registries.resolve_items([id.clone()]).unwrap();
+        let key = host.item_key(&id).unwrap();
+        let mut table =
+            parse_times(br#"{"minecraft:cobblestone":80,"machine_sample:missing":20}"#).unwrap();
+        assert_eq!(table.duration(&host, key), 80);
+        assert_eq!(table.duration(&host, key), 80);
+        assert_eq!(WARNINGS.0.load(Ordering::Relaxed), 1);
+        table =
+            parse_times(br#"{"minecraft:cobblestone":20,"machine_sample:missing":10}"#).unwrap();
+        assert!(table.resolved.get().is_none());
+        assert_eq!(table.duration(&host, key), 20);
+        assert_eq!(WARNINGS.0.load(Ordering::Relaxed), 2);
+        table = parse_times(br#"{}"#).unwrap();
+        assert_eq!(table.duration(&host, key), crate::DURATION);
+        assert_eq!(WARNINGS.0.load(Ordering::Relaxed), 2);
     }
 
     #[test]

@@ -10,9 +10,7 @@ pub fn tick_rate_seen(host: HostSide<'_>, args: &mut mod_points::OnTickRateChang
 }
 
 #[derive(Default)]
-struct Sample {
-    items: std::sync::OnceLock<std::sync::Arc<std::collections::BTreeMap<String, ItemKey>>>,
-}
+struct Sample;
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
@@ -29,13 +27,7 @@ impl Hooks for Sample {
         _: &dyn Host,
         event: &mut AddServerReloadListenersEvent<'_>,
     ) {
-        tour::reload::server(
-            event,
-            self.items
-                .get()
-                .expect("registration precedes reload")
-                .clone(),
-        );
+        tour::reload::server(event);
     }
 
     fn add_client_reload_listeners(
@@ -82,18 +74,7 @@ impl Hooks for Sample {
         (event.block == MACHINE).then(tour::fluids::tanks)
     }
 
-    fn register(&self, registrar: &mut dyn Registrar, context: &RegistrationContext) {
-        // Item identities are load-fixed; reloads rebuild durations, not this key catalog.
-        let items = context
-            .registry("minecraft:item")
-            .expect("item registry available");
-        let items = items
-            .iter()
-            .map(|id| (id.clone(), registrar.item_key(id)))
-            .collect();
-        self.items
-            .set(std::sync::Arc::new(items))
-            .expect("register runs once");
+    fn register(&self, registrar: &mut dyn Registrar, _: &RegistrationContext) {
         tour::client::register(registrar);
         let automatic_input = tour::policy::register(registrar);
         let machine = registrar

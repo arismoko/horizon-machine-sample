@@ -9,8 +9,9 @@ forwarders, plus API 2d's per-kind registrar and capability-provider traits.
 It also includes API 3a's owned nonempty `ItemStack` conversion boundary and
 API 3d's native-only raw renderer split. The sample uses keyed item metadata,
 component-aware merging, consuming shrink/split and fallible count growth.
-Registration captures load-fixed item identities; each reload rebuilds the
-keyed duration table, with no per-tick name resolution. Attachment tests use
+Prepare validates typed item identifiers; apply replaces the duration table and
+its key cache. The first server lookup resolves the table once, with one warning
+per missing item per reload; subsequent ticks only read the keyed cache. Attachment tests use
 resolved keys through `FakeHost`. Existing screen drawing stays on the API
 `DrawContext` route; no raw render listener is added here.
 

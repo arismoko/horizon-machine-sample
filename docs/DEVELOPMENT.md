@@ -90,11 +90,13 @@ Deposit moves the carried stack into input slot 0. Compatible input processes
 into output slot 1 in 40 ticks by default; the server reload table can override
 the duration by input item id.
 
-Item identities are load-fixed. During `register`, the sample captures
-`RegistrationContext::registry("minecraft:item")` through `Registrar::item_key`.
-Each reload validates its new duration table against those captured keys and
-publishes a fresh keyed map; ticks never resolve an item name. Unknown item ids
-refuse the reload rather than silently adding an unusable duration.
+Item identities are load-fixed, but `register` cannot enumerate names supplied
+by future pack overrides. Prepare validates typed `Identifier`s; apply publishes
+a fresh table and empty key cache. Its first server lookup uses
+`ItemsHost::item_key` to build the cache once for that reload. Later ticks do
+only keyed reads. Unknown items are skipped with one warning per identifier per
+reload, without retrying on subsequent ticks. No file I/O or JSON parsing occurs
+on ticks.
 
 `ItemStack` is an owned, nonempty value. Empty slots use `None`, consumed stacks
 use `shrink` or `split`, and growth uses fallible `set_count` after the capacity

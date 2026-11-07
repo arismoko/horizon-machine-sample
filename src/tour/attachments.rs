@@ -76,6 +76,7 @@ fn inspection_hands_empty(main: Option<&ItemStack>, used: Option<&ItemStack>) ->
 #[cfg(test)]
 mod tests {
     use super::*;
+    use mod_api::prelude::ItemsHost;
 
     #[test]
     fn an_empty_off_hand_does_not_bypass_an_occupied_main_hand() {

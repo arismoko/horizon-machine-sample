@@ -72,7 +72,7 @@ impl BlockEntityPart for Machine {
             _ => 0,
         };
         let duration = entity.items[0].as_ref().map_or(DURATION, |input| {
-            crate::tour::reload::duration(input.item())
+            crate::tour::reload::duration(host, input.item())
         });
         let (progress, done) = advance(progress, result.is_some(), duration);
         entity.nbt.insert("progress".into(), Tag::Int(progress));
