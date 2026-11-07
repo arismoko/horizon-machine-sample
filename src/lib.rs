@@ -9,6 +9,14 @@ struct Sample;
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
+    fn entity_interact(
+        &self,
+        host: &mut dyn ServerHost,
+        event: &mut EntityInteractEvent<'_>,
+    ) -> Flow {
+        tour::attachments::inspect(host, event)
+    }
+
     fn add_server_reload_listeners(
         &self,
         _: &dyn Host,

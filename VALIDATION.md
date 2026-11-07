@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`43f7fffa1e4d7b82f44e47cf7e7ef4d1c8e1658f` and its matching Mixins revision
+`5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split. The sample's existing trait imports and Part implementations
@@ -133,6 +133,23 @@ should also process into stone. Removing the override should restore the default
 membership on reload. The unit test checks that the bundled recipe references
 the bundled tag and its default contents. Runtime tag reload and gamerule
 persistence have not been exercised at this pin.
+
+### Persistent entity attachments
+
+Crouch and right-click a cow with an empty hand. Its action-bar inspection
+count should begin at 1 and increase on subsequent inspections. Inspect a
+second cow to check that each entity has its own count. Save, quit, reopen and
+inspect the first cow again: its count must continue rather than reset. Killing
+it and summoning another cow must start a new count. Ordinary clicks, held-item
+interactions and interactions without crouching must retain vanilla behavior.
+The inspection gesture is claimed only after its attachment write succeeds.
+
+`machine_sample:inspection_visits` has an NBT codec, no client sync, and no
+copy-on-death policy. No entity handle or holder id is kept between callbacks.
+Missing holders are ignored; malformed saved counts are refused without
+replacing the value. Unit tests cover codec round trips through u32::MAX and
+refusal of missing, wrong-typed, negative and oversized counts. Gameplay,
+entity save/load and action-bar output have not been run at this pin.
 
 ## In-game proof scope
 
