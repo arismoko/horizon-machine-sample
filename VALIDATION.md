@@ -1,13 +1,14 @@
 # Validation
 
 The flat project pins fork Horizon
-`e8e8109dc3f1c3624187ee425880aa6905d58693` and its matching Mixins revision
+`0a3b486ed7f2fa9c0eccaab141c9bc06306baaee` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split, plus API 2c's access declarations and generated host
-forwarders. The inherent game-helper rename changes no sample Host or hook
-call. The sample's existing trait imports and Part implementations compile
-unchanged against this API. It retains typed block-entity declarations,
+forwarders, plus API 2d's per-kind registrar and capability-provider traits.
+Calls through `dyn Registrar` and the machine's Part implementations retain
+their existing shape; no gameplay code port is needed. The inherent game-helper
+rename changes no sample Host or hook call. It retains typed block-entity declarations,
 scoped-Part subscriptions and flat layout, handles the Part registration
 `Result`, and its `register` hook takes the registration context. The launcher owns the generated main and its mod and
 inventory markers; the staging check lays the canonical flat package out at
