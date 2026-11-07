@@ -134,6 +134,23 @@ membership on reload. The unit test checks that the bundled recipe references
 the bundled tag and its default contents. Runtime tag reload and gamerule
 persistence have not been exercised at this pin.
 
+### Persistent entity attachments
+
+Crouch and right-click a cow with an empty hand. Its action-bar inspection
+count should begin at 1 and increase on subsequent inspections. Inspect a
+second cow to check that each entity has its own count. Save, quit, reopen and
+inspect the first cow again: its count must continue rather than reset. Killing
+it and summoning another cow must start a new count. Ordinary clicks, held-item
+interactions and interactions without crouching must retain vanilla behavior.
+The inspection gesture is claimed only after its attachment write succeeds.
+
+`machine_sample:inspection_visits` has an NBT codec, no client sync, and no
+copy-on-death policy. No entity handle or holder id is kept between callbacks.
+Missing holders are ignored; malformed saved counts are refused without
+replacing the value. Unit tests cover codec round trips through u32::MAX and
+refusal of missing, wrong-typed, negative and oversized counts. Gameplay,
+entity save/load and action-bar output have not been run at this pin.
+
 ## In-game proof scope
 
 A linked dev build and an integrated or dedicated-server run are distinct from
