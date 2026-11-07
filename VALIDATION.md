@@ -38,10 +38,10 @@ helper and CI explicitly select the pinned launcher's Rust 1.99.1.
 
 ## Feature tour triggers
 
-Gameplay observations in this section refer to the recorded linked proof at
+Except for the separately pinned injection proof below, gameplay observations
+in this section refer to the recorded linked proof at
 `5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc`, not a new game run at the current
 source pin. A new pin's source/package checks do not refresh these observations.
-The injection example below has its own, separate proof scope.
 
 ### API-typed function-slot injection
 
@@ -61,8 +61,14 @@ binding test checks the listener against the generated head-slot constructor.
 As an operator, run `/tick rate 10`. Expect
 `Machine Sample: tick-rate update observed.` alongside vanilla's tick-rate
 response. Restore normal speed with `/tick rate 20`; the message should appear
-again. Native slot binding and this gameplay trigger have not yet been verified.
-The earlier screenshots do not cover this module.
+again. Verified in a linked Developer build at
+`e8e8109dc3f1c3624187ee425880aa6905d58693`: the pinned launcher accepted the
+slot and hash, compiled the generated native binding, and installed
+`native-e8e8109-6733542a5b5e`. In a fresh integrated-server world, both commands
+produced the message on the server thread and in the client's chat history;
+20 TPS was restored before quitting. The injection image shows those two
+updates, not a wasm or dedicated-server run. Other screenshots retain the older
+proof pin above.
 
 This replaces a head mixin on vanilla `MinecraftServer.onTickRateChanged`;
 [Horizon #1705](https://github.com/arismoko/horizon/issues/1705) requests a hook

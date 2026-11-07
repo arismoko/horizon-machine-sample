@@ -18,7 +18,7 @@ change and try in a fresh world.
 | [Reload](src/tour/reload.rs) | Read processing times from `data/` and a screen label from `assets/`, with pack overrides. | Label above the machine screen |
 | [Tags and gamerules](src/tour/policy.rs) | A reloadable input tag and a gamerule that pauses automatic intake. | Recipe membership and intake policy |
 | [Attachments](src/tour/attachments.rs) | Inspect an entity with an empty main hand to record a persistent visit count. | <img src="docs/images/tour-attachment.png" width="280" alt="Cow inspection counter displayed in the player's action bar"> |
-| [Unified inject](src/tour/inject.rs) | Observe a server tick-rate update through an API-typed head slot; [hook request](https://github.com/arismoko/horizon/issues/1705). | Chat message after `/tick rate 10` |
+| [Unified inject](src/tour/inject.rs) | Observe a server tick-rate update through an API-typed head slot; [hook request](https://github.com/arismoko/horizon/issues/1705). | <img src="docs/images/tour-inject.png" width="350" alt="Server tick-rate update listener messages at 10 and 20 TPS"> |
 
 The default recipe turns cobblestone into stone in 40 ticks. The machine has two
 visible slots; its Deposit button accepts the carried stack. This is a fixed
