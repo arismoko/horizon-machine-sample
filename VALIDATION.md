@@ -18,7 +18,7 @@ handwritten entry, packaging filter or compatibility fallback.
 Before a pin is ready, check its committed source hashes and seed the development
 `Cargo.lock` from that game's lockfile, then resolve offline. Shared dependency
 versions must agree with the game. Run the formatting, clippy, unit, staging and
-package commands documented in README.md. Exact-head results belong in the PR's
+package commands documented in [Development](docs/DEVELOPMENT.md). Exact-head results belong in the PR's
 validation section and CI, not in a status table that becomes stale at each pin.
 
 `tools/test_stage.py` verifies the original checkout is unchanged and repeated
@@ -46,7 +46,8 @@ The prefix names the original source even under `execute as`; feedback follows
 vanilla silence and command-block track-output rules. A non-operator must not
 be able to execute this level 2 command. An unrelated command must be untouched.
 Unit tests cover literal routing and parsed message formatting. These gameplay
-triggers are documented, not yet exercised at this pin.
+triggers are documented; the player announcement and its typed player prefix
+were exercised at this pin, but the non-player and permission cases were not.
 
 ### Side-typed data and asset reload
 
@@ -69,8 +70,9 @@ client assets. A malformed table, out-of-range duration or multiline/overlong
 label must fail prepare without publishing a replacement. Restore the file and
 reload to recover.
 
-Tests cover both parsers and duration thresholds, not actual pack overrides or
-client drawing. Those triggers have not been run at this pin. Files are read
+Tests cover both parsers and duration thresholds, not actual pack overrides.
+The default label was viewed above the machine panel in the linked game;
+pack overrides, F3+T and malformed-reload recovery have not been run at this pin. Files are read
 only during prepare; ticks use the published table, never filesystem reads.
 
 ### Energy buffer
@@ -82,8 +84,9 @@ uses the game's built-in transactional energy provider, not a parallel store.
 Read the block entity with `/data get block X Y Z` after a recipe, then save,
 quit and reopen the world and read it again. Complete enough recipes to verify
 the amount stops at 1,000. A capability consumer should be able to extract in a
-transaction and observe no change when it aborts. This gameplay trigger and
-save/load were not run at this pin. The unit test verifies charging the saved
+transaction and observe no change when it aborts. The saved value reached 1,000
+after processing a full stack and remained 1,000 after save/reopen. Capability
+consumer and abort behavior were not exercised. The unit test verifies charging the saved
 NBT field and capacity saturation; transaction behavior belongs to the game.
 
 ### Client inspection and screen overlay
@@ -99,8 +102,9 @@ button and progress bar must remain unobscured. No other player should hear the
 click or have their camera changed.
 
 The unit test covers the camera toggle policy, not rendering, sound or input
-routing. These visual/audio triggers have not been exercised at this pin and
-need a reviewer client run.
+routing. The overlay and keybinding row were viewed in the linked game. Actual
+physical-key camera switching, remapping and audio were not verified; control-tool
+key taps are not evidence that the physical input hook fired.
 
 ### Fluid tank and buckets
 
@@ -117,8 +121,10 @@ allow a target anywhere loaded in the player's current dimension.
 
 This reuses the game's transactional `FLUIDS` and `ITEM_FLUIDS` providers and
 `move_resources`, not handwritten tank or bucket NBT. Unit tests cover the tank
-configuration and command routing. Gameplay and save/load triggers have not
-been exercised at this pin.
+configuration and command routing. Fill and drain each transferred 1,000 mB in
+the linked game; authoritative tank data and the client's synchronized bucket
+replacement were checked after allowing game ticks to advance. A nonempty tank
+survived save/reopen. Capacity, mixing, abort and refusal cases were not exercised.
 
 ### Tags and gamerules
 
@@ -154,13 +160,40 @@ count. A unit regression test covers main/used-hand occupancy combinations.
 copy-on-death policy. No entity handle or holder id is kept between callbacks.
 Missing holders are ignored; malformed saved counts are refused without
 replacing the value. Unit tests cover codec round trips through u32::MAX and
-refusal of missing, wrong-typed, negative and oversized counts. Gameplay,
-entity save/load and action-bar output have not been run at this pin.
+refusal of missing, wrong-typed, negative and oversized counts. Automated crouched
+interactions displayed the count in the action bar. After saving at 8 and fully
+reopening the world, the same cow was assigned a new runtime entity id and its
+next automated interaction displayed 10 rather than restarting. These captures
+establish persistence and feedback, not exactly one increment per physical click.
+Per-entity isolation, death behavior and the held-item gesture guard were not
+manually verified.
 
 ## In-game proof scope
 
-A linked dev build and an integrated or dedicated-server run are distinct from
-source compilation. Do not carry the previous nested-layout sample's linked
-and integrated-server machine results forward as evidence for a flat pin.
-State the exact source and tested server side whenever reporting new gameplay
-proof. No player data or Minecraft assets belong in this repository.
+The README pictures were captured at the Horizon pin above, with sample code
+including the hand guard from #40 and screen-label fix from #42 (the latter's
+source head was `dc5d2616f17a7101cd445be3504dfa474060253e`). The exact-pin fork
+launcher built and linked the sample in Developer mode: Cargo's `fast` profile
+with the `horizon-client` package's optimization level set to 0. It ran offscreen
+on Xvfb with software Vulkan/llvmpipe and a local integrated server, not a LAN
+guest or dedicated server.
+
+The source chest accepted 64 cobblestone; the output chest contained 64 stone.
+The machine screen showed its input, live progress, overlay and unobscured reload
+label. Its energy value reached 1,000. Tank fill/drain each reported 1,000 mB and
+changed authoritative fluid data; a resumed-game check waited 61 ticks and
+confirmed the client's replaced bucket matched the server. Energy and a nonempty
+tank survived save/reopen. The cow's inspection counter also continued after a
+full restart with a different runtime id. The player announcement's prefix and
+feedback, and the registered keybinding row, were viewed.
+
+This does not verify all triggers above. In particular, no dedicated server,
+LAN guest, physical keyboard/audio path, pack override, transaction abort,
+gamerule-false persistence or death-copy policy is claimed. The automation
+explicitly closes screens before state-sensitive checks; a command succeeding
+while paused is not proof that the client has processed the resulting state.
+
+The resource inputs were private copies; the pinned vanilla exporter refreshed
+fluid metadata required by this game revision. No original checkout or player
+resources were changed. Only cropped ordinary gameplay images are committed,
+not prepared tables, standalone vanilla assets or player saves.
