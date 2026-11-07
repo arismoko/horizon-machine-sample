@@ -8,7 +8,9 @@ native mod API.
 
 The machine has a custom two-slot screen backed by a five-slot hopper menu.
 The Deposit button moves the carried stack into input slot 0; compatible items
-are processed in 40 ticks into output slot 1. It pulls one item from slot 0 of a
+are processed in 40 ticks by default into output slot 1. The reloadable
+`data/machine_sample/machine_tour/processing.json` table can override the duration
+by input item id. It pulls one item from slot 0 of a
 container directly west, through that container's east face. A pipe directly
 east sends one output item per tick into a container east of the pipe, through
 its west face. Other orientations and pipe networks are not supported. The
@@ -55,6 +57,22 @@ other API features independently:
 
 - `services.rs`: `/machine_sample announce <message>` (operator level 2) broadcasts
   an announcement using typed command sources and source-routed feedback.
+
+- `reload.rs`: typed server and client reload listeners read the sample's own
+  processing-time table in `data/` and screen-label JSON in `assets/`. Pack
+  overrides apply on reload, and malformed replacements abort publication.
+
+- `energy.rs`: the machine recovers 25 energy per recipe into a saved 1,000-unit
+  buffer exposed through ENERGY on all faces (100 units per transfer).
+  Item processing requires no energy and otherwise stays unchanged.
+
+- `client.rs`: a remappable Inspect machine view key (default I) toggles first/
+  third-person while targeting a machine and plays a local UI click. The machine
+  screen also demonstrates a small draw overlay.
+
+- `fluids.rs`: a saved 4,000 mB machine tank with operator commands
+  `/machine_sample fill <tank:block_pos>` and `/machine_sample drain <tank:block_pos>`.
+  They transfer up to one bucket between the main hand and the machine atomically.
 
 See [VALIDATION.md](VALIDATION.md) for gameplay triggers and tested scope.
 

@@ -48,6 +48,75 @@ be able to execute this level 2 command. An unrelated command must be untouched.
 Unit tests cover literal routing and parsed message formatting. These gameplay
 triggers are documented, not yet exercised at this pin.
 
+### Side-typed data and asset reload
+
+Override `data/machine_sample/machine_tour/processing.json` in a datapack with
+`{"minecraft:cobblestone":80}` and run `/reload`. A newly inserted cobblestone
+should now take 80 server ticks to process instead of the default 40. Its screen
+progress bar should still reach the end exactly on completion. Processing-time
+keys must be namespaced item ids and durations integers in 1..=10,000; other
+inputs keep the 40 tick default. Changing the duration mid-cycle keeps the saved
+progress and applies the new threshold on the next tick.
+
+Override `assets/machine_sample/machine_tour/screen.json` in a resource pack with
+a JSON string of at most 24 characters, for example `"Cooling sample"`. Reload
+client assets (F3+T) and open the machine to see it above the player inventory.
+This asset listener cannot read server data; the server listener cannot read
+client assets. A malformed table, out-of-range duration or multiline/overlong
+label must fail prepare without publishing a replacement. Restore the file and
+reload to recover.
+
+Tests cover both parsers and duration thresholds, not actual pack overrides or
+client drawing. Those triggers have not been run at this pin. Files are read
+only during prepare; ticks use the published table, never filesystem reads.
+
+### Energy buffer
+
+Complete a machine recipe. Its scoped ticking Part recovers 25 energy in the
+saved `energy` field, up to 1,000. The canonical `ENERGY` capability exposes this
+buffer on every face, with insertion/extraction limited to 100 per call. This
+uses the game's built-in transactional energy provider, not a parallel store.
+Read the block entity with `/data get block X Y Z` after a recipe, then save,
+quit and reopen the world and read it again. Complete enough recipes to verify
+the amount stops at 1,000. A capability consumer should be able to extract in a
+transaction and observe no change when it aborts. This gameplay trigger and
+save/load were not run at this pin. The unit test verifies charging the saved
+NBT field and capacity saturation; transaction behavior belongs to the game.
+
+### Client inspection and screen overlay
+
+Look at a sample machine with no screen open and press I. The view should switch
+from first person to third person behind, and a local UI click should play.
+With the machine still targeted, press again to return; vanilla F5 also remains
+available. Looking at another block, an entity or empty space must do nothing,
+as must holding the key (repeat events). Rebind Inspect machine view under
+Options > Controls and confirm only the new binding works. Open the machine
+screen and inspect the `Processing cycle` overlay above its two slots; the Deposit
+button and progress bar must remain unobscured. No other player should hear the
+click or have their camera changed.
+
+The unit test covers the camera toggle policy, not rendering, sound or input
+routing. These visual/audio triggers have not been exercised at this pin and
+need a reviewer client run.
+
+### Fluid tank and buckets
+
+As an operator holding a water bucket in the main hand, run
+`/machine_sample fill X Y Z` targeting a sample machine in your dimension.
+Expect `Transferred 1000 mB.` and an empty bucket in place of the water bucket.
+Hold the empty bucket and run `/machine_sample drain X Y Z` to reverse the move.
+Fill four times, then verify a fifth fill moves zero and leaves the held bucket
+unchanged. Try lava while the tank contains water: no mixing or bucket loss.
+Save and reopen with a nonempty tank and drain it to check persistence. A
+non-machine or unloaded target must refuse the transfer, and console sources
+must receive the player-only explanation. The operator commands intentionally
+allow a target anywhere loaded in the player's current dimension.
+
+This reuses the game's transactional `FLUIDS` and `ITEM_FLUIDS` providers and
+`move_resources`, not handwritten tank or bucket NBT. Unit tests cover the tank
+configuration and command routing. Gameplay and save/load triggers have not
+been exercised at this pin.
+
 ## In-game proof scope
 
 A linked dev build and an integrated or dedicated-server run are distinct from
