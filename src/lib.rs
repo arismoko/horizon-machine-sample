@@ -9,6 +9,14 @@ struct Sample;
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
+    fn block_entity_energy(
+        &self,
+        _: &dyn Host,
+        event: &mut BlockEntityEnergyEvent<'_>,
+    ) -> Option<ModEnergyBuffer> {
+        (event.block == MACHINE).then(tour::energy::buffer)
+    }
+
     fn input_key(&self, host: &mut dyn ClientHost, event: &mut InputKeyEvent<'_>) {
         tour::client::input(host, event);
     }

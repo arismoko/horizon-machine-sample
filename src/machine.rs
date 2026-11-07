@@ -69,6 +69,7 @@ impl BlockEntityPart for Machine {
         entity.nbt.insert("progress".into(), Tag::Int(progress));
         entity.data = vec![progress];
         if done {
+            crate::tour::energy::charge(&mut entity.nbt);
             let input = entity.items[0].as_mut().unwrap();
             input.count -= 1;
             if input.count == 0 {

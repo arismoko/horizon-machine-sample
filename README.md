@@ -56,6 +56,10 @@ other API features independently:
 - `services.rs`: `/machine_sample announce <message>` (operator level 2) broadcasts
   an announcement using typed command sources and source-routed feedback.
 
+- `energy.rs`: the machine recovers 25 energy per recipe into a saved 1,000-unit
+  buffer exposed through ENERGY on all faces (100 units per transfer).
+  Item processing requires no energy and otherwise stays unchanged.
+
 - `client.rs`: a remappable Inspect machine view key (default I) toggles first/
   third-person while targeting a machine and plays a local UI click. The machine
   screen also demonstrates a small draw overlay.

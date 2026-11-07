@@ -48,6 +48,19 @@ be able to execute this level 2 command. An unrelated command must be untouched.
 Unit tests cover literal routing and parsed message formatting. These gameplay
 triggers are documented, not yet exercised at this pin.
 
+### Energy buffer
+
+Complete a machine recipe. Its scoped ticking Part recovers 25 energy in the
+saved `energy` field, up to 1,000. The canonical `ENERGY` capability exposes this
+buffer on every face, with insertion/extraction limited to 100 per call. This
+uses the game's built-in transactional energy provider, not a parallel store.
+Read the block entity with `/data get block X Y Z` after a recipe, then save,
+quit and reopen the world and read it again. Complete enough recipes to verify
+the amount stops at 1,000. A capability consumer should be able to extract in a
+transaction and observe no change when it aborts. This gameplay trigger and
+save/load were not run at this pin. The unit test verifies charging the saved
+NBT field and capacity saturation; transaction behavior belongs to the game.
+
 ### Client inspection and screen overlay
 
 Look at a sample machine with no screen open and press I. The view should switch
