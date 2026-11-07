@@ -17,7 +17,7 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `cb01ae304c7136f1598f97650c63ccfc1da47b90`.
+The sample pins fork Horizon commit `57f0b36960bbe26915d1af3f4053d64d8ebbf0a8`.
 The exact Horizon and Mixins revisions are in [horizon-mod.toml](horizon-mod.toml).
 See [VALIDATION.md](VALIDATION.md) for the scope of the current checks.
 Native mods run code with the player's rights; only build code you trust. The
