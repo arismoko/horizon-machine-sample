@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`57f0b36960bbe26915d1af3f4053d64d8ebbf0a8` and its matching Mixins revision
+`43f7fffa1e4d7b82f44e47cf7e7ef4d1c8e1658f` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split. The sample's existing trait imports and Part implementations
@@ -116,6 +116,23 @@ This reuses the game's transactional `FLUIDS` and `ITEM_FLUIDS` providers and
 `move_resources`, not handwritten tank or bucket NBT. Unit tests cover the tank
 configuration and command routing. Gameplay and save/load triggers have not
 been exercised at this pin.
+
+### Tags and gamerules
+
+Put cobblestone in a container west of an empty machine. The default
+`machine_sample:automatic_input` gamerule is true, so it should pull as before.
+Run `/gamerule machine_sample:automatic_input false`: automatic intake must
+stop, but a manually deposited input must still process and output normally.
+Set it back to true to resume intake. Save/reopen with it false to check that
+the registered rule persists with the world's gamerules.
+
+The processing recipe now uses `#machine_sample:processable`, defined under
+`data/machine_sample/tags/item/processable.json` with cobblestone as its sole
+default member. A datapack can add granite to that tag; after `/reload`, granite
+should also process into stone. Removing the override should restore the default
+membership on reload. The unit test checks that the bundled recipe references
+the bundled tag and its default contents. Runtime tag reload and gamerule
+persistence have not been exercised at this pin.
 
 ## In-game proof scope
 

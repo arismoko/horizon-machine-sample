@@ -63,12 +63,13 @@ impl Hooks for Sample {
 
     fn register(&self, registrar: &mut dyn Registrar, _: &RegistrationContext) {
         tour::client::register(registrar);
+        let automatic_input = tour::policy::register(registrar);
         let machine = registrar
             .block_entity_type("machine")
             .blocks(&[MACHINE])
             .build();
         registrar
-            .block_entity_part(&machine, machine::Machine)
+            .block_entity_part(&machine, machine::Machine { automatic_input })
             .expect("native block entity type");
     }
 

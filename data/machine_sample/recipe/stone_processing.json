@@ -1,6 +1,6 @@
 {
   "type": "machine_sample:processing",
-  "ingredient": "minecraft:cobblestone",
+  "ingredient": "#machine_sample:processable",
   "result": {
     "id": "minecraft:stone",
     "count": 1
