@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`e9f8d7991ef8e7b050e96364ce7c5b145a60116d` and its matching Mixins revision
+`cb01ae304c7136f1598f97650c63ccfc1da47b90` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split. The sample's existing trait imports and Part implementations
@@ -47,6 +47,24 @@ vanilla silence and command-block track-output rules. A non-operator must not
 be able to execute this level 2 command. An unrelated command must be untouched.
 Unit tests cover literal routing and parsed message formatting. These gameplay
 triggers are documented, not yet exercised at this pin.
+
+### Fluid tank and buckets
+
+As an operator holding a water bucket in the main hand, run
+`/machine_sample fill X Y Z` targeting a sample machine in your dimension.
+Expect `Transferred 1000 mB.` and an empty bucket in place of the water bucket.
+Hold the empty bucket and run `/machine_sample drain X Y Z` to reverse the move.
+Fill four times, then verify a fifth fill moves zero and leaves the held bucket
+unchanged. Try lava while the tank contains water: no mixing or bucket loss.
+Save and reopen with a nonempty tank and drain it to check persistence. A
+non-machine or unloaded target must refuse the transfer, and console sources
+must receive the player-only explanation. The operator commands intentionally
+allow a target anywhere loaded in the player's current dimension.
+
+This reuses the game's transactional `FLUIDS` and `ITEM_FLUIDS` providers and
+`move_resources`, not handwritten tank or bucket NBT. Unit tests cover the tank
+configuration and command routing. Gameplay and save/load triggers have not
+been exercised at this pin.
 
 ## In-game proof scope
 

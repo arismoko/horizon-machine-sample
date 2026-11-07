@@ -17,7 +17,7 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `e9f8d7991ef8e7b050e96364ce7c5b145a60116d`.
+The sample pins fork Horizon commit `cb01ae304c7136f1598f97650c63ccfc1da47b90`.
 The exact Horizon and Mixins revisions are in [horizon-mod.toml](horizon-mod.toml).
 See [VALIDATION.md](VALIDATION.md) for the scope of the current checks.
 Native mods run code with the player's rights; only build code you trust. The
@@ -55,6 +55,10 @@ other API features independently:
 
 - `services.rs`: `/machine_sample announce <message>` (operator level 2) broadcasts
   an announcement using typed command sources and source-routed feedback.
+
+- `fluids.rs`: a saved 4,000 mB machine tank with operator commands
+  `/machine_sample fill <tank:block_pos>` and `/machine_sample drain <tank:block_pos>`.
+  They transfer up to one bucket between the main hand and the machine atomically.
 
 See [VALIDATION.md](VALIDATION.md) for gameplay triggers and tested scope.
 
