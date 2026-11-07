@@ -4,6 +4,11 @@ mod tour;
 
 use mod_api::*;
 
+/// API-typed head listener declared by the manifest's `tick_rate_seen` injection.
+pub fn tick_rate_seen(host: HostSide<'_>, args: &mut mod_points::OnTickRateChangedArgs) {
+    tour::inject::tick_rate_seen(host, args);
+}
+
 #[derive(Default)]
 struct Sample;
 

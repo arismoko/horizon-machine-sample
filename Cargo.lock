@@ -342,6 +342,7 @@ name = "horizon-example-mod"
 version = "0.1.0"
 dependencies = [
  "horizon-mod-api",
+ "horizon-mod-points",
 ]
 
 [[package]]
@@ -434,6 +435,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.119",
+]
+
+[[package]]
+name = "horizon-mod-points"
+version = "0.1.0"
+source = "git+https://github.com/arismoko/horizon?rev=e8e8109dc3f1c3624187ee425880aa6905d58693#e8e8109dc3f1c3624187ee425880aa6905d58693"
+dependencies = [
+ "horizon-mod-api",
+ "horizon-mod-api-gen",
+ "wit-bindgen",
 ]
 
 [[package]]
