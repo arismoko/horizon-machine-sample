@@ -9,7 +9,7 @@ capabilities = ["registries"]
 
 [native]
 game = "26.3"
-horizon = "0a3b486ed7f2fa9c0eccaab141c9bc06306baaee"
+horizon = "b5d6f467dc78deda3b072e700f767adb456cd349"
 mixins = "5a64af938ec86b00d53d16a408aabc0038fb3e57"
 
 [[inject]]
