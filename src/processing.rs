@@ -118,6 +118,20 @@ mod tests {
     }
 
     #[test]
+    fn stopped_and_next_start_cannot_reuse_world_definitions() {
+        let sample = crate::Sample::default();
+        let source = data(&[2]);
+        let input = ItemStack::new(key(1), 1).unwrap();
+        let mut host = mod_api::testing::FakeHost::new();
+        sample.recipes.publish(&source);
+        sample.server_stopped(&mut host, &mut ServerStoppedEvent { dedicated: false });
+        assert!(sample.recipes.result(&source, &input).is_none());
+        sample.recipes.publish(&source);
+        sample.server_about_to_start(&mut host, &mut ServerAboutToStartEvent { dedicated: true });
+        assert!(sample.recipes.result(&source, &input).is_none());
+    }
+
+    #[test]
     fn live_input_and_world_answers_are_not_cached() {
         let cache = ProcessingRecipes::default();
         let host = data(&[2]);
