@@ -77,7 +77,7 @@ other API features independently:
 - `policy.rs`: a namespaced gamerule enables automatic input by default; the
   processing recipe uses the sample's reloadable `processable` item tag.
 
-- `attachments.rs`: crouch and right-click an entity with an empty hand to
+- `attachments.rs`: crouch and right-click an entity with an empty main hand to
   record a persistent inspection count and show it in the action bar.
 
 See [VALIDATION.md](VALIDATION.md) for gameplay triggers and tested scope.

@@ -136,13 +136,16 @@ persistence have not been exercised at this pin.
 
 ### Persistent entity attachments
 
-Crouch and right-click a cow with an empty hand. Its action-bar inspection
+Crouch and right-click a cow with an empty main hand. Its action-bar inspection
 count should begin at 1 and increase on subsequent inspections. Inspect a
 second cow to check that each entity has its own count. Save, quit, reopen and
 inspect the first cow again: its count must continue rather than reset. Killing
 it and summoning another cow must start a new count. Ordinary clicks, held-item
 interactions and interactions without crouching must retain vanilla behavior.
 The inspection gesture is claimed only after its attachment write succeeds.
+Hold a non-using item such as a stick in the main hand while the off hand is
+empty, then crouch and interact: the off-hand callback must not increment the
+count. A unit regression test covers main/used-hand occupancy combinations.
 
 `machine_sample:inspection_visits` has an NBT codec, no client sync, and no
 copy-on-death policy. No entity handle or holder id is kept between callbacks.
