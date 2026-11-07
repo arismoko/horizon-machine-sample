@@ -90,6 +90,20 @@ Deposit moves the carried stack into input slot 0. Compatible input processes
 into output slot 1 in 40 ticks by default; the server reload table can override
 the duration by input item id.
 
+Item identities are load-fixed, but `register` cannot enumerate names supplied
+by future pack overrides. Prepare validates typed `Identifier`s; apply publishes
+a fresh table and empty key cache. Its first server lookup uses
+`ItemsHost::item_key` to build the cache once for that reload. Later ticks do
+only keyed reads. Unknown items are skipped with one warning per identifier per
+reload, without retrying on subsequent ticks. No file I/O or JSON parsing occurs
+on ticks.
+
+`ItemStack` is an owned, nonempty value. Empty slots use `None`, consumed stacks
+use `shrink` or `split`, and growth uses fallible `set_count` after the capacity
+check. Merging compares both item identity and component patches, including
+numeric damage presence. The game's write boundary owns registry-dependent
+validation; the sample does not duplicate that component validator.
+
 It pulls one item from slot 0 of a container directly west through that
 container's east face. A pipe directly east sends one output item per tick into
 a container east of the pipe through its west face. Other orientations and pipe

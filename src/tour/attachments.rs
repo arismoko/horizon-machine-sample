@@ -76,10 +76,14 @@ fn inspection_hands_empty(main: Option<&ItemStack>, used: Option<&ItemStack>) ->
 #[cfg(test)]
 mod tests {
     use super::*;
+    use mod_api::prelude::ItemsHost;
 
     #[test]
     fn an_empty_off_hand_does_not_bypass_an_occupied_main_hand() {
-        let stick = ItemStack::new("minecraft:stick", 1);
+        let mut host = mod_api::testing::FakeHost::new();
+        let id = Identifier::parse("minecraft:stick").unwrap();
+        host.registries.resolve_items([id.clone()]).unwrap();
+        let stick = ItemStack::of(host.item_key(&id).unwrap());
         assert!(inspection_hands_empty(None, None));
         assert!(!inspection_hands_empty(Some(&stick), None));
         assert!(!inspection_hands_empty(None, Some(&stick)));

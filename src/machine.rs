@@ -32,7 +32,7 @@ impl BlockEntityPart for Machine {
             host.transaction(|host, tx| {
                 let resource = source.resource(host, 0).ok_or(())?;
                 if source.extract(host, tx, 0, &resource, 1) == 1 {
-                    Ok(resource.to_stack(1))
+                    resource.to_stack(1).ok_or(())
                 } else {
                     Err(())
                 }
@@ -55,14 +55,15 @@ impl BlockEntityPart for Machine {
                     })
             });
         let result = result.filter(|result| {
-            let limit = host.max_stack_size(&result.item).unwrap_or(0);
+            let limit = host.max_stack_size(result.item()).unwrap_or(0);
             match entity.items.get(1).and_then(Option::as_ref) {
-                None => result.count <= limit,
+                None => result.count() <= limit,
                 Some(output) => {
-                    output.item == result.item
-                        && output.damage == result.damage
-                        && output.extra == result.extra
-                        && output.count + result.count <= limit
+                    output.is_stackable_with(result)
+                        && output
+                            .count()
+                            .checked_add(result.count())
+                            .is_some_and(|n| n <= limit)
                 }
             }
         });
@@ -70,22 +71,20 @@ impl BlockEntityPart for Machine {
             Some(Tag::Int(n)) => *n,
             _ => 0,
         };
-        let duration = entity.items[0]
-            .as_ref()
-            .map_or(DURATION, |input| crate::tour::reload::duration(&input.item));
+        let duration = entity.items[0].as_ref().map_or(DURATION, |input| {
+            crate::tour::reload::duration(host, input.item())
+        });
         let (progress, done) = advance(progress, result.is_some(), duration);
         entity.nbt.insert("progress".into(), Tag::Int(progress));
         entity.data = vec![progress, duration];
         if done {
             crate::tour::energy::charge(&mut entity.nbt);
-            let input = entity.items[0].as_mut().unwrap();
-            input.count -= 1;
-            if input.count == 0 {
-                entity.items[0] = None;
-            }
+            entity.items[0] = entity.items[0].take().and_then(|input| input.shrink(1));
             let result = result.unwrap();
             if let Some(output) = &mut entity.items[1] {
-                output.count += result.count;
+                output
+                    .set_count(output.count() + result.count())
+                    .expect("capacity checked above");
             } else {
                 entity.items[1] = Some(result);
             }
@@ -120,10 +119,7 @@ impl BlockEntityPart for Machine {
                     .is_ok()
                 });
             if inserted {
-                output.count -= 1;
-                if output.count == 0 {
-                    entity.items[1] = None;
-                }
+                entity.items[1] = entity.items[1].take().and_then(|output| output.shrink(1));
             }
         }
     }
@@ -180,17 +176,17 @@ impl BlockEntityPart for Machine {
         if event.context.id != DEPOSIT {
             return;
         }
-        let (Some(input), Some(stack)) = (event.entity.items.first_mut(), event.carried.as_mut())
+        let (Some(input), Some(stack)) = (event.entity.items.first_mut(), event.carried.as_ref())
         else {
             return;
         };
-        let limit = host.max_stack_size(&stack.item).unwrap_or(0);
-        let compatible = input.as_ref().is_none_or(|item| {
-            item.item == stack.item && item.damage == stack.damage && item.extra == stack.extra
-        });
+        let limit = host.max_stack_size(stack.item()).unwrap_or(0);
+        let compatible = input
+            .as_ref()
+            .is_none_or(|item| item.is_stackable_with(stack));
         let count = deposit_count(
-            stack.count,
-            input.as_ref().map_or(0, |item| item.count),
+            stack.count(),
+            input.as_ref().map_or(0, ItemStack::count),
             limit,
             compatible,
         );
@@ -198,16 +194,14 @@ impl BlockEntityPart for Machine {
             return;
         }
         if let Some(input) = input {
-            input.count += count;
+            input
+                .set_count(input.count() + count)
+                .expect("deposit respects capacity");
+            *event.carried = event.carried.take().and_then(|stack| stack.shrink(count));
         } else {
-            *input = Some(ItemStack {
-                count,
-                ..stack.clone()
-            });
-        }
-        stack.count -= count;
-        if stack.count == 0 {
-            *event.carried = None;
+            let split = event.carried.take().unwrap().split(count);
+            *input = split.taken;
+            *event.carried = split.remainder;
         }
     }
 }

@@ -1,15 +1,22 @@
 # Validation
 
 The flat project pins fork Horizon
-`0a3b486ed7f2fa9c0eccaab141c9bc06306baaee` and its matching Mixins revision
+`b357cb326e203200b345601edf2966322331eaf0` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split, plus API 2c's access declarations and generated host
 forwarders, plus API 2d's per-kind registrar and capability-provider traits.
-Calls through `dyn Registrar` and the machine's Part implementations retain
-their existing shape; no gameplay code port is needed. The inherent game-helper
-rename changes no sample Host or hook call. It retains typed block-entity
-declarations, scoped-Part subscriptions and flat layout, handles the Part registration
+It also includes API 3a's owned nonempty `ItemStack` conversion boundary and
+API 3d's native-only raw renderer split. The sample uses keyed item metadata,
+component-aware merging, consuming shrink/split and fallible count growth.
+Prepare validates typed item identifiers; apply replaces the duration table and
+its key cache. The first server lookup resolves the table once, with one warning
+per missing item per reload; subsequent ticks only read the keyed cache. Attachment tests use
+resolved keys through `FakeHost`. Existing screen drawing stays on the API
+`DrawContext` route; no raw render listener is added here.
+
+It retains typed block-entity declarations, scoped-Part subscriptions and flat
+layout, handles the Part registration
 `Result`, and its `register` hook takes the registration context. The launcher owns the generated main and its mod and
 inventory markers; the staging check lays the canonical flat package out at
 `horizon-native-mods/<id>/`, where the engine validates id, version and side
