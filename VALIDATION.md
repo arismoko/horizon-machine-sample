@@ -39,8 +39,8 @@ helper and CI explicitly select the pinned launcher's Rust 1.99.1.
 ## Feature tour triggers
 
 Gameplay observations in this section refer to the recorded linked proof at
-`5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc`, not a new game run at the current source pin.
-The current re-pin is source/package verification only.
+`5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc`, not a new game run at the current
+source pin. The current re-pin is source/package verification only.
 
 ### Commands and messages
 
@@ -53,7 +53,8 @@ vanilla silence and command-block track-output rules. A non-operator must not
 be able to execute this level 2 command. An unrelated command must be untouched.
 Unit tests cover literal routing and parsed message formatting. These gameplay
 triggers are documented; the player announcement and its typed player prefix
-were exercised at the recorded gameplay revision, but the non-player and permission cases were not.
+were exercised at the recorded gameplay revision, but the non-player and
+permission cases were not.
 
 ### Side-typed data and asset reload
 
@@ -78,8 +79,9 @@ reload to recover.
 
 Tests cover both parsers and duration thresholds, not actual pack overrides.
 The default label was viewed above the machine panel in the linked game;
-pack overrides, F3+T and malformed-reload recovery have not been run at the recorded gameplay revision. Files are read
-only during prepare; ticks use the published table, never filesystem reads.
+pack overrides, F3+T and malformed-reload recovery have not been run at the
+recorded gameplay revision. Files are read only during prepare; ticks use the
+published table, never filesystem reads.
 
 ### Energy buffer
 
