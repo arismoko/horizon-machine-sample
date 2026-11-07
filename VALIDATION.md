@@ -51,6 +51,31 @@ in this section refer to the recorded linked proof at
 `5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc`, not a new game run at the current
 source pin. A new pin's source/package checks do not refresh these observations.
 
+### Reload-owned processing definitions
+
+The machine publishes typed processing ingredients/results at
+`server_data_loaded`, not on each tick. It still checks the live input and Host
+for every match. The unit tests cover ordered selection, replacement/removal,
+changed predicate answers and clears through the stop/start hooks. They use a
+generic predicate, not the real ingredient/custom-matcher backend: the public
+`FakeHost` has no recipe configuration. These tests do not establish in-game
+reload ordering or performance.
+
+For a linked-game check, first process cobblestone with the bundled recipe.
+Then override `machine_sample:stone_processing` in a world data pack, changing
+its result to `minecraft:andesite`, and run `/reload`. Clear the output slot and
+supply fresh input: expect andesite, not a cached stone result. Override the
+ingredient with an empty list and reload: processing must stop rather than keep
+the previous definition. Restore the recipe and reload, change the input stack
+while the machine is running, and verify it does not process a nonmatching input.
+Stop the server and open a world with different recipe data to check isolation.
+These new-cache gameplay cases have not been run by this lane.
+
+For measurements, finish publication and warm the duration item-key cache before
+starting the timer. Report cold reload work separately from steady-state ticks;
+use the final sample source and exact game pin for both native and wasm runs.
+No performance improvement is claimed from source checks alone.
+
 ### API-typed function-slot injection
 
 The native `[[inject]]` declaration names the head of

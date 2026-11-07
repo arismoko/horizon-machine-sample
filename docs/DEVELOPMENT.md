@@ -90,6 +90,17 @@ Deposit moves the carried stack into input slot 0. Compatible input processes
 into output slot 1 in 40 ticks by default; the server reload table can override
 the duration by input item id.
 
+Processing definitions are owned by a reload table in
+[`src/processing.rs`](../src/processing.rs). `server_data_loaded` parses typed
+ingredients and output stacks once, after recipe/tag publication, preserving
+file order and replacing the whole table even when it becomes empty. Server
+stop and the next startup clear it. Every tick still tests the current input
+against the ingredient using the live Host; output capacity, inventory transfers,
+progress and energy stay live. No inventory answer is cached. Unit tests cover
+selection with a generic predicate, publication replacement and lifecycle clears;
+they do not exercise the game's ingredient/custom-matcher backend, which the
+current public `FakeHost` cannot configure. No private API is used.
+
 Item identities are load-fixed, but `register` cannot enumerate names supplied
 by future pack overrides. Prepare validates typed `Identifier`s; apply publishes
 a fresh table and empty key cache. Its first server lookup uses
