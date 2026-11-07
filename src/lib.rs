@@ -1,5 +1,6 @@
 // Shared by the standalone tests and the native bundle.
 mod machine;
+mod tour;
 
 use mod_api::*;
 
@@ -8,6 +9,14 @@ struct Sample;
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
+    fn block_entity_energy(
+        &self,
+        _: &dyn Host,
+        event: &mut BlockEntityEnergyEvent<'_>,
+    ) -> Option<ModEnergyBuffer> {
+        (event.block == MACHINE).then(tour::energy::buffer)
+    }
+
     fn register(&self, registrar: &mut dyn Registrar, _: &RegistrationContext) {
         let machine = registrar
             .block_entity_type("machine")

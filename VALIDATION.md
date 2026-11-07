@@ -1,7 +1,7 @@
 # Validation
 
 The flat project pins fork Horizon
-`5eb3fd87ccb4ec423920c799be21ef8e18d5ca88` and its matching Mixins revision
+`53cc666df8f68c840fc0dd6f86d29c4600417d2d` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split. The sample's existing trait imports and Part implementations
@@ -33,6 +33,21 @@ stage and check separately; linking is an additional, explicitly named proof.
 
 Mods don't ship a toolchain file; Horizon's pinned toolchain builds them. The
 helper and CI explicitly select the pinned launcher's Rust 1.99.1.
+
+## Feature tour triggers
+
+### Energy buffer
+
+Complete a machine recipe. Its scoped ticking Part recovers 25 energy in the
+saved `energy` field, up to 1,000. The canonical `ENERGY` capability exposes this
+buffer on every face, with insertion/extraction limited to 100 per call. This
+uses the game's built-in transactional energy provider, not a parallel store.
+Read the block entity with `/data get block X Y Z` after a recipe, then save,
+quit and reopen the world and read it again. Complete enough recipes to verify
+the amount stops at 1,000. A capability consumer should be able to extract in a
+transaction and observe no change when it aborts. This gameplay trigger and
+save/load were not run at this pin. The unit test verifies charging the saved
+NBT field and capacity saturation; transaction behavior belongs to the game.
 
 ## In-game proof scope
 

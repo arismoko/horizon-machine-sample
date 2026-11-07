@@ -17,7 +17,7 @@ output.
 
 ## Build and test
 
-The sample pins fork Horizon commit `5eb3fd87ccb4ec423920c799be21ef8e18d5ca88`.
+The sample pins fork Horizon commit `53cc666df8f68c840fc0dd6f86d29c4600417d2d`.
 The exact Horizon and Mixins revisions are in [horizon-mod.toml](horizon-mod.toml).
 See [VALIDATION.md](VALIDATION.md) for the scope of the current checks.
 Native mods run code with the player's rights; only build code you trust. The
@@ -47,6 +47,14 @@ game's shared package writer; the check compiles
 the trait crate, **not** a linked executable. Both leave the
 original checkout unchanged. The launcher's native build is necessary to verify
 linking and gameplay. `--offline` needs the dependencies in Cargo's cache.
+
+## Feature tour
+
+Small modules in `src/tour/` extend the existing machine. `energy.rs` recovers
+25 energy per completed recipe into a saved 1,000-unit buffer exposed through
+the canonical `ENERGY` capability on all faces (100 units per transfer).
+The original item processing needs no energy and remains unchanged.
+See [VALIDATION.md](VALIDATION.md) for triggers and tested scope.
 
 ## Package and API
 
