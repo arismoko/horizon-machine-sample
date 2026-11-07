@@ -4,6 +4,7 @@ use crate::{DEPOSIT, DURATION, PIPE, advance, deposit_count, fill_empty};
 
 pub struct Machine {
     pub automatic_input: BoolGameRuleKey,
+    pub(crate) recipes: std::sync::Arc<crate::processing::ProcessingRecipes>,
 }
 
 #[mod_api::horizon_part]
@@ -43,17 +44,7 @@ impl BlockEntityPart for Machine {
             .items
             .first()
             .and_then(Option::as_ref)
-            .and_then(|input| {
-                host.recipes_of_type("machine_sample:processing")
-                    .iter()
-                    .find_map(|recipe| {
-                        let ingredient = host.recipe_ingredient(&recipe.json["ingredient"])?;
-                        if !ingredient.test(&*host, input) {
-                            return None;
-                        }
-                        host.recipe_result(&recipe.json["result"])
-                    })
-            });
+            .and_then(|input| self.recipes.result(host, input));
         let result = result.filter(|result| {
             let limit = host.max_stack_size(result.item()).unwrap_or(0);
             match entity.items.get(1).and_then(Option::as_ref) {
