@@ -13,7 +13,7 @@ pub fn tick_rate_seen(host: HostSide<'_>, _args: &mut OnTickRateChangedArgs) {
 mod tests {
     #[test]
     fn listener_has_the_pinned_api_head_signature() {
-        let slot = mod_points::on_tick_rate_changed(
+        let slot = mod_points::listeners::on_tick_rate_changed(
             "machine_sample",
             0,
             "tick_rate_seen",
