@@ -112,7 +112,7 @@ pub fn draw(event: &mut ScreenDrawEvent<'_>) {
     let label = LABEL.read().unwrap_or_else(|e| e.into_inner());
     event
         .draw
-        .text(&label, [x + 8.0, y + 72.0], 0xffaaaaaa, false);
+        .text(&label, [x + 8.0, y - 12.0], 0xffaaaaaa, false);
 }
 
 #[cfg(test)]
