@@ -1,11 +1,13 @@
 # Validation
 
 The flat project pins fork Horizon
-`5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc` and its matching Mixins revision
+`4cc97e605d4181372f411f8d00341fc66c5a7ad0` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
-key runtime split. The sample's existing trait imports and Part implementations
-compile unchanged against this API. It retains typed block-entity declarations,
+key runtime split, plus API 2c's access declarations and generated host
+forwarders. The inherent game-helper rename changes no sample Host or hook
+call. The sample's existing trait imports and Part implementations compile
+unchanged against this API. It retains typed block-entity declarations,
 scoped-Part subscriptions and flat layout, handles the Part registration
 `Result`, and its `register` hook takes the registration context. The launcher owns the generated main and its mod and
 inventory markers; the staging check lays the canonical flat package out at
@@ -36,6 +38,10 @@ helper and CI explicitly select the pinned launcher's Rust 1.99.1.
 
 ## Feature tour triggers
 
+Gameplay observations in this section refer to the recorded linked proof at
+`5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc`, not a new game run at the current source pin.
+The current re-pin is source/package verification only.
+
 ### Commands and messages
 
 As an operator, run `/machine_sample announce Machine ready`. Every player should
@@ -47,7 +53,7 @@ vanilla silence and command-block track-output rules. A non-operator must not
 be able to execute this level 2 command. An unrelated command must be untouched.
 Unit tests cover literal routing and parsed message formatting. These gameplay
 triggers are documented; the player announcement and its typed player prefix
-were exercised at this pin, but the non-player and permission cases were not.
+were exercised at the recorded gameplay revision, but the non-player and permission cases were not.
 
 ### Side-typed data and asset reload
 
@@ -72,7 +78,7 @@ reload to recover.
 
 Tests cover both parsers and duration thresholds, not actual pack overrides.
 The default label was viewed above the machine panel in the linked game;
-pack overrides, F3+T and malformed-reload recovery have not been run at this pin. Files are read
+pack overrides, F3+T and malformed-reload recovery have not been run at the recorded gameplay revision. Files are read
 only during prepare; ticks use the published table, never filesystem reads.
 
 ### Energy buffer
@@ -141,7 +147,7 @@ default member. A datapack can add granite to that tag; after `/reload`, granite
 should also process into stone. Removing the override should restore the default
 membership on reload. The unit test checks that the bundled recipe references
 the bundled tag and its default contents. Runtime tag reload and gamerule
-persistence have not been exercised at this pin.
+persistence have not been exercised at the recorded gameplay revision.
 
 ### Persistent entity attachments
 
@@ -170,7 +176,8 @@ manually verified.
 
 ## In-game proof scope
 
-The README pictures were captured at the Horizon pin above, with sample code
+The README pictures were captured at Horizon
+`5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc`, with sample code
 including the hand guard from #40 and screen-label fix from #42 (the latter's
 source head was `dc5d2616f17a7101cd445be3504dfa474060253e`). The exact-pin fork
 launcher built and linked the sample in Developer mode: Cargo's `fast` profile
