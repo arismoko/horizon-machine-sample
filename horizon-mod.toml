@@ -11,3 +11,10 @@ capabilities = ["registries"]
 game = "26.3"
 horizon = "e8e8109dc3f1c3624187ee425880aa6905d58693"
 mixins = "5a64af938ec86b00d53d16a408aabc0038fb3e57"
+
+[[inject]]
+id = "tick_rate_seen"
+at = "horizon_client::game::Game<'_>::on_tick_rate_changed"
+kind = "head"
+with = "tick_rate_seen"
+hash = "401a155ce7673f0b"

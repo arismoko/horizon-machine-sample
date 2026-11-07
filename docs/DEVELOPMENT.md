@@ -7,7 +7,7 @@ and the parts of the sample that are deliberately small.
 
 [horizon-mod.toml](../horizon-mod.toml) is the sole mod manifest. Its `[native]`
 section pins the game and exact Horizon and horizon-mixins revisions. The
-standalone dependency in [Cargo.toml](../Cargo.toml) must name that same Horizon
+standalone API and points dependencies in [Cargo.toml](../Cargo.toml) must name that same Horizon
 commit. [compatibility.json](../compatibility.json) records the source revision
 and hashes used by the development exporter; it is not a runtime manifest.
 
@@ -63,7 +63,13 @@ data/machine_sample/
 The mod's id and version come from `horizon-mod.toml`, not Cargo's package name
 and version. `#[mod_api::horizon_mod]` exports its Hooks entry. The launcher owns
 the generated game entry and tool manifest; this project has no raw injections
-or handwritten factories. Legacy nested layouts and manifests are not accepted.
+or handwritten factories. The API-typed `[[inject]]` declaration names a public
+crate-root function and its generated `mod_points` record; the launcher owns
+registration. It needs neither a `Points` implementation nor a handwritten
+`entry::main_with` call. Its exact target and record come from the pinned game's
+`points.json`, and its hash comes from the paired `internals.json`. This sample
+leaves cancellation unchanged and uses no internals. Legacy nested layouts and
+manifests are not accepted.
 
 Package using the pinned game's shared writer:
 

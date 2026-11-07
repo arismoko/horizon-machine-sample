@@ -38,9 +38,44 @@ helper and CI explicitly select the pinned launcher's Rust 1.99.1.
 
 ## Feature tour triggers
 
-Gameplay observations in this section refer to the recorded linked proof at
+Except for the separately pinned injection proof below, gameplay observations
+in this section refer to the recorded linked proof at
 `5d27928c5ce0ca8c041b0856ef56bfe5430bb6fc`, not a new game run at the current
-source pin. The current re-pin is source/package verification only.
+source pin. A new pin's source/package checks do not refresh these observations.
+
+### API-typed function-slot injection
+
+The native `[[inject]]` declaration names the head of
+`horizon_client::game::Game<'_>::on_tick_rate_changed`, not a hook or a raw
+receiver. Its crate-root `tick_rate_seen` function takes `HostSide` and
+`&mut OnTickRateChangedArgs`. It broadcasts only with the server Host; it does
+not change the record's cancellation flag, so vanilla's autosave-wait adjustment
+continues. There is no polling or extra work on ordinary ticks.
+
+At `e8e8109dc3f1c3624187ee425880aa6905d58693`, the generated `points.json`
+admits this target with a both-side writing Host and no arguments. The paired
+`internals.json` supplies its hash `401a155ce7673f0b`; `points.json` itself has
+no hash field. Copy that pin's hash, not one from another build. The focused
+binding test checks the listener against the generated head-slot constructor.
+
+As an operator, run `/tick rate 10`. Expect
+`Machine Sample: tick-rate update observed.` alongside vanilla's tick-rate
+response. Restore normal speed with `/tick rate 20`; the message should appear
+again. Verified in a linked Developer build at
+`e8e8109dc3f1c3624187ee425880aa6905d58693`: the pinned launcher accepted the
+slot and hash, compiled the generated native binding, and installed
+`native-e8e8109-6733542a5b5e`. In a fresh integrated-server world, both commands
+produced the message on the server thread and in the client's chat history;
+20 TPS was restored before quitting. The injection image shows those two
+updates, not a wasm or dedicated-server run. Other screenshots retain the older
+proof pin above.
+
+This replaces a head mixin on vanilla `MinecraftServer.onTickRateChanged`;
+[Horizon #1705](https://github.com/arismoko/horizon/issues/1705) requests a hook
+for that moment. Hooks and Parts are preferred when one already exists.
+For flavour 1 wasm, the same API `[[inject]]` shape supplies a listener from
+`mod.wasm`, with `[wasm]` replacing `[native]` and generated guest exports.
+No wasm artifact or wasm run is claimed here.
 
 ### Commands and messages
 
