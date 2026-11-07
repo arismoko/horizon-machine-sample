@@ -33,10 +33,14 @@ impl ProcessingRecipes {
     }
 
     pub(crate) fn result(&self, host: &dyn Host, input: &ItemStack) -> Option<ItemStack> {
+        self.select(|ingredient| ingredient.test(host, input))
+    }
+
+    fn select(&self, mut matches: impl FnMut(&Ingredient) -> bool) -> Option<ItemStack> {
         let table = self.published.read().unwrap();
         table
             .iter()
-            .find(|recipe| recipe.ingredient.test(host, input))
+            .find(|recipe| matches(&recipe.ingredient))
             .map(|recipe| recipe.result.clone())
     }
 }
@@ -44,18 +48,14 @@ impl ProcessingRecipes {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mod_api::{__private::game::BackendRefOf, prelude::ItemsHost};
+    use mod_api::prelude::ItemsHost;
     use std::{cell::Cell, sync::Arc};
 
     struct Data {
         recipes: Arc<[Recipe]>,
         accepts: Cell<bool>,
     }
-    impl Host for Data {
-        fn backend(&self) -> Option<BackendRef<'_>> {
-            Some(BackendRef::of(self))
-        }
-    }
+    impl Host for Data {}
     impl mod_api::prelude::RecipesHost for Data {
         fn recipes_of_type(&self, _: &str) -> Arc<[Recipe]> {
             self.recipes.clone()
@@ -68,13 +68,13 @@ mod tests {
         }
     }
     mod_api::impl_host_areas!(Data, except(recipes));
-    impl Backend for Data {}
-    impl mod_api::prelude::RecipesBackend for Data {
-        fn recipe_ingredient_test(&self, ingredient: &Ingredient, input: &ItemStack) -> bool {
-            self.accepts.get() && ingredient.items.contains(&input.count().to_string())
-        }
+    // FakeHost has no recipe configuration: these tests exercise table selection
+    // with a live predicate, not the game's ingredient/custom-matcher backend.
+    fn result(cache: &ProcessingRecipes, host: &Data, input: &ItemStack) -> Option<ItemStack> {
+        cache.select(|ingredient| {
+            host.accepts.get() && ingredient.items.contains(&input.count().to_string())
+        })
     }
-    mod_api::impl_backend_areas!(Data, except(recipes));
 
     fn key(n: u32) -> ItemKey {
         let mut host = mod_api::testing::FakeHost::new();
@@ -106,15 +106,15 @@ mod tests {
     fn publication_replaces_order_overrides_and_removals() {
         let cache = ProcessingRecipes::default();
         let input = ItemStack::new(key(1), 1).unwrap();
-        assert!(cache.result(&data(&[]), &input).is_none());
+        assert!(result(&cache, &data(&[]), &input).is_none());
         let original = data(&[2, 3]);
         cache.publish(&original);
-        assert_eq!(cache.result(&original, &input).unwrap().item(), key(2));
+        assert_eq!(result(&cache, &original, &input).unwrap().item(), key(2));
         let override_ = data(&[4]);
         cache.publish(&override_);
-        assert_eq!(cache.result(&override_, &input).unwrap().item(), key(4));
+        assert_eq!(result(&cache, &override_, &input).unwrap().item(), key(4));
         cache.publish(&data(&[]));
-        assert!(cache.result(&original, &input).is_none());
+        assert!(result(&cache, &original, &input).is_none());
     }
 
     #[test]
@@ -125,10 +125,10 @@ mod tests {
         let mut host = mod_api::testing::FakeHost::new();
         sample.recipes.publish(&source);
         sample.server_stopped(&mut host, &mut ServerStoppedEvent { dedicated: false });
-        assert!(sample.recipes.result(&source, &input).is_none());
+        assert!(result(&sample.recipes, &source, &input).is_none());
         sample.recipes.publish(&source);
         sample.server_about_to_start(&mut host, &mut ServerAboutToStartEvent { dedicated: true });
-        assert!(sample.recipes.result(&source, &input).is_none());
+        assert!(result(&sample.recipes, &source, &input).is_none());
     }
 
     #[test]
@@ -137,14 +137,14 @@ mod tests {
         let host = data(&[2]);
         cache.publish(&host);
         let input = ItemStack::new(key(1), 1).unwrap();
-        assert!(cache.result(&host, &input).is_some());
+        assert!(result(&cache, &host, &input).is_some());
         let changed = ItemStack::new(key(1), 2).unwrap();
-        assert!(cache.result(&host, &changed).is_none());
+        assert!(result(&cache, &host, &changed).is_none());
         host.accepts.set(false);
-        assert!(cache.result(&host, &input).is_none());
+        assert!(result(&cache, &host, &input).is_none());
         host.accepts.set(true);
-        assert!(cache.result(&host, &input).is_some());
+        assert!(result(&cache, &host, &input).is_some());
         cache.clear();
-        assert!(cache.result(&host, &input).is_none());
+        assert!(result(&cache, &host, &input).is_none());
     }
 }
