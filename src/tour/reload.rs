@@ -1,12 +1,12 @@
 //! Read sample-owned data and assets once per side-typed pack reload.
 use mod_api::*;
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, HashMap},
     io,
     sync::{Arc, LazyLock, RwLock},
 };
 
-static TIMES: LazyLock<RwLock<BTreeMap<ItemKey, i32>>> = LazyLock::new(RwLock::default);
+static TIMES: LazyLock<RwLock<HashMap<ItemKey, i32>>> = LazyLock::new(RwLock::default);
 static LABEL: LazyLock<RwLock<String>> = LazyLock::new(|| RwLock::new("Machine processing".into()));
 
 pub fn server(
@@ -60,7 +60,7 @@ impl ServerReloadListener for Times {
 fn parse_times(
     bytes: &[u8],
     items: &BTreeMap<String, ItemKey>,
-) -> io::Result<BTreeMap<ItemKey, i32>> {
+) -> io::Result<HashMap<ItemKey, i32>> {
     let table: BTreeMap<String, i32> = serde_json::from_slice(bytes)?;
     table
         .into_iter()
