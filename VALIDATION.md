@@ -1,13 +1,15 @@
 # Validation
 
 The flat project pins fork Horizon
-`b357cb326e203200b345601edf2966322331eaf0` and its matching Mixins revision
+`8c10766facba5d2f86aa54fbf3fac1351f41ad40` and its matching Mixins revision
 `5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split, plus API 2c's access declarations and generated host
 forwarders, plus API 2d's per-kind registrar and capability-provider traits.
-It also includes API 3a's owned nonempty `ItemStack` conversion boundary and
-API 3d's native-only raw renderer split. The sample uses keyed item metadata,
+It also includes API 3a's owned nonempty `ItemStack` conversion boundary,
+API 3d's native-only raw renderer split and the shared-memory Wire boundary.
+Block comparisons retain registration-time keys. Recipe-field parsing passes
+JSON text and skips refused or absent definitions when publishing the table. The sample uses keyed item metadata,
 component-aware merging, consuming shrink/split and fallible count growth.
 Prepare validates typed item identifiers; apply replaces the duration table and
 its key cache. The first server lookup resolves the table once, with one warning
@@ -54,7 +56,8 @@ source pin. A new pin's source/package checks do not refresh these observations.
 ### Reload-owned processing definitions
 
 The machine publishes typed processing ingredients/results at
-`server_data_loaded`, not on each tick. It still checks the live input and Host
+`datapack_sync` (once per server data load before recipe content is sent), not
+on each tick. It leaves the client recipe-type request list unchanged. It still checks the live input and Host
 for every match. The unit tests cover ordered selection, replacement/removal,
 changed predicate answers and clears through the stop/start hooks. They use a
 generic predicate, not the real ingredient/custom-matcher backend: the public

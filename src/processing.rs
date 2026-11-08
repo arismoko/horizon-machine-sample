@@ -24,8 +24,12 @@ impl ProcessingRecipes {
             .iter()
             .filter_map(|recipe| {
                 Some(ProcessingRecipe {
-                    ingredient: host.recipe_ingredient(&recipe.json["ingredient"])?,
-                    result: host.recipe_result(&recipe.json["result"])?,
+                    ingredient: host
+                        .recipe_ingredient(&recipe.json["ingredient"].to_string())
+                        .ok()??,
+                    result: host
+                        .recipe_result(&recipe.json["result"].to_string())
+                        .ok()??,
                 })
             })
             .collect();
@@ -60,11 +64,15 @@ mod tests {
         fn recipes_of_type(&self, _: &str) -> Arc<[Recipe]> {
             self.recipes.clone()
         }
-        fn recipe_ingredient(&self, json: &serde_json::Value) -> Option<Ingredient> {
-            Some(Ingredient::of(vec![json.as_str()?.to_owned()]))
+        fn recipe_ingredient(&self, json: &str) -> Result<Option<Ingredient>, RecipeJsonError> {
+            let json: serde_json::Value =
+                serde_json::from_str(json).map_err(|_| RecipeJsonError::InvalidJson)?;
+            Ok(json.as_str().map(|id| Ingredient::of(vec![id.to_owned()])))
         }
-        fn recipe_result(&self, json: &serde_json::Value) -> Option<ItemStack> {
-            ItemStack::new(key(json.as_u64()? as u32), 1)
+        fn recipe_result(&self, json: &str) -> Result<Option<ItemStack>, RecipeJsonError> {
+            let json: serde_json::Value =
+                serde_json::from_str(json).map_err(|_| RecipeJsonError::InvalidJson)?;
+            Ok(json.as_u64().and_then(|n| ItemStack::new(key(n as u32), 1)))
         }
     }
     mod_api::impl_host_areas!(Data, except(recipes));

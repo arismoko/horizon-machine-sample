@@ -4,7 +4,8 @@ use mod_points::OnTickRateChangedArgs;
 
 pub fn tick_rate_seen(host: HostSide<'_>, _args: &mut OnTickRateChangedArgs) {
     if let HostSide::Server(host) = host {
-        host.messages()
+        let _ = host
+            .messages()
             .broadcast(Text::literal("Machine Sample: tick-rate update observed."));
     }
 }

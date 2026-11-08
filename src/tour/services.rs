@@ -12,11 +12,14 @@ pub fn run(host: &mut dyn ServerHost, event: &mut RunModCommandEvent<'_>) -> Flo
     let Some(message) = announcement(event.command, event.source) else {
         return Flow::Continue;
     };
-    host.messages().broadcast(Text::literal(message));
+    let feedback = if host.messages().broadcast(Text::literal(message)).is_ok() {
+        "Announcement delivered."
+    } else {
+        "Announcement could not be delivered."
+    };
     // The command service, rather than an acting-player lookup, routes feedback
     // correctly for console, functions, command blocks and players alike.
-    host.commands()
-        .feedback(Text::literal("Announcement delivered."));
+    let _ = host.commands().feedback(Text::literal(feedback));
     Flow::Cancel
 }
 
