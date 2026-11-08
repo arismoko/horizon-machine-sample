@@ -1,8 +1,6 @@
 //! A saved machine tank, filled or drained with the player's held bucket.
 use mod_api::*;
 
-use crate::MACHINE;
-
 pub fn tanks() -> ModFluidTanks {
     let mut tanks = ModFluidTanks::default();
     tanks.tanks = vec![4_000];
@@ -29,12 +27,17 @@ fn direction(command: &CommandInvocation) -> Option<bool> {
     }
 }
 
-pub fn run(host: &mut dyn ServerHost, event: &mut RunModCommandEvent<'_>) -> Flow {
+pub fn run(
+    host: &mut dyn ServerHost,
+    event: &mut RunModCommandEvent<'_>,
+    machine: Option<BlockKey>,
+) -> Flow {
     let Some(fill) = direction(event.command) else {
         return Flow::Continue;
     };
     let CommandSource::Player { player, .. } = event.source else {
-        host.commands()
+        let _ = host
+            .commands()
             .feedback(Text::literal("Hold a bucket and run this as a player."));
         return Flow::Cancel;
     };
@@ -42,12 +45,17 @@ pub fn run(host: &mut dyn ServerHost, event: &mut RunModCommandEvent<'_>) -> Flo
         return Flow::Continue;
     };
     let Some(level) = player.entity().level(host) else {
-        host.commands()
+        let _ = host
+            .commands()
             .feedback(Text::literal("The player is no longer in a level."));
         return Flow::Cancel;
     };
-    if level.block(host, *pos).as_deref() != Some(MACHINE) {
-        host.commands()
+    if !level
+        .block(host, *pos)
+        .is_some_and(|block| Some(block) == machine)
+    {
+        let _ = host
+            .commands()
             .feedback(Text::literal("Target a loaded sample machine."));
         return Flow::Cancel;
     }
@@ -58,7 +66,7 @@ pub fn run(host: &mut dyn ServerHost, event: &mut RunModCommandEvent<'_>) -> Flo
     };
     let bucket = held.capability(host, &ITEM_FLUIDS);
     let (Some(tank), Some(bucket)) = (tank, bucket) else {
-        host.commands().feedback(Text::literal(
+        let _ = host.commands().feedback(Text::literal(
             "No fluid handler in the machine or held item.",
         ));
         return Flow::Cancel;
@@ -73,7 +81,7 @@ pub fn run(host: &mut dyn ServerHost, event: &mut RunModCommandEvent<'_>) -> Flo
         Ok(amount) => format!("Transferred {amount} mB."),
         Err(_) => "Transfer refused; no fluid moved.".into(),
     };
-    host.commands().feedback(Text::literal(feedback));
+    let _ = host.commands().feedback(Text::literal(feedback));
     Flow::Cancel
 }
 

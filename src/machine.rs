@@ -1,8 +1,9 @@
 use mod_api::*;
 
-use crate::{DEPOSIT, DURATION, PIPE, advance, deposit_count, fill_empty};
+use crate::{DEPOSIT, DURATION, advance, deposit_count, fill_empty};
 
 pub struct Machine {
+    pub pipe: BlockKey,
     pub automatic_input: BoolGameRuleKey,
     pub(crate) recipes: std::sync::Arc<crate::processing::ProcessingRecipes>,
 }
@@ -84,7 +85,7 @@ impl BlockEntityPart for Machine {
         let pipe = host
             .level(dimension)
             .and_then(|level| level.block(host, [pos[0] + 1, pos[1], pos[2]]));
-        if pipe.as_deref() == Some(PIPE)
+        if pipe == Some(self.pipe)
             && let Some(output) = &mut entity.items[1]
         {
             let resource = ItemResource::of(output);

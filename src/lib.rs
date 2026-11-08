@@ -13,6 +13,7 @@ pub fn tick_rate_seen(host: HostSide<'_>, args: &mut mod_points::OnTickRateChang
 #[derive(Default)]
 struct Sample {
     recipes: std::sync::Arc<processing::ProcessingRecipes>,
+    machine: std::sync::OnceLock<BlockKey>,
 }
 
 #[mod_api::horizon_mod]
@@ -21,7 +22,7 @@ impl Hooks for Sample {
         self.recipes.clear();
     }
 
-    fn server_data_loaded(&self, host: &mut dyn ServerHost, _: &mut ServerDataLoadedEvent) {
+    fn datapack_sync(&self, host: &mut dyn ServerHost, _: &mut DatapackSyncEvent<'_>) {
         self.recipes.publish(host);
     }
 
@@ -78,7 +79,7 @@ impl Hooks for Sample {
         if matches!(tour::services::run(host, event), Flow::Cancel) {
             return Flow::Cancel;
         }
-        tour::fluids::run(host, event)
+        tour::fluids::run(host, event, self.machine.get().copied())
     }
 
     fn block_entity_fluids(
@@ -90,6 +91,8 @@ impl Hooks for Sample {
     }
 
     fn register(&self, registrar: &mut dyn Registrar, _: &RegistrationContext) {
+        let _ = self.machine.set(registrar.block_key(MACHINE));
+        let pipe = registrar.block_key(PIPE);
         tour::client::register(registrar);
         let automatic_input = tour::policy::register(registrar);
         let machine = registrar
@@ -100,6 +103,7 @@ impl Hooks for Sample {
             .block_entity_part(
                 &machine,
                 machine::Machine {
+                    pipe,
                     automatic_input,
                     recipes: self.recipes.clone(),
                 },

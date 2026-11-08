@@ -91,8 +91,12 @@ into output slot 1 in 40 ticks by default; the server reload table can override
 the duration by input item id.
 
 Processing definitions are owned by a reload table in
-[`src/processing.rs`](../src/processing.rs). `server_data_loaded` parses typed
-ingredients and output stacks once, after recipe/tag publication, preserving
+[`src/processing.rs`](../src/processing.rs). `datapack_sync` parses typed
+ingredients and output stacks once, after the server builds its data tables and
+before it sends recipe content to clients. It does not request any additional
+client recipe types or run once per joining player. This replaces the removed
+`server_data_loaded` publication callback for this cache, not a general reload
+completion notification or client acknowledgement. Publication preserves
 file order and replacing the whole table even when it becomes empty. Server
 stop and the next startup clear it. Every tick still tests the current input
 against the ingredient using the live Host; output capacity, inventory transfers,
