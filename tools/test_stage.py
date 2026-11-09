@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Audit the real pinned export, deterministic staging and unchanged checkout."""
 import argparse
+import contextlib
 import json
+import sys
 import re
 from pathlib import Path
 import subprocess
 import tempfile
+from unittest import mock
 import horizon
 
 
@@ -70,6 +73,21 @@ hash = "0000000000000000"
             broken.write_text(broken.read_text().replace('0000000000000000', current_hash))
             horizon.check_injections(output, broken)
             assert not (staged/'tools').exists(), 'development helper leaked into the package'
+            # The command must propagate placement failures before compiling the mod.
+            with (mock.patch.object(horizon, 'lock', return_value=contextlib.nullcontext()),
+                  mock.patch.object(horizon, 'trait_stage', return_value=(output, False)),
+                  mock.patch.object(horizon, 'check_injections',
+                                    side_effect=ValueError('placement refused')) as validate,
+                  mock.patch.object(sys, 'argv', ['horizon.py', 'check', '--horizon', str(checkout)]),
+                  mock.patch.object(horizon.subprocess, 'run',
+                                    side_effect=AssertionError('compiled before validation'))):
+                try:
+                    horizon.main()
+                except ValueError as error:
+                    assert str(error) == 'placement refused'
+                else:
+                    raise AssertionError('check ignored an injection placement failure')
+                validate.assert_called_once_with(output, horizon.ROOT/'horizon-mod.toml')
             mismatched = root/'mismatched.lock'
             mismatched.write_text('[[package]]\nname = "libc"\nversion = "999.0.0"\n')
             try:
