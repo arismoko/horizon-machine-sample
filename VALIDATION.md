@@ -39,8 +39,13 @@ pinned game's canonical package writer. `tools/test_package.py` checks the flat
 archive's contents, deterministic output and staging; development provenance,
 Cargo.lock and legacy manifests are not shipped.
 
-`tools/horizon.py check` compiles the trait crate against the exact pin. It does
-**not** link a game executable. A successful paired item 11 reports pin, lock,
+`tools/horizon.py check` first checks API injection placement against the exact
+pin's published point catalog and shared constructor resolver, then freshness
+against its internals catalog and shared injection router. It compiles the trait
+crate, but **not** generated injection bindings or a linked game executable.
+The staging regression rejects a nonexistent point and a real point with a stale
+hash, then accepts that real point with its current hash. Acceptance does not
+prove the listener exists or has the emitted signature; that needs native linkage. A successful paired item 11 reports pin, lock,
 stage and check separately; linking is an additional, explicitly named proof.
 
 Mods don't ship a toolchain file; Horizon's pinned toolchain builds them. The

@@ -56,7 +56,9 @@ package layout, source checks and common build prerequisites.
 - CI checks formatting, clippy and standalone unit tests.
 - The staging test checks the pinned source export, canonical package writer,
   deterministic output and that the original checkout stays unchanged.
-- The pinned check compiles the trait crate. It does **not** link or run the game.
+- The pinned check resolves API injection placement and signature hashes against
+  the pinned catalogs, then compiles the trait crate. It does **not** compile
+  injection bindings, link or run the game.
 - These pictures come from an actual linked Developer build on software Vulkan.
   Processing and pipe output, tank transfers, saved machine data, and an entity's
   inspection counter across save/reopen were exercised. They are not proof of

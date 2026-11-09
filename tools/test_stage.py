@@ -2,6 +2,7 @@
 """Audit the real pinned export, deterministic staging and unchanged checkout."""
 import argparse
 import json
+import re
 from pathlib import Path
 import subprocess
 import tempfile
@@ -55,6 +56,20 @@ hash = "0000000000000000"
                 assert 'deliberately_missing_slot' in error.stderr, error.stderr
             else:
                 raise AssertionError('canonical resolver accepted an impossible API injection')
+            broken.write_text(broken.read_text().replace(
+                'horizon_client::game::Game::sample_nonexistent_slot',
+                "horizon_client::game::autosave::Game<'_>::on_tick_rate_changed"))
+            try:
+                horizon.check_injections(output, broken)
+            except subprocess.CalledProcessError as error:
+                assert 'E_INJECT_CHANGED' in error.stderr, error.stderr
+                assert 'deliberately_missing_slot' in error.stderr, error.stderr
+                current_hash = re.search(r' -> ([0-9a-f]+);', error.stderr).group(1)
+            else:
+                raise AssertionError('canonical router accepted a stale injection hash')
+            broken.write_text(broken.read_text().replace('0000000000000000', current_hash))
+            horizon.check_injections(output, broken)
+            assert not (staged/'tools').exists(), 'development helper leaked into the package'
             mismatched = root/'mismatched.lock'
             mismatched.write_text('[[package]]\nname = "libc"\nversion = "999.0.0"\n')
             try:

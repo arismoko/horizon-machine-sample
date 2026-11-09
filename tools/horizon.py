@@ -100,7 +100,8 @@ def check_injections(source, manifest):
     lines = ['[package]', 'name = "sample-injection-check"', 'version = "0.0.0"',
              'edition = "2024"', '[workspace]', '[[bin]]',
              'name = "sample-injection-check"',
-             'path = ' + json.dumps(str(ROOT / "tools/check_injections.rs")), '[dependencies]']
+             'path = "main.rs"', '[dependencies]']
+    shutil.copyfile(ROOT / "tools/check_injections.rs.in", helper / "main.rs")
     lines += [name + ' = { path = ' + json.dumps(str(source / "crates" / name)) + ' }'
               for name in dependencies]
     lines += ['serde_json = "1"']

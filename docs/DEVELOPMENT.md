@@ -39,9 +39,15 @@ python3 tools/horizon.py check --horizon /path/to/horizon
 The stage test exports only committed pinned sources into ignored `target/`
 trees. It verifies source hashes and shared dependency versions, stages the
 canonical flat package, and leaves the original checkout unchanged. Repeated
-exports must preserve source bytes and mtimes. The check compiles the trait
-crate, not a linked executable; use the launcher's native build for linking and
-actual gameplay. [VALIDATION](../VALIDATION.md) gives the proof scope and triggers.
+exports must preserve source bytes and mtimes. The check resolves API injection
+placement with the pinned point emitter and checks freshness with the shared
+injection router and internals catalog before compiling the trait crate. Missing
+points and stale hashes fail; internals and call-site injections are outside this
+prebuilt-only check and are refused. The staging regression checks missing and
+stale declarations and accepts a current real slot. The development helper is a
+Rust template copied under ignored `target/`, never a packaged runtime source.
+The check does not compile emitted listener bindings or link an executable;
+listener existence/signatures and gameplay still require the launcher's native build. [VALIDATION](../VALIDATION.md) gives the proof scope and triggers.
 
 Seed the development `Cargo.lock` from the pinned game's committed lockfile
 before resolving the standalone crate. The launcher uses the game's lockfile
