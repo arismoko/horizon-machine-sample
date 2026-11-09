@@ -7,7 +7,7 @@ and the parts of the sample that are deliberately small.
 
 [horizon-mod.toml](../horizon-mod.toml) is the sole mod manifest. Its `[native]`
 section pins the game and exact Horizon and horizon-mixins revisions. The
-standalone API and points dependencies in [Cargo.toml](../Cargo.toml) must name that same Horizon
+standalone API dependencies in [Cargo.toml](../Cargo.toml) must name that same Horizon
 commit. [compatibility.json](../compatibility.json) records the source revision
 and hashes used by the development exporter; it is not a runtime manifest.
 
@@ -17,7 +17,8 @@ release or a different Nightly is not a substitute. A stale launcher can also
 stage obsolete crate names even when the mod itself compiles. The current CLI's
 Developer mode currently uses Cargo's `fast` profile with the `horizon-client`
 package's optimization level set to 0. Balanced and Optimized are separate
-build modes. The README's native-build command uses Developer deliberately.
+build modes. The README uses Optimized to select the prebuilt route when the exact artifact exists.
+Developer is an explicit source-build fallback, not prebuilt proof.
 
 The pinned launcher brings its own Rust compiler. Local checks use Rust 1.99.1,
 matching this pin. Mods do not ship a toolchain file. Cargo's cache must contain
@@ -63,13 +64,11 @@ data/machine_sample/
 The mod's id and version come from `horizon-mod.toml`, not Cargo's package name
 and version. `#[mod_api::horizon_mod]` exports its Hooks entry. The launcher owns
 the generated game entry and tool manifest; this project has no raw injections
-or handwritten factories. The API-typed `[[inject]]` declaration names a public
-crate-root function and its generated `mod_points` record; the launcher owns
-registration. It needs neither a `Points` implementation nor a handwritten
-`entry::main_with` call. Its exact target and record come from the pinned game's
-`points.json`, and its hash comes from the paired `internals.json`. This sample
-leaves cancellation unchanged and uses no internals. Legacy nested layouts and
-manifests are not accepted.
+or handwritten factories. The tick-rate example uses `server_tick_rate_changed`, the typed hook now provided
+by the engine. There are no injection declarations or points dependencies. A
+future API injection must have a prebuilt slot; it must never rebuild the game
+or silently acquire an internals source adapter. Real mixins require internals
+access and are deliberately outside this prebuilt-only sample.
 
 Package using the pinned game's shared writer:
 
@@ -109,8 +108,8 @@ Item identities are load-fixed, but `register` cannot enumerate names supplied
 by future pack overrides. Prepare validates typed `Identifier`s; apply publishes
 a fresh table and empty key cache. Its first server lookup uses
 `ItemsHost::item_key` to build the cache once for that reload. Later ticks do
-only keyed reads. Unknown items are skipped with one warning per identifier per
-reload, without retrying on subsequent ticks. No file I/O or JSON parsing occurs
+only keyed reads. Unknown items are skipped with one stderr warning per identifier per
+reload (using the standard library, not an external logging dependency), without retrying on subsequent ticks. No file I/O or JSON parsing occurs
 on ticks.
 
 `ItemStack` is an owned, nonempty value. Empty slots use `None`, consumed stacks

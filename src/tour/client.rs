@@ -5,7 +5,7 @@ use crate::MACHINE;
 
 pub fn register(registrar: &mut dyn Registrar) {
     registrar.register_key_mapping(
-        NativeKeyRegistration::new("inspect", "key.keyboard.i")
+        KeyRegistration::new("inspect", "key.keyboard.i")
             .label("key.machine_sample.inspect")
             .context(KeyConflictContext::InGame),
     );
@@ -21,7 +21,7 @@ pub fn input(host: &dyn ClientHost, event: &InputKeyEvent<'_>) {
     if event.key != key || event.modifiers & 7 != modifiers.bits & 7 {
         return;
     }
-    let Some(NativeCrosshairTarget::Block { state, .. }) = host.crosshair_target() else {
+    let Some(CrosshairTarget::Block { state, .. }) = host.crosshair_target() else {
         return;
     };
     let Some(state) = host.block_state_string(state) else {

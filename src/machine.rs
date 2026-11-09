@@ -116,8 +116,8 @@ impl BlockEntityPart for Machine {
         }
     }
 
-    fn screen(&self, _: &dyn Host, _: &mut ScreenEvent<'_>) -> Option<NativeScreen> {
-        Some(NativeScreen {
+    fn screen(&self, _: &dyn Host, _: &mut ScreenEvent<'_>) -> Option<Screen> {
+        Some(Screen {
             width: 176.0,
             height: 166.0,
             slots: vec![Some([44.0, 35.0]), Some([116.0, 35.0])],

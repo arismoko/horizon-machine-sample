@@ -2,10 +2,9 @@
 use mod_api::*;
 
 pub fn register(event: &mut RegisterCommandsEvent<'_>) {
-    event.commands.push(NativeCommand::op(
-        "machine_sample announce <message:text>",
-        2,
-    ));
+    event
+        .commands
+        .push(Command::op("machine_sample announce <message:text>", 2));
 }
 
 pub fn run(host: &mut dyn ServerHost, event: &mut RunModCommandEvent<'_>) -> Flow {
@@ -58,7 +57,7 @@ mod tests {
     #[test]
     fn announces_parsed_text_and_typed_origin() {
         let source = CommandSource::Console {
-            permission: NativePermissionLevel::All,
+            permission: PermissionLevel::All,
         };
         assert_eq!(
             announcement(
@@ -73,7 +72,7 @@ mod tests {
         );
         let function = CommandSource::Function {
             id: Identifier::parse("machine_sample:alarm").unwrap(),
-            permission: NativePermissionLevel::All,
+            permission: PermissionLevel::All,
         };
         assert_eq!(
             announcement(

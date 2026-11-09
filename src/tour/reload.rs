@@ -40,15 +40,22 @@ struct Durations {
 impl Durations {
     fn duration(&self, host: &dyn Host, item: ItemKey) -> i32 {
         // Prepare has no resolver. Resolve once on the first server lookup, never per tick.
-        self.resolved.get_or_init(|| self.entries.iter().filter_map(|(id, ticks)| {
-            match host.item_key(id) {
-                Some(key) => Some((key, *ticks)),
-                None => {
-                    log::warn!(target: "machine_sample::reload", "Skipping processing time for unknown item {id}");
-                    None
-                }
-            }
-        }).collect()).get(&item).copied().unwrap_or(crate::DURATION)
+        self.resolved
+            .get_or_init(|| {
+                self.entries
+                    .iter()
+                    .filter_map(|(id, ticks)| match host.item_key(id) {
+                        Some(key) => Some((key, *ticks)),
+                        None => {
+                            eprintln!("Skipping processing time for unknown item {id}");
+                            None
+                        }
+                    })
+                    .collect()
+            })
+            .get(&item)
+            .copied()
+            .unwrap_or(crate::DURATION)
     }
 }
 
@@ -165,23 +172,7 @@ mod tests {
     }
 
     #[test]
-    fn replacing_reload_data_drops_keys_and_warns_once_per_missing_item() {
-        use std::sync::atomic::{AtomicUsize, Ordering};
-        struct Warnings(AtomicUsize);
-        impl log::Log for Warnings {
-            fn enabled(&self, metadata: &log::Metadata<'_>) -> bool {
-                metadata.target() == "machine_sample::reload"
-            }
-            fn log(&self, record: &log::Record<'_>) {
-                if self.enabled(record.metadata()) {
-                    self.0.fetch_add(1, Ordering::Relaxed);
-                }
-            }
-            fn flush(&self) {}
-        }
-        static WARNINGS: Warnings = Warnings(AtomicUsize::new(0));
-        log::set_logger(&WARNINGS).unwrap();
-        log::set_max_level(log::LevelFilter::Warn);
+    fn replacing_reload_data_drops_resolved_keys_and_skips_unknown_items() {
         let mut host = mod_api::testing::FakeHost::new();
         let id = Identifier::parse("minecraft:cobblestone").unwrap();
         host.registries.resolve_items([id.clone()]).unwrap();
@@ -190,15 +181,15 @@ mod tests {
             parse_times(br#"{"minecraft:cobblestone":80,"machine_sample:missing":20}"#).unwrap();
         assert_eq!(table.duration(&host, key), 80);
         assert_eq!(table.duration(&host, key), 80);
-        assert_eq!(WARNINGS.0.load(Ordering::Relaxed), 1);
+        assert_eq!(table.resolved.get().unwrap().len(), 1);
         table =
             parse_times(br#"{"minecraft:cobblestone":20,"machine_sample:missing":10}"#).unwrap();
         assert!(table.resolved.get().is_none());
         assert_eq!(table.duration(&host, key), 20);
-        assert_eq!(WARNINGS.0.load(Ordering::Relaxed), 2);
+        assert_eq!(table.resolved.get().unwrap().len(), 1);
         table = parse_times(br#"{}"#).unwrap();
         assert_eq!(table.duration(&host, key), crate::DURATION);
-        assert_eq!(WARNINGS.0.load(Ordering::Relaxed), 2);
+        assert!(table.resolved.get().unwrap().is_empty());
     }
 
     #[test]
