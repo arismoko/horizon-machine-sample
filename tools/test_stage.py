@@ -37,6 +37,24 @@ def main():
             assert (staged/'Cargo.toml').is_file()
             assert not any((staged/path).exists() for path in
                            ('native', 'rust', 'horizon-native.json', 'horizon-mixin.toml'))
+            horizon.check_injections(output, staged/'horizon-mod.toml')
+            broken = root/'broken-horizon-mod.toml'
+            broken.write_text((staged/'horizon-mod.toml').read_text() + '''
+[[inject]]
+id = "deliberately_missing_slot"
+at = "horizon_client::game::Game::sample_nonexistent_slot"
+kind = "head"
+access = "api"
+with = "listener"
+hash = "0000000000000000"
+''')
+            try:
+                horizon.check_injections(output, broken)
+            except subprocess.CalledProcessError as error:
+                assert 'unknown API point' in error.stderr, error.stderr
+                assert 'deliberately_missing_slot' in error.stderr, error.stderr
+            else:
+                raise AssertionError('canonical resolver accepted an impossible API injection')
             mismatched = root/'mismatched.lock'
             mismatched.write_text('[[package]]\nname = "libc"\nversion = "999.0.0"\n')
             try:
