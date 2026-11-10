@@ -104,7 +104,8 @@ def check_injections(source, manifest):
     shutil.copyfile(ROOT / "tools/check_injections.rs.in", helper / "main.rs")
     lines += [name + ' = { path = ' + json.dumps(str(source / "crates" / name)) + ' }'
               for name in dependencies]
-    lines += ['serde_json = "1"']
+    # Catalog construction is CPU-heavy; unoptimized AST walking makes each check take minutes.
+    lines += ['serde_json = "1"', '[profile.dev]', 'opt-level = 3', 'debug = 0']
     (helper / "Cargo.toml").write_text('\n'.join(lines) + '\n')
     shutil.copyfile(source / "Cargo.lock", helper / "Cargo.lock")
     subprocess.run(["cargo", "run", "--offline", "-j", "4", "--manifest-path",
