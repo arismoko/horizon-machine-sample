@@ -7,9 +7,7 @@ license = "MIT"
 description = "A minimal native Horizon mod"
 
 [dependencies]
-log = "0.4"
-horizon-mod-api = { git = "https://github.com/arismoko/horizon", rev = "8c10766facba5d2f86aa54fbf3fac1351f41ad40" }
-horizon-mod-points = { git = "https://github.com/arismoko/horizon", rev = "8c10766facba5d2f86aa54fbf3fac1351f41ad40" }
+horizon-mod-api = { git = "https://github.com/arismoko/horizon", rev = "f0a383025a21956a8cee9343107e5867259e63f6" }
 
 [dev-dependencies]
-horizon-mod-api = { git = "https://github.com/arismoko/horizon", rev = "8c10766facba5d2f86aa54fbf3fac1351f41ad40", features = ["testing"] }
+horizon-mod-api = { git = "https://github.com/arismoko/horizon", rev = "f0a383025a21956a8cee9343107e5867259e63f6", features = ["testing"] }

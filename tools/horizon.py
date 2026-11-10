@@ -92,6 +92,28 @@ def stage_mods(source, stages):
     return mods
 
 
+def check_injections(source, manifest):
+    """Resolve prebuilt API slots with the pinned native/wasm constructor emitter."""
+    helper = ROOT / "target/injection-check"
+    helper.mkdir(parents=True, exist_ok=True)
+    dependencies = ("horizon-mod-api-gen", "horizon-mod-package", "horizon-mod-point-emit")
+    lines = ['[package]', 'name = "sample-injection-check"', 'version = "0.0.0"',
+             'edition = "2024"', '[workspace]', '[[bin]]',
+             'name = "sample-injection-check"',
+             'path = "main.rs"', '[dependencies]']
+    shutil.copyfile(ROOT / "tools/check_injections.rs.in", helper / "main.rs")
+    lines += [name + ' = { path = ' + json.dumps(str(source / "crates" / name)) + ' }'
+              for name in dependencies]
+    # Catalog construction is CPU-heavy; unoptimized AST walking makes each check take minutes.
+    lines += ['serde_json = "1"', '[profile.dev]', 'opt-level = 3', 'debug = 0']
+    (helper / "Cargo.toml").write_text('\n'.join(lines) + '\n')
+    shutil.copyfile(source / "Cargo.lock", helper / "Cargo.lock")
+    subprocess.run(["cargo", "run", "--offline", "-j", "4", "--manifest-path",
+                    str(helper / "Cargo.toml"), "--target-dir", str(ROOT / "target/package-tool"),
+                    "--", str(source), str(manifest)], check=True, capture_output=True, text=True,
+                   env=dict(os.environ, RUSTUP_TOOLCHAIN=TOOLCHAIN, CARGO_INCREMENTAL="0"))
+
+
 def check_lock(horizon_lock, sample_lock):
     """Refuse a shared dependency version absent from the pinned game lock."""
     with horizon_lock.open("rb") as file:
@@ -146,6 +168,7 @@ def main():
         report = {"stage": str(output), "stage_changed": changed,
                   "horizon_revision": PIN, "staging_seconds": time.monotonic()-started}
         if args.action != "stage":
+            check_injections(output, ROOT / "horizon-mod.toml")
             if args.action == "build":
                 raise ValueError("trait mods must be linked with horizon-launcher native-build; see README.md")
             command = ["nice", "-n", "19", "cargo", args.action, "-j", "4",

@@ -5,11 +5,6 @@ mod tour;
 
 use mod_api::*;
 
-/// API-typed head listener declared by the manifest's `tick_rate_seen` injection.
-pub fn tick_rate_seen(host: HostSide<'_>, args: &mut mod_points::OnTickRateChangedArgs) {
-    tour::inject::tick_rate_seen(host, args);
-}
-
 #[derive(Default)]
 struct Sample {
     recipes: std::sync::Arc<processing::ProcessingRecipes>,
@@ -18,6 +13,16 @@ struct Sample {
 
 #[mod_api::horizon_mod]
 impl Hooks for Sample {
+    fn server_tick_rate_changed(
+        &self,
+        host: &mut dyn ServerHost,
+        _: &mut ServerTickRateChangedEvent,
+    ) {
+        let _ = host
+            .messages()
+            .broadcast(Text::literal("Machine Sample: tick-rate update observed."));
+    }
+
     fn server_about_to_start(&self, _: &mut dyn ServerHost, _: &mut ServerAboutToStartEvent) {
         self.recipes.clear();
     }

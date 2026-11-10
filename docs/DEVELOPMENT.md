@@ -7,7 +7,7 @@ and the parts of the sample that are deliberately small.
 
 [horizon-mod.toml](../horizon-mod.toml) is the sole mod manifest. Its `[native]`
 section pins the game and exact Horizon and horizon-mixins revisions. The
-standalone API and points dependencies in [Cargo.toml](../Cargo.toml) must name that same Horizon
+standalone API dependencies in [Cargo.toml](../Cargo.toml) must name that same Horizon
 commit. [compatibility.json](../compatibility.json) records the source revision
 and hashes used by the development exporter; it is not a runtime manifest.
 
@@ -17,7 +17,8 @@ release or a different Nightly is not a substitute. A stale launcher can also
 stage obsolete crate names even when the mod itself compiles. The current CLI's
 Developer mode currently uses Cargo's `fast` profile with the `horizon-client`
 package's optimization level set to 0. Balanced and Optimized are separate
-build modes. The README's native-build command uses Developer deliberately.
+build modes. The README uses Optimized to select the prebuilt route when the exact artifact exists.
+Developer is an explicit source-build fallback, not prebuilt proof.
 
 The pinned launcher brings its own Rust compiler. Local checks use Rust 1.99.1,
 matching this pin. Mods do not ship a toolchain file. Cargo's cache must contain
@@ -38,9 +39,15 @@ python3 tools/horizon.py check --horizon /path/to/horizon
 The stage test exports only committed pinned sources into ignored `target/`
 trees. It verifies source hashes and shared dependency versions, stages the
 canonical flat package, and leaves the original checkout unchanged. Repeated
-exports must preserve source bytes and mtimes. The check compiles the trait
-crate, not a linked executable; use the launcher's native build for linking and
-actual gameplay. [VALIDATION](../VALIDATION.md) gives the proof scope and triggers.
+exports must preserve source bytes and mtimes. The check resolves API injection
+placement with the pinned point emitter and checks freshness with the shared
+injection router and internals catalog before compiling the trait crate. Missing
+points and stale hashes fail; internals and call-site injections are outside this
+prebuilt-only check and are refused. The staging regression checks missing and
+stale declarations and accepts a current real slot. The development helper is a
+Rust template copied under ignored `target/`, never a packaged runtime source.
+The check does not compile emitted listener bindings or link an executable;
+listener existence/signatures and gameplay still require the launcher's native build. [VALIDATION](../VALIDATION.md) gives the proof scope and triggers.
 
 Seed the development `Cargo.lock` from the pinned game's committed lockfile
 before resolving the standalone crate. The launcher uses the game's lockfile
@@ -63,13 +70,11 @@ data/machine_sample/
 The mod's id and version come from `horizon-mod.toml`, not Cargo's package name
 and version. `#[mod_api::horizon_mod]` exports its Hooks entry. The launcher owns
 the generated game entry and tool manifest; this project has no raw injections
-or handwritten factories. The API-typed `[[inject]]` declaration names a public
-crate-root function and its generated `mod_points` record; the launcher owns
-registration. It needs neither a `Points` implementation nor a handwritten
-`entry::main_with` call. Its exact target and record come from the pinned game's
-`points.json`, and its hash comes from the paired `internals.json`. This sample
-leaves cancellation unchanged and uses no internals. Legacy nested layouts and
-manifests are not accepted.
+or handwritten factories. The tick-rate example uses `server_tick_rate_changed`, the typed hook now provided
+by the engine. There are no injection declarations or points dependencies. A
+future API injection must have a prebuilt slot; it must never rebuild the game
+or silently acquire an internals source adapter. Real mixins require internals
+access and are deliberately outside this prebuilt-only sample.
 
 Package using the pinned game's shared writer:
 
@@ -109,8 +114,8 @@ Item identities are load-fixed, but `register` cannot enumerate names supplied
 by future pack overrides. Prepare validates typed `Identifier`s; apply publishes
 a fresh table and empty key cache. Its first server lookup uses
 `ItemsHost::item_key` to build the cache once for that reload. Later ticks do
-only keyed reads. Unknown items are skipped with one warning per identifier per
-reload, without retrying on subsequent ticks. No file I/O or JSON parsing occurs
+only keyed reads. Unknown items are skipped with one stderr warning per identifier per
+reload (using the standard library, not an external logging dependency), without retrying on subsequent ticks. No file I/O or JSON parsing occurs
 on ticks.
 
 `ItemStack` is an owned, nonempty value. Empty slots use `None`, consumed stacks

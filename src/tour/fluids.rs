@@ -12,7 +12,7 @@ pub fn tanks() -> ModFluidTanks {
 
 pub fn register(event: &mut RegisterCommandsEvent<'_>) {
     for verb in ["fill", "drain"] {
-        event.commands.push(NativeCommand::op(
+        event.commands.push(Command::op(
             &format!("machine_sample {verb} <tank:block_pos>"),
             2,
         ));
