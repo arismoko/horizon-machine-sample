@@ -28,7 +28,8 @@ def main():
         assert any(name.startswith('data/machine_sample/') for name in names)
         assert not any(name.startswith(('native/', 'rust/', 'mixins/', 'api/', 'content/'))
                        for name in names)
-        assert not {'horizon-native.json', 'horizon-mixin.toml', 'compatibility.json', 'Cargo.lock'} & names
+        assert 'Cargo.lock' in names, 'native registry dependencies require a pinned lockfile'
+        assert not {'horizon-native.json', 'horizon-mixin.toml', 'compatibility.json'} & names
     with tempfile.TemporaryDirectory(dir=root / 'target') as scratch:
         with horizon.lock(root/'target/stage.lock'):
             source, _ = horizon.stage(args.horizon.resolve(), Path(scratch)/'original')
