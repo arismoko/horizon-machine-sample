@@ -25,8 +25,10 @@ visible slots; its Deposit button accepts the carried stack. This is a fixed
 west-to-east transfer example, not a pipe network.
 
 [Try each example](VALIDATION.md#feature-tour-triggers) for the commands, gestures
-and expected results. Hooks and Parts cover every example; no injections or source adapters are needed.
-This sample has not been built as wasm.
+and expected results. Hooks and Parts implement the gameplay examples. The experimental native telemetry
+rows observe their engine execution without changing machine processing.
+This sample has not been built as wasm. This experimental branch also tries native-only
+function replacement and the published block-entity loop; see [the native trial](docs/NATIVE-TRIAL.md).
 
 ## Build and run
 
@@ -44,9 +46,9 @@ horizon-launcher native-build "$PWD" --instance "Machine Sample" --version PINNE
 horizon-launcher play --instance "Machine Sample"
 ```
 
-Optimized mode uses a matching prebuilt game when one is published; a missing
-artifact falls back to a source build. The sample depends only on the public API.
-Use `--profile developer` explicitly for the documented source-build fallback.
+The native route requires a matching published prebuilt game. A missing SDK is
+refused; there is no source-build fallback. This experimental branch uses engine
+internals for telemetry, in addition to the public API gameplay examples.
 
 [Development and packaging](docs/DEVELOPMENT.md) covers exact revisions, the flat
 package layout, source checks and common build prerequisites.

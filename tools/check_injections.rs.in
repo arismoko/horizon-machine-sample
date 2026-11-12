@@ -13,7 +13,7 @@ fn run() -> Result<(), String> {
     };
     let manifest = Manifest::parse(&fs::read_to_string(manifest).map_err(|e| e.to_string())?)?;
     for entry in &manifest.inject {
-        if entry.access != Access::Api || entry.call.is_some() {
+        if entry.access != Access::Api {
             return Err(format!(
                 "{}: this sample check supports only prebuilt API function slots",
                 entry.id
@@ -41,9 +41,7 @@ fn run() -> Result<(), String> {
             .map(|item| Place {
                 at: inject.at.clone(),
                 hash: item.hash.clone(),
-                native_only: false,
                 slots: vec![SlotKind::Head, SlotKind::Return],
-                calls: Vec::new(),
             })
             .collect::<Vec<_>>();
         // The emitter checked the API record/kind above; the shared router owns freshness.
@@ -52,7 +50,6 @@ fn run() -> Result<(), String> {
                 inject,
                 target: Target::Native,
                 mod_id: &manifest.id,
-                resolved_call: None,
             },
             &places,
         )

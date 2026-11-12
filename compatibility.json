@@ -1,11 +1,11 @@
 {
-  "horizon_revision": "8fce8db0d4d0b0db5ceba5447ad417bc75b23a5d",
+  "horizon_revision": "13e3b39f7fe0cfeedc85a7aefb30a0e5e270b539",
   "source_sha256": {
-    "crates/horizon-client/src/game.rs": "65fb6ec737312ee45ee32f2304dd22a752e2c5d0f9f4110f74e7d0d37c0412ab",
+    "crates/horizon-client/src/game.rs": "d91b12ad1ffa962e984bf18a4500fc70aab93e3ffbc39808bca241718aa06d54",
     "crates/horizon-client/src/game/native_hooks/server_tick_rate_changed.rs": "4d814a69ab834fd5b0ae4605dc013660274bec5d7a83e8d24b9ff2a5a96f1b45"
   },
   "horizon_repository": "https://github.com/arismoko/horizon",
   "horizon_mixins_repository": "https://github.com/horizon-rust/horizon-mixins",
-  "horizon_mixins_revision": "5a64af938ec86b00d53d16a408aabc0038fb3e57",
+  "horizon_mixins_revision": "e59da9094f0c2fdda6c627fe9eff22dec6a906f0",
   "mixin_schema": 6
 }
