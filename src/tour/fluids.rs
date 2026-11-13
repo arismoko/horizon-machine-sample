@@ -100,8 +100,14 @@ mod tests {
 
     #[test]
     fn routes_only_our_transfer_commands() {
-        let command =
-            |verb: &str| CommandInvocation::new(vec!["machine_sample".into(), verb.into()], vec![]);
+        let command = |verb: &str| {
+            CommandInvocation::new(
+                vec!["machine_sample".into(), verb.into()],
+                vec![],
+                mod_api::DimensionKey::OVERWORLD,
+                [0.0; 3],
+            )
+        };
         assert_eq!(direction(&command("fill")), Some(true));
         assert_eq!(direction(&command("drain")), Some(false));
         assert_eq!(direction(&command("announce")), None);

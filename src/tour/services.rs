@@ -51,6 +51,8 @@ mod tests {
                 "message".into(),
                 CommandArgumentValue::String(message.into()),
             )],
+            mod_api::DimensionKey::OVERWORLD,
+            [0.0; 3],
         )
     }
 
