@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = tomllib.loads((ROOT / "horizon-mod.toml").read_text())
 COMPAT = json.loads((ROOT / "compatibility.json").read_text())
 PIN = MANIFEST["native"]["horizon"]
+# Where `cargo horizon-mod` fetches the pinned build's SDK; the crate names the API only there.
+SDK_API = ".horizon/sdk/api/crates/horizon-mod-api"
 # Matches launcher/src/rust_toolchain.rs at the pinned Horizon revision.
 TOOLCHAIN = "1.99.1"
 
@@ -133,9 +135,9 @@ def trait_stage(horizon, stages):
     """Export the pinned game and stage its flat mod without changing game sources."""
     crate = tomllib.loads((ROOT / "Cargo.toml").read_text())
     if (COMPAT["horizon_revision"] != PIN
-            or crate["dependencies"]["horizon-mod-api"]["rev"] != PIN
+            or crate["dependencies"]["horizon-mod-api"] != {"path": SDK_API}
             or MANIFEST["native"]["mixins"] != COMPAT["horizon_mixins_revision"]):
-        raise ValueError("The manifest, crate and development provenance pins must match")
+        raise ValueError("The manifest and development provenance pins must match, and the crate must name the API by its SDK path")
     output, changed = stage(horizon, stages / "original")
     check_lock(output / "Cargo.lock", ROOT / "Cargo.lock")
     stage_mods(output, stages)
