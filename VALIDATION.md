@@ -65,6 +65,18 @@ west of the machine, a pipe to its east and an empty chest beyond:
   the Deposit button, the reloadable label and the two slots; the input slot held
   cobblestone mid-cycle.
 
+### Published SDK
+
+`sdk-0cad862ddcd8c80f184070eaab40c0d64b9a846d` was the first SDK release published
+while this pin was ported. With the manifest and `compatibility.json` pin moved to
+that build and no other change, `cargo horizon-mod check` fetched the signed SDK and passed (the host and
+wasm32 checks, then 566 API items used), `cargo horizon-mod build` packed `machine_sample.hmod` with
+its `uses.json`, and `horizon-launcher native-build` on a developer base of that commit,
+with no `HORIZON_LAUNCHER_DEVELOPER_SDK`, downloaded the mod tools (96 MB) and built in 13 s. In game the
+same chest-machine-pipe-chest line turned 16 cobblestone into 16 stone. This sample's own pin stays at
+`c417323915`, which has no SDK release. `cargo horizon-mod hooks` and `fits` were tried only as far as
+`hooks energy` (no match) and `fits` (no Nightly SDK to compare with).
+
 Not run at this pin: fluids, energy, the tour commands, keybindings, attachments,
 pack overrides and save/reopen. Their triggers below still describe the earlier
 recorded proof.

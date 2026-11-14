@@ -30,7 +30,8 @@ This sample has not been built as wasm.
 
 ## Build and run
 
-No `sdk-<build id>` release exists for the pinned Horizon build yet, so the sample is
+No `sdk-<build id>` release exists for the pinned Horizon build (the first one published is a newer build; [VALIDATION](VALIDATION.md#published-sdk)
+lists what that route did), so the sample is
 built the way a mod author builds against an unpublished commit: with the
 launcher's developer SDK, from a checkout of [the pinned commit](horizon-mod.toml).
 Native mods run with your rights: read the source before trusting it. The steps
