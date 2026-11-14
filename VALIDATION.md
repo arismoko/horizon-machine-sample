@@ -247,7 +247,8 @@ second cow to check that each entity has its own count. Save, quit, reopen and
 inspect the first cow again: its count must continue rather than reset. Killing
 it and summoning another cow must start a new count. Ordinary clicks, held-item
 interactions and interactions without crouching must retain vanilla behavior.
-The inspection gesture is claimed only after its attachment write succeeds.
+The inspection gesture is answered `SuccessServer` (the server swings the hand) only after its attachment write
+succeeds; the client answers nothing for it.
 Hold a non-using item such as a stick in the main hand while the off hand is
 empty, then crouch and interact: the off-hand callback must not increment the
 count. A unit regression test covers main/used-hand occupancy combinations.

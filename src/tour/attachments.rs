@@ -23,12 +23,13 @@ fn decode(saved: &Compound) -> Result<u32, AttachmentError> {
     u32::try_from(*visits).map_err(|_| AttachmentError::Decode)
 }
 
-pub fn inspect(host: &mut dyn ServerHost, event: &EntityInteractEvent<'_>) -> Flow {
-    let Some(player) = host.players().acting_player() else {
-        return Flow::Continue;
-    };
+pub fn inspect(
+    host: &mut dyn ServerHost,
+    event: &EntityInteractEvent<'_>,
+) -> Option<InteractionResult> {
+    let player = host.players().acting_player()?;
     if player.is_secondary_use_active(host) != Some(true) {
-        return Flow::Continue;
+        return None;
     }
     let main = ItemPlace::PlayerHand {
         player: player.uuid(),
@@ -36,11 +37,9 @@ pub fn inspect(host: &mut dyn ServerHost, event: &EntityInteractEvent<'_>) -> Fl
     }
     .stack(host);
     if !inspection_hands_empty(main.as_ref(), event.stack) {
-        return Flow::Continue;
+        return None;
     }
-    let Ok(id) = u32::try_from(event.entity) else {
-        return Flow::Continue;
-    };
+    let id = u32::try_from(event.entity).ok()?;
     // The event's target belongs to the host's current level. No entity, world
     // borrow or holder identity is retained beyond this callback.
     let holder = Holder::Entity(id);
@@ -55,16 +54,17 @@ pub fn inspect(host: &mut dyn ServerHost, event: &EntityInteractEvent<'_>) -> Fl
                 host,
                 Text::literal(format!("Inspected {}: visit {visits}", event.kind)),
             );
-            // Claim this gesture so vanilla does not retry with the other hand.
-            Flow::Cancel
+            // A consuming answer ends the hand loop, so the off hand is not asked;
+            // the server swings the hand.
+            Some(InteractionResult::SuccessServer)
         }
-        Err(AttachmentError::MissingHolder) => Flow::Continue,
+        Err(AttachmentError::MissingHolder) => None,
         Err(_) => {
             let _ = player.action_bar(
                 host,
                 Text::literal("Inspection data could not be read; left unchanged."),
             );
-            Flow::Continue
+            None
         }
     }
 }

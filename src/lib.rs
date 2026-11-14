@@ -37,10 +37,14 @@ impl Hooks for Sample {
 
     fn entity_interact(
         &self,
-        host: &mut dyn ServerHost,
+        host: HostSide<'_>,
         event: &mut EntityInteractEvent<'_>,
-    ) -> Flow {
-        tour::attachments::inspect(host, event)
+    ) -> Option<InteractionResult> {
+        // The visit count is the server's: the client predicts nothing here.
+        match host {
+            HostSide::Server(host) => tour::attachments::inspect(host, event),
+            HostSide::Client(_) => None,
+        }
     }
 
     fn add_server_reload_listeners(
