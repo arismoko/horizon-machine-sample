@@ -1,7 +1,7 @@
 {
-  "horizon_revision": "a22b62d98a3c26068296d6a398de916ec738179a",
+  "horizon_revision": "bade262391477ff2a668e3ae5ea6ee34f3115035",
   "source_sha256": {
-    "crates/horizon-client/src/game.rs": "fbcbb7cfdbbdae609fc48a5d00c491c4c119d28f7788e48b8a84f7cf18e26f30",
+    "crates/horizon-client/src/game.rs": "ecdd73367d9bd66f6f5720f4ab372ae91e7c790f1ea1e1f0e9e78111e3b49478",
     "crates/horizon-client/src/game/native_hooks/server_tick_rate_changed.rs": "66befbaf55e5d3b0cc285a39b8a298979585fb6e5bfba2b0fcc24061f16ac09e"
   },
   "horizon_repository": "https://github.com/arismoko/horizon",
