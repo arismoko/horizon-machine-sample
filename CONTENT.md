@@ -5,9 +5,11 @@ The top-level content in this mod supplies `machine_sample:machine` and
 machine copies the vanilla chest block template. The pipe copies the iron
 block template. Both blocks use simple cube models.
 
-The `machine_sample:processing` recipe maps one cobblestone to one stone.
-It is mod-defined data, not a vanilla crafting recipe. It does nothing without
-native code that reads this recipe type and implements machine behavior.
+The `machine_sample:stone_processing` recipe maps one cobblestone to one stone.
+It is mod-defined data, not a vanilla crafting recipe. Its file `type` is the
+serializer `machine_sample:processing_json`, which the mod registers for the
+recipe type `machine_sample:processing`. It does nothing without native code
+that reads this recipe type and implements machine behavior.
 The blocks and textures do not provide processing or pipe transport by themselves.
 
 ## Build and install
