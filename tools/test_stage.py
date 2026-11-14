@@ -48,7 +48,6 @@ def main():
 id = "deliberately_missing_slot"
 at = "horizon_client::game::Game::sample_nonexistent_slot"
 kind = "head"
-access = "api"
 with = "listener"
 hash = "0000000000000000"
 ''')
