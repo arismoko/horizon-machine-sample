@@ -20,7 +20,7 @@ impl ProcessingRecipes {
     pub(crate) fn publish(&self, host: &dyn Host) {
         // Build completely before replacing, including when all recipes vanished.
         let next = host
-            .recipes_of_type("machine_sample:processing")
+            .recipes_of_type(crate::PROCESSING_RECIPE_TYPE)
             .iter()
             .filter_map(|recipe| {
                 Some(ProcessingRecipe {

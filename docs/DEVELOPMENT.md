@@ -97,6 +97,11 @@ Deposit moves the carried stack into input slot 0. Compatible input processes
 into output slot 1 in 40 ticks by default; the server reload table can override
 the duration by input item id.
 
+Recipe files carry a serializer id as their `type`. `Hooks::register` declares
+the recipe type `machine_sample:processing` and the raw serializer
+`machine_sample:processing_json` for it; an unregistered serializer id would
+refuse the whole recipe load. The machine reads the type with `recipes_of_type`.
+
 Processing definitions are owned by a reload table in
 [`src/processing.rs`](../src/processing.rs). `datapack_sync` parses typed
 ingredients and output stacks once, after the server builds its data tables and

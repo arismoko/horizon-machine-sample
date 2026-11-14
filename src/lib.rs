@@ -84,6 +84,8 @@ impl Hooks for Sample {
     }
 
     fn register(&self, registrar: &mut dyn Registrar, _: &RegistrationContext) {
+        registrar.register_recipe_type(PROCESSING_RECIPE_TYPE);
+        registrar.register_raw_recipe_serializer(PROCESSING_SERIALIZER, PROCESSING_RECIPE_TYPE);
         let machine_block = registrar.block_key(MACHINE);
         registrar.block_container(&machine_block, container());
         registrar.block_fluids(&machine_block, tour::fluids::tanks());
@@ -120,6 +122,10 @@ fn container() -> ModContainer {
 }
 
 pub const MACHINE: &str = "machine_sample:machine";
+/// The recipe type the machine queries with `recipes_of_type`.
+pub const PROCESSING_RECIPE_TYPE: &str = "machine_sample:processing";
+/// The `type` of the recipe files, a serializer id independent of the recipe type.
+pub const PROCESSING_SERIALIZER: &str = "machine_sample:processing_json";
 pub const PIPE: &str = "machine_sample:pipe";
 pub const DURATION: i32 = 40;
 pub const DEPOSIT: i32 = 0;
