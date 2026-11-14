@@ -7,7 +7,7 @@ license = "MIT"
 description = "A minimal native Horizon mod"
 
 [dependencies]
-horizon-mod-api = { git = "https://github.com/arismoko/horizon", rev = "8fce8db0d4d0b0db5ceba5447ad417bc75b23a5d" }
+horizon-mod-api = { path = ".horizon/sdk/api/crates/horizon-mod-api" }
 
 [dev-dependencies]
-horizon-mod-api = { git = "https://github.com/arismoko/horizon", rev = "8fce8db0d4d0b0db5ceba5447ad417bc75b23a5d", features = ["testing"] }
+horizon-mod-api = { path = ".horizon/sdk/api/crates/horizon-mod-api", features = ["testing"] }

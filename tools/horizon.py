@@ -19,6 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = tomllib.loads((ROOT / "horizon-mod.toml").read_text())
 COMPAT = json.loads((ROOT / "compatibility.json").read_text())
 PIN = MANIFEST["native"]["horizon"]
+# Where `cargo horizon-mod` fetches the pinned build's SDK; the crate names the API only there.
+SDK_API = ".horizon/sdk/api/crates/horizon-mod-api"
 # Matches launcher/src/rust_toolchain.rs at the pinned Horizon revision.
 TOOLCHAIN = "1.99.1"
 
@@ -92,28 +94,6 @@ def stage_mods(source, stages):
     return mods
 
 
-def check_injections(source, manifest):
-    """Resolve prebuilt API slots with the pinned native/wasm constructor emitter."""
-    helper = ROOT / "target/injection-check"
-    helper.mkdir(parents=True, exist_ok=True)
-    dependencies = ("horizon-mod-api-gen", "horizon-mod-package", "horizon-mod-point-emit")
-    lines = ['[package]', 'name = "sample-injection-check"', 'version = "0.0.0"',
-             'edition = "2024"', '[workspace]', '[[bin]]',
-             'name = "sample-injection-check"',
-             'path = "main.rs"', '[dependencies]']
-    shutil.copyfile(ROOT / "tools/check_injections.rs.in", helper / "main.rs")
-    lines += [name + ' = { path = ' + json.dumps(str(source / "crates" / name)) + ' }'
-              for name in dependencies]
-    # Catalog construction is CPU-heavy; unoptimized AST walking makes each check take minutes.
-    lines += ['serde_json = "1"', '[profile.dev]', 'opt-level = 3', 'debug = 0']
-    (helper / "Cargo.toml").write_text('\n'.join(lines) + '\n')
-    shutil.copyfile(source / "Cargo.lock", helper / "Cargo.lock")
-    subprocess.run(["cargo", "run", "--offline", "-j", "4", "--manifest-path",
-                    str(helper / "Cargo.toml"), "--target-dir", str(ROOT / "target/package-tool"),
-                    "--", str(source), str(manifest)], check=True, capture_output=True, text=True,
-                   env=dict(os.environ, RUSTUP_TOOLCHAIN=TOOLCHAIN, CARGO_INCREMENTAL="0"))
-
-
 def check_lock(horizon_lock, sample_lock):
     """Refuse a shared dependency version absent from the pinned game lock."""
     with horizon_lock.open("rb") as file:
@@ -133,9 +113,9 @@ def trait_stage(horizon, stages):
     """Export the pinned game and stage its flat mod without changing game sources."""
     crate = tomllib.loads((ROOT / "Cargo.toml").read_text())
     if (COMPAT["horizon_revision"] != PIN
-            or crate["dependencies"]["horizon-mod-api"]["rev"] != PIN
+            or crate["dependencies"]["horizon-mod-api"] != {"path": SDK_API}
             or MANIFEST["native"]["mixins"] != COMPAT["horizon_mixins_revision"]):
-        raise ValueError("The manifest, crate and development provenance pins must match")
+        raise ValueError("The manifest and development provenance pins must match, and the crate must name the API by its SDK path")
     output, changed = stage(horizon, stages / "original")
     check_lock(output / "Cargo.lock", ROOT / "Cargo.lock")
     stage_mods(output, stages)
@@ -168,7 +148,6 @@ def main():
         report = {"stage": str(output), "stage_changed": changed,
                   "horizon_revision": PIN, "staging_seconds": time.monotonic()-started}
         if args.action != "stage":
-            check_injections(output, ROOT / "horizon-mod.toml")
             if args.action == "build":
                 raise ValueError("trait mods must be linked with horizon-launcher native-build; see README.md")
             command = ["nice", "-n", "19", "cargo", args.action, "-j", "4",
