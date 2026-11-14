@@ -1,5 +1,5 @@
 {
-  "type": "machine_sample:processing",
+  "type": "machine_sample:processing_json",
   "ingredient": "#machine_sample:processable",
   "result": {
     "id": "minecraft:stone",
