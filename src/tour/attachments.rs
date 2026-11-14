@@ -23,23 +23,41 @@ fn decode(saved: &Compound) -> Result<u32, AttachmentError> {
     u32::try_from(*visits).map_err(|_| AttachmentError::Decode)
 }
 
-pub fn inspect(host: &mut dyn ServerHost, event: &EntityInteractEvent<'_>) -> Flow {
-    let Some(player) = host.players().acting_player() else {
-        return Flow::Continue;
-    };
+pub fn inspect(
+    host: HostSide<'_>,
+    event: &mut EntityInteractEvent<'_>,
+) -> Option<InteractionResult> {
+    match host {
+        HostSide::Server(host) => inspect_server(host, event),
+        HostSide::Client(host) => {
+            let player = host.local_player()?;
+            let main = LivingRef::new(player.entity()).hand_item(host, Hand::Main);
+            if player.is_secondary_use_active(host) == Some(true)
+                && inspection_hands_empty(main.as_ref(), event.stack)
+            {
+                // Predict ownership only: the server alone persists and reports the visit.
+                Some(InteractionResult::SuccessServer)
+            } else {
+                None
+            }
+        }
+    }
+}
+
+fn inspect_server(
+    host: &mut dyn ServerHost,
+    event: &mut EntityInteractEvent<'_>,
+) -> Option<InteractionResult> {
+    let player = host.players().acting_player()?;
     if player.is_secondary_use_active(host) != Some(true) {
-        return Flow::Continue;
+        return None;
     }
-    let main = ItemPlace::PlayerHand {
-        player: player.uuid(),
-        hand: Hand::Main,
-    }
-    .stack(host);
+    let main = LivingRef::new(player.entity()).hand_item(host, Hand::Main);
     if !inspection_hands_empty(main.as_ref(), event.stack) {
-        return Flow::Continue;
+        return None;
     }
     let Ok(id) = u32::try_from(event.entity) else {
-        return Flow::Continue;
+        return None;
     };
     // The event's target belongs to the host's current level. No entity, world
     // borrow or holder identity is retained beyond this callback.
@@ -55,16 +73,15 @@ pub fn inspect(host: &mut dyn ServerHost, event: &EntityInteractEvent<'_>) -> Fl
                 host,
                 Text::literal(format!("Inspected {}: visit {visits}", event.kind)),
             );
-            // Claim this gesture so vanilla does not retry with the other hand.
-            Flow::Cancel
+            Some(InteractionResult::SuccessServer)
         }
-        Err(AttachmentError::MissingHolder) => Flow::Continue,
+        Err(AttachmentError::MissingHolder) => None,
         Err(_) => {
             let _ = player.action_bar(
                 host,
                 Text::literal("Inspection data could not be read; left unchanged."),
             );
-            Flow::Continue
+            None
         }
     }
 }

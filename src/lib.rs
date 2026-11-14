@@ -37,9 +37,9 @@ impl Hooks for Sample {
 
     fn entity_interact(
         &self,
-        host: &mut dyn ServerHost,
+        host: HostSide<'_>,
         event: &mut EntityInteractEvent<'_>,
-    ) -> Flow {
+    ) -> Option<InteractionResult> {
         tour::attachments::inspect(host, event)
     }
 

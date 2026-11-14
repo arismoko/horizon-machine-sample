@@ -118,6 +118,11 @@ only keyed reads. Unknown items are skipped with one stderr warning per identifi
 reload (using the standard library, not an external logging dependency), without retrying on subsequent ticks. No file I/O or JSON parsing occurs
 on ticks.
 
+Entity inspection uses the both-side `entity_interact` result. The client predicts
+ownership with `Some(InteractionResult::SuccessServer)` only for an eligible inspection;
+the server alone updates and reports the saved attachment. Both sides read the live main
+hand through `LivingRef::hand_item`, without requesting a server-only item handler on the client.
+
 `ItemStack` is an owned, nonempty value. Empty slots use `None`, consumed stacks
 use `shrink` or `split`, and growth uses fallible `set_count` after the capacity
 check. Merging compares both item identity and component patches, including

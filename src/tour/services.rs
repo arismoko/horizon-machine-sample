@@ -51,6 +51,8 @@ mod tests {
                 "message".into(),
                 CommandArgumentValue::String(message.into()),
             )],
+            mod_api::testing::FakeLevel::default().level().dimension(),
+            [0.0; 3],
         )
     }
 
