@@ -59,14 +59,6 @@ impl Hooks for Sample {
         tour::reload::client(event);
     }
 
-    fn block_entity_energy(
-        &self,
-        _: &dyn Host,
-        event: &mut BlockEntityEnergyEvent<'_>,
-    ) -> Option<ModEnergyBuffer> {
-        (event.block == MACHINE).then(tour::energy::buffer)
-    }
-
     fn input_key(&self, host: &mut dyn ClientHost, event: &mut InputKeyEvent<'_>) {
         tour::client::input(host, event);
     }
@@ -87,16 +79,12 @@ impl Hooks for Sample {
         tour::fluids::run(host, event, self.machine.get().copied())
     }
 
-    fn block_entity_fluids(
-        &self,
-        _: &dyn Host,
-        event: &mut BlockEntityFluidsEvent<'_>,
-    ) -> Option<ModFluidTanks> {
-        (event.block == MACHINE).then(tour::fluids::tanks)
-    }
-
     fn register(&self, registrar: &mut dyn Registrar, _: &RegistrationContext) {
-        let _ = self.machine.set(registrar.block_key(MACHINE));
+        let machine_block = registrar.block_key(MACHINE);
+        registrar.block_container(&machine_block, container());
+        registrar.block_fluids(&machine_block, tour::fluids::tanks());
+        registrar.block_energy(&machine_block, tour::energy::buffer());
+        let _ = self.machine.set(machine_block);
         let pipe = registrar.block_key(PIPE);
         tour::client::register(registrar);
         let automatic_input = tour::policy::register(registrar);
@@ -115,19 +103,15 @@ impl Hooks for Sample {
             )
             .expect("native block entity type");
     }
+}
 
-    fn block_entity_container(
-        &self,
-        _: &dyn Host,
-        event: &mut BlockEntityContainerEvent<'_>,
-    ) -> Option<ModContainer> {
-        (event.block == MACHINE).then(|| ModContainer {
-            slots: 5,
-            faces: std::array::from_fn(|_| vec![0, 1]),
-            inputs: vec![0],
-            outputs: vec![1],
-            menu: Some("minecraft:hopper".into()),
-        })
+fn container() -> ModContainer {
+    ModContainer {
+        slots: 5,
+        faces: std::array::from_fn(|_| vec![0, 1]),
+        inputs: vec![0],
+        outputs: vec![1],
+        menu: Some("minecraft:hopper".into()),
     }
 }
 
