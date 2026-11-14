@@ -1,8 +1,8 @@
 # Validation
 
 The flat project pins fork Horizon
-`f0a383025a21956a8cee9343107e5867259e63f6` and its matching Mixins revision
-`5a64af938ec86b00d53d16a408aabc0038fb3e57`. This pin includes the host-area
+`c417323915f5051092ff1c4649a0e96ef3022394` and its matching Mixins revision
+`e59da9094f0c2fdda6c627fe9eff22dec6a906f0`. This pin includes the host-area
 trait regroup, the `horizon-mod-package` rename, and the attachment and registry
 key runtime split, plus API 2c's access declarations and generated host
 forwarders, plus API 2d's per-kind registrar and capability-provider traits.
@@ -50,6 +50,24 @@ stage and check separately; linking is an additional, explicitly named proof.
 
 Mods don't ship a toolchain file; Horizon's pinned toolchain builds them. The
 helper and CI explicitly select the pinned launcher's Rust 1.99.1.
+
+## Played at the current pin
+
+Built with the launcher's developer SDK from a checkout of the pinned commit
+(see the README), started with `horizon-ctl launch --offscreen` under a virtual
+display on software Vulkan, in a new creative world. A cobblestone chest to the
+west of the machine, a pipe to its east and an empty chest beyond:
+
+- `setblock` placed `machine_sample:machine` and `machine_sample:pipe`; both read back.
+- 16 cobblestone were put in the west chest. After 720 ticks the east chest held
+  16 stone and the west chest was empty (one item per 40 ticks, as configured).
+- Interacting with the machine opened "Sample Machine" with the processing bar,
+  the Deposit button, the reloadable label and the two slots; the input slot held
+  cobblestone mid-cycle.
+
+Not run at this pin: fluids, energy, the tour commands, keybindings, attachments,
+pack overrides and save/reopen. Their triggers below still describe the earlier
+recorded proof.
 
 ## Feature tour triggers
 

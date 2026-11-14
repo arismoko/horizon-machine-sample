@@ -7,8 +7,9 @@ and the parts of the sample that are deliberately small.
 
 [horizon-mod.toml](../horizon-mod.toml) is the sole mod manifest. Its `[native]`
 section pins the game and exact Horizon and horizon-mixins revisions. The
-standalone API dependencies in [Cargo.toml](../Cargo.toml) must name that same Horizon
-commit. [compatibility.json](../compatibility.json) records the source revision
+API dependency in [Cargo.toml](../Cargo.toml) names the API only by the SDK path
+`.horizon/sdk/api/crates/horizon-mod-api`; the SDK there must be that same Horizon
+commit's. [compatibility.json](../compatibility.json) records the source revision
 and hashes used by the development exporter; it is not a runtime manifest.
 
 Use a fork launcher that understands this API and package layout. Native builds
@@ -28,8 +29,12 @@ the pinned dependencies before using `--offline`.
 
 With a Git checkout containing the committed Horizon pin:
 
+The API source must exist at that path first: `cargo horizon-mod check` fetches the signed
+SDK of a published build, and for an unpublished one `python3 tools/sdk_api_source.py build
+.horizon/sdk/api` in the Horizon checkout writes it.
+
 ```sh
-cargo +1.99.1 fmt --all --check
+cargo +1.99.1 fmt --check
 cargo +1.99.1 clippy --workspace --all-targets --locked --offline -- -D warnings
 cargo +1.99.1 test --workspace --locked --offline
 python3 tools/test_stage.py --horizon /path/to/horizon
@@ -39,15 +44,12 @@ python3 tools/horizon.py check --horizon /path/to/horizon
 The stage test exports only committed pinned sources into ignored `target/`
 trees. It verifies source hashes and shared dependency versions, stages the
 canonical flat package, and leaves the original checkout unchanged. Repeated
-exports must preserve source bytes and mtimes. The check resolves API injection
-placement with the pinned point emitter and checks freshness with the shared
-injection router and internals catalog before compiling the trait crate. Missing
-points and stale hashes fail; internals and call-site injections are outside this
-prebuilt-only check and are refused. The staging regression checks missing and
-stale declarations and accepts a current real slot. The development helper is a
-Rust template copied under ignored `target/`, never a packaged runtime source.
-The check does not compile emitted listener bindings or link an executable;
-listener existence/signatures and gameplay still require the launcher's native build. [VALIDATION](../VALIDATION.md) gives the proof scope and triggers.
+exports must preserve source bytes and mtimes. `check` then compiles the sample's crate in
+that export. Staging runs the pinned game's `cargo horizon-mod build`, which fetches the pinned build's signed SDK:
+with no `sdk-<build id>` release for the pin, `stage`, `check`, `test`, `package.py` and `test_stage.py`
+stop there with "has no signed SDK" ([horizon#4313](https://github.com/arismoko/horizon/issues/4313)), so they were not run
+at this pin. Listener existence/signatures and gameplay need the launcher's native build.
+[VALIDATION](../VALIDATION.md) gives the proof scope and triggers.
 
 Seed the development `Cargo.lock` from the pinned game's committed lockfile
 before resolving the standalone crate. The launcher uses the game's lockfile
